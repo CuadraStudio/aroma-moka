@@ -31,7 +31,23 @@ DESIGN.md pasó a v2.0 porque el cliente no aprobó v1.0 ("el diseño sigue sien
 - Nuevos tokens de color `--menta-dolce` / `--coral-dolce`, usados únicamente en el botón/CTA de Dolce Shop y el borde de sus piezas en el racimo — la paleta base de Aroma Moka (rosa/crema) no cambia.
 - Verificado en 375 y 800px: sin errores de consola, imágenes cargando (200 OK), CTAs apiladas correctamente en mobile.
 
+## v3.0 (2026-09-30) — lenguaje visual más seguro (referencia del cliente)
+
+El cliente trajo una referencia externa ([triozen-tech/day-3-melt](https://github.com/triozen-tech/day-3-melt), un sitio-demo ficticio con fotos generadas por IA) pidiendo "algo así". Se tomó el lenguaje visual/estructural, nunca sus fotos ni su motor (Next.js, cursor personalizado, video scroll-driven — ninguno es parte del stack de Cuadra). Cambios:
+
+- **Loader de marca:** `#brandLoader`, isologo real (`isotipo.jpg/webp` — el de las letras "AM" con la tacita, no el sello circular que describía DESIGN.md; es el único isologo suelto que existe como archivo limpio) sobre crema, pulso breve, se retira solo (mínimo ~900ms, máximo 2.2s aunque `load` no llegue nunca). `prefers-reduced-motion`: no se muestra.
+- **Goteo marcado:** se rediseñaron los `clipPath` `waveTop`/`waveBottom` con más oscilaciones y más amplitud (de ~0.05-0.1 a ~0.1-0.2 de la altura). Se sumó `wavy-top` a `.mesa` y `.personal` (antes solo estaba en `.clasicos` y el footer) para reforzar el corte entre "El gesto" y "La mesa". Estiramiento leve al entrar en viewport vía clase `.drip-stretch` (`scaleY`, 550ms, se retira sola).
+- **Tipografía mayor:** `.hero__title` de `clamp(2.6rem,...,4.4rem)` a `clamp(3.2rem,...,6rem)`; `--fs-h2` de `clamp(2rem,...,3.4rem)` a `clamp(2.3rem,...,4rem)`.
+- **Corazón que se dibuja:** nuevo SVG `#heartDraw` en `.cafe__hero` (esquina inferior derecha de la foto de la taza), trazo animado con `stroke-dasharray`/`getTotalLength()`, disparado por `IntersectionObserver`. **No existía en ninguna versión anterior** — DESIGN.md lo describía desde v1.0 pero nunca se había implementado; se construyó recién ahora.
+- **Un solo color de acción:** se sacó `--coral-dolce` de los botones "Encargá" (ambos vuelven a la paleta rosa/marrón — `btn-pill--on-rosa` y `btn-pill--outline`). Menta/coral quedan solo en el borde de las piezas de Dolce Shop en el racimo (`.dolce-piece`), nunca en botones.
+
+**Bug real encontrado y corregido en esta pasada:** el corazón no se dibujaba — el JS fijaba `stroke-dashoffset` inline (mayor especificidad que la regla CSS `.in-view`), así que la clase se agregaba bien pero el offset nunca volvía a 0 visualmente. Se corrigió reseteando el offset por JS también, no solo por clase.
+
+Verificado en 375 y 800px: sin errores de consola, sin scroll horizontal, loader se retira solo y se elimina del DOM, corazón se dibuja al entrar en viewport (confirmado con `getComputedStyle`, no solo visualmente), botones "Pedí"/"Encargá" ambos en paleta rosa/marrón.
+
 ## Problemas conocidos
 
 - `sites/aroma-moka/` (el original) sigue existiendo en paralelo, ahora desactualizado respecto a `clientes/aroma-moka/site/` — candidato a archivar cuando el cliente apruebe esta versión, no se borró sin confirmar.
 - `research/RESEARCH.md` marca 04-personas en 0 pese a búsqueda activa — si aparece una foto real con personas, sumarla.
+- El loader usa el isologo "AM + tacita" (bubble), no el sello circular con el corazón que describía DESIGN.md — es el único logo suelto disponible como archivo limpio; si el negocio tiene el sello circular como archivo aparte, se puede reemplazar.
+- "Estacionamiento: Gratuito" sigue sin verificar; el horario del sitio sigue sin actualizarse al real (Martes a Sábado 9-20h) — ninguno de los dos fue pedido en esta pasada.
