@@ -57,6 +57,18 @@ Las dos mecánicas nuevas se verificaron con scroll programático (no solo visua
 
 Verificado en 375 y ~640px: sin scroll horizontal, sin errores de consola, ninguna escena repite la mecánica de su vecina inmediata.
 
+## v5.0 (2026-09-30) — identidad visual completa, no una escena más
+
+Feedback directo tras v4.0: "la página sigue teniendo la misma estructura... el mismo texto, la misma distribución del ícono de menú, el sello en el medio, la imagen a la derecha". Correcto — v4.0 cambió la mecánica de "El gesto" y "La mesa" pero nunca tocó el hero ni el nav, que seguían siendo los de la v1.0 pre-workflow. v5.0 redefine la identidad visual completa:
+
+- **Hero rehecho de cero.** `.hero__grid` (texto-izquierda/foto-derecha con `.stamp-badge` circular superpuesto) se reemplaza por `.hero__stage`/`.hero__pin`: bloque rosa sólido con "AROMA MOKA" en wordmark gigante (Fredoka, `clamp(3.6rem, 17vw, 11rem)`). Misma receta de `sticky` + progreso de scroll que el corazón de "El gesto": la foto real del mostrador (`hero-mostrador-figma`) se revela detrás del wordmark (`opacity` 0→1, `scale` 0.92→1) mientras el wordmark cede protagonismo (`scale` 1→0.9, `opacity` 1→0.65). El copy real y el CTA bajaron a flujo normal, debajo del stage. Se sacó el `.stamp-badge` (sello circular decorativo): no aportaba nada que el wordmark + el corazón real de "El gesto" no cubrieran ya.
+- **Nav reducido a pantalla completa en todos los tamaños.** Se eliminó la barra de links inline que solo existía en desktop (`min-width:781px`) y el bloque de ubicación/horario del header (esa info ya está en el cierre, no hacía falta duplicarla). El nav queda en logo + botón "Menú" siempre, abriendo el mismo overlay (`.nav-mobile`) que antes era exclusivo de mobile.
+- **Cierre pasa a bloque marrón sólido, invertido** (texto crema), con una textura de damero muy sutil de fondo (`conic-gradient` a 5% de opacidad). Botones cambiaron de `--solid`/`--outline` (invisibles sobre marrón) a `--on-rosa` y una variante nueva `--outline-crema`.
+- **Damero como motivo recurrente:** nueva franja (`.damero-strip`) entre el hero y "Nuestros clásicos", sumada a la ya existente en "El lugar" y la nueva textura del cierre — 3 apariciones en vez de 1.
+- Paleta (rosa/crema/marrón) y tipografía (Fredoka/Inter/Caveat) no cambiaron: siguen documentadas en fotos reales. Lo que cambió es la composición y el peso con que se usan.
+
+Verificado con scroll programático: la foto del hero responde en proporción exacta al progreso (confirmado a 60% con `resize_window` para forzar repintado, dado el conocido artefacto de capturas del navegador de pruebas justo después de un scroll). Sin scroll horizontal en 375/622px. Menú a pantalla completa verificado abriendo/cerrando por JS (`#navToggle`), 5 links presentes.
+
 ## Problemas conocidos
 
 - `sites/aroma-moka/` (el original) sigue existiendo en paralelo, ahora desactualizado respecto a `clientes/aroma-moka/site/` — candidato a archivar cuando el cliente apruebe esta versión, no se borró sin confirmar.
