@@ -4,6 +4,88 @@
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------------------------------------------------------------------
+   * Loader de marca: isologo breve antes de abrir la pagina.
+   * Se saca solo (clase is-hidden) al primero entre "load" o un minimo,
+   * asi nunca tapa la pagina mas de la cuenta si algo tarda.
+   * ------------------------------------------------------------------- */
+  const loader = document.getElementById("brandLoader");
+  if (loader) {
+    if (reduceMotion) {
+      loader.classList.add("is-hidden");
+    } else {
+      const MIN_MS = 900;
+      const MAX_MS = 2200;
+      let hidden = false;
+      const hide = () => {
+        if (hidden) return;
+        hidden = true;
+        loader.classList.add("is-hidden");
+        loader.addEventListener("transitionend", () => loader.remove(), { once: true });
+      };
+      const start = Date.now();
+      window.addEventListener(
+        "load",
+        () => setTimeout(hide, Math.max(0, MIN_MS - (Date.now() - start))),
+        { once: true }
+      );
+      setTimeout(hide, MAX_MS); // nunca deja la pagina tapada si "load" no llega
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+   * Goteo: los bordes con clip-path de gota se estiran un toque al entrar
+   * ------------------------------------------------------------------- */
+  if (!reduceMotion) {
+    const dripEls = document.querySelectorAll(".wavy-top");
+    if (dripEls.length) {
+      const dripObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("drip-stretch");
+            setTimeout(() => entry.target.classList.remove("drip-stretch"), 550);
+            dripObserver.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.15 }
+      );
+      dripEls.forEach((el) => dripObserver.observe(el));
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+   * Corazon que se dibuja: eco del latte art real, una sola vez
+   * ------------------------------------------------------------------- */
+  const heartDraw = document.getElementById("heartDraw");
+  if (heartDraw) {
+    const heartPath = heartDraw.querySelector(".heart-draw__path");
+    if (heartPath && heartPath.getTotalLength) {
+      const len = Math.ceil(heartPath.getTotalLength());
+      heartPath.style.strokeDasharray = String(len);
+      heartPath.style.strokeDashoffset = reduceMotion ? "0" : String(len);
+    }
+    if (reduceMotion) {
+      heartDraw.classList.add("in-view");
+    } else {
+      const heartObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              heartDraw.classList.add("in-view");
+              // el offset se fijo inline arriba (mayor especificidad que la regla de clase) -
+              // hay que resetearlo por JS tambien, si no la regla .in-view nunca gana
+              if (heartPath) heartPath.style.strokeDashoffset = "0";
+              heartObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.4 }
+      );
+      heartObserver.observe(heartDraw);
+    }
+  }
+
+  /* ---------------------------------------------------------------------
    * Nav: sombra al scrollear + link activo por sección + menú mobile
    * ------------------------------------------------------------------- */
   const navToggle = document.getElementById("navToggle");
@@ -109,7 +191,7 @@
             }
           });
         },
-        { threshold: 0.25 }
+        { threshold: 0.15 }
       );
       stackItems.forEach((item) => stackObserver.observe(item));
     }

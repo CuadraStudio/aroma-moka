@@ -13,6 +13,12 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<div class="brand-loader" id="brandLoader" aria-hidden="true">
+  <picture>
+    <source srcset="img/isotipo.webp" type="image/webp">
+    <img src="img/isotipo.jpg" width="150" height="150" alt="">
+  </picture>
+</div>
 <a class="skip-link" href="#main">Saltar al contenido</a>
 
 <!-- Formas reutilizables (marco lobulado tipo flor/nube) -->
@@ -25,10 +31,10 @@
       <path d="M0.14,0 C0.06,0.06 0.02,0.14 0.05,0.22 C0.09,0.31 0.02,0.39 0.01,0.5 C0,0.61 0.08,0.67 0.06,0.77 C0.04,0.86 0.1,0.94 0.19,1 L0.87,1 C0.95,1 1,0.95 1,0.87 L1,0.06 C1,0.03 0.97,0 0.94,0 Z" />
     </clipPath>
     <clipPath id="waveTop" clipPathUnits="objectBoundingBox">
-      <path d="M0,0.07 C0.08,0 0.17,0.09 0.27,0.06 C0.37,0.03 0.46,0.1 0.56,0.06 C0.66,0.02 0.75,0.09 0.85,0.05 C0.93,0.02 0.97,0.06 1,0.03 L1,1 L0,1 Z" />
+      <path d="M0,0.14 C0.06,0 0.14,0.19 0.22,0.12 C0.3,0.05 0.36,0.21 0.44,0.13 C0.52,0.05 0.58,0.22 0.66,0.11 C0.74,0.01 0.8,0.19 0.87,0.1 C0.93,0.03 0.97,0.13 1,0.05 L1,1 L0,1 Z" />
     </clipPath>
     <clipPath id="waveBottom" clipPathUnits="objectBoundingBox">
-      <path d="M0,0 L1,0 L1,0.93 C0.93,1 0.83,0.91 0.73,0.94 C0.63,0.97 0.54,0.9 0.44,0.94 C0.34,0.98 0.25,0.91 0.15,0.95 C0.07,0.98 0.03,0.94 0,0.97 Z" />
+      <path d="M0,0 L1,0 L1,0.86 C0.95,0.98 0.89,0.8 0.82,0.89 C0.75,0.98 0.68,0.79 0.6,0.9 C0.52,1 0.45,0.78 0.37,0.89 C0.29,0.99 0.21,0.8 0.13,0.91 C0.07,0.98 0.03,0.87 0,0.94 Z" />
     </clipPath>
   </defs>
 </svg>
@@ -203,6 +209,10 @@
             <source srcset="img/03_cafe_taza_rosa.webp" type="image/webp">
             <img src="img/03_cafe_taza_rosa.jpg" width="1440" height="1440" alt="Taza rosa sobre plato en forma de flor, con latte art de corazón, apoyada en una mesa de madera" loading="lazy">
           </picture>
+          <svg class="heart-draw" id="heartDraw" viewBox="0 0 64 56" aria-hidden="true">
+            <circle cx="32" cy="28" r="30" class="heart-draw__bg" />
+            <path d="M32 46 C14 34 6 24 6 15 C6 7 12 2 19 2 C25 2 30 6 32 12 C34 6 39 2 45 2 C52 2 58 7 58 15 C58 24 50 34 32 46 Z" class="heart-draw__path" />
+          </svg>
         </figure>
 
         <div class="cafe__satellites">
@@ -233,7 +243,7 @@
   </section>
 
   <!-- ============================= LA MESA — PASTELERÍA ============================= -->
-  <section class="section mesa" id="pasteleria">
+  <section class="section mesa wavy-top" id="pasteleria">
     <div class="container">
       <div class="mesa__intro">
         <div>
@@ -314,7 +324,7 @@
   </section>
 
   <!-- ============================= PERSONALIZACIÓN ============================= -->
-  <section class="section personal" id="personalizacion">
+  <section class="section personal wavy-top" id="personalizacion">
     <div class="container">
       <div class="personal__layout">
         <figure class="personal__photo lobe-frame">
@@ -330,7 +340,7 @@
           <p class="lede" style="margin-top:1.1rem;">Una galletita con la foto de las tres, un corazón en la espuma que dice "para mamá", una torta que se pide para compartir en la mesa de otro. Acá la personalización no es un servicio aparte: es cómo se atiende siempre.</p>
           <p class="personal__quote">"para mamá"</p>
           <p class="lede" style="margin-top:1rem;">Las piezas a medida —tortas y galletas decoradas para una fecha puntual— las arma Dolce Shop, la marca hermana de Aroma Moka.</p>
-          <a class="btn-pill btn-pill--dolce" style="margin-top:1.2rem;" href="https://wa.me/59893329614" target="_blank" rel="noopener">
+          <a class="btn-pill btn-pill--on-rosa" style="margin-top:1.2rem;" href="https://wa.me/59893329614" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20V8.5C6 6 8 4 10.5 4h3C16 4 18 6 18 8.5V13c0 2.5-2 4.5-4.5 4.5H10l-4 3.5Z"/><path d="M10 9.5c1.3 2.2 2.8 3.5 4.8 4.4"/></svg>
             Encargá tu torta
           </a>
@@ -448,7 +458,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20V8.5C6 6 8 4 10.5 4h3C16 4 18 6 18 8.5V13c0 2.5-2 4.5-4.5 4.5H10l-4 3.5Z"/><path d="M10 9.5c1.3 2.2 2.8 3.5 4.8 4.4"/></svg>
           Pedí — café y vitrina
         </a>
-        <a class="btn-pill btn-pill--dolce" href="https://wa.me/59893329614" target="_blank" rel="noopener">
+        <a class="btn-pill btn-pill--outline" href="https://wa.me/59893329614" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20V8.5C6 6 8 4 10.5 4h3C16 4 18 6 18 8.5V13c0 2.5-2 4.5-4.5 4.5H10l-4 3.5Z"/><path d="M10 9.5c1.3 2.2 2.8 3.5 4.8 4.4"/></svg>
           Encargá — Dolce Shop
         </a>
