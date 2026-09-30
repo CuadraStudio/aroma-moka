@@ -54,49 +54,6 @@
   }
 
   /* ---------------------------------------------------------------------
-   * Hero: el wordmark queda fijo a pantalla completa mientras una foto
-   * real se revela detrás, en proporción directa al scroll — "el nombre
-   * primero, el lugar después". Misma receta que el corazón de "El gesto".
-   * ------------------------------------------------------------------- */
-  const heroStage = document.getElementById("heroStage");
-  const heroPhoto = heroStage?.querySelector(".hero__photo-wrap");
-  const heroWordmark = heroStage?.querySelector(".hero__wordmark");
-  if (heroStage && heroPhoto) {
-    if (reduceMotion) {
-      heroPhoto.style.opacity = "1";
-      heroPhoto.style.transform = "scale(1)";
-    } else {
-      const updateHero = () => {
-        const rect = heroStage.getBoundingClientRect();
-        const total = rect.height - window.innerHeight;
-        const progress = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
-        heroPhoto.style.opacity = String(progress);
-        heroPhoto.style.transform = `scale(${(0.92 + progress * 0.08).toFixed(3)})`;
-        if (heroWordmark) {
-          heroWordmark.style.opacity = String(1 - progress * 0.35);
-          heroWordmark.style.transform = `scale(${(1 - progress * 0.1).toFixed(3)})`;
-        }
-      };
-      updateHero();
-      let heroTicking = false;
-      window.addEventListener(
-        "scroll",
-        () => {
-          if (!heroTicking) {
-            heroTicking = true;
-            requestAnimationFrame(() => {
-              updateHero();
-              heroTicking = false;
-            });
-          }
-        },
-        { passive: true }
-      );
-      window.addEventListener("resize", updateHero);
-    }
-  }
-
-  /* ---------------------------------------------------------------------
    * Momento de firma: la foto del gesto queda fija (css) mientras el
    * corazon se dibuja en proporcion directa al scroll dentro del stage.
    * No es un disparo unico al entrar en pantalla: responde todo el tiempo,

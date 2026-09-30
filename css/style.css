@@ -127,12 +127,26 @@ body {
 }
 
 .eyebrow {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4em 0.9em 0.4em 0.7em;
+  border-radius: var(--radius-pill);
+  background: var(--crema);
+  box-shadow: 0 6px 16px -10px rgba(74, 50, 39, 0.35);
   font-size: var(--fs-label);
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-weight: 600;
+  letter-spacing: 0.14em;
+  font-weight: 700;
   color: var(--rosa-ink);
+}
+.eyebrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
 }
 
 .section-heading {
@@ -150,7 +164,9 @@ body {
   color: var(--marron-mid);
 }
 
-/* ---- Botones / pills ---- */
+/* ---- Botones "candy": pill con un borde inferior grueso que hace de
+   base 3D — al presionar, el botón baja y la base se acorta, como un
+   botón físico. Reemplaza la sombra plana de versiones anteriores. */
 .btn-pill {
   display: inline-flex;
   align-items: center;
@@ -158,95 +174,105 @@ body {
   padding: 0.85em 1.6em;
   border-radius: var(--radius-pill);
   font-family: var(--font-body);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.95rem;
   border: 2px solid transparent;
-  transition: transform 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
   white-space: nowrap;
 }
-.btn-pill:hover, .btn-pill:focus-visible { transform: translate(-2px, -2px); }
+.btn-pill:hover, .btn-pill:focus-visible { transform: translateY(3px); }
 
 .btn-pill--solid {
   background: var(--marron);
   color: var(--crema);
-  box-shadow: 4px 4px 0 var(--rosa-deep);
+  box-shadow: 0 5px 0 var(--marron-deep);
 }
 .btn-pill--solid:hover, .btn-pill--solid:focus-visible {
-  box-shadow: 6px 6px 0 var(--rosa-deep);
+  box-shadow: 0 2px 0 var(--marron-deep);
 }
 
 .btn-pill--outline {
-  background: transparent;
+  background: var(--crema);
   color: var(--marron);
-  border-color: currentColor;
+  border-color: transparent;
+  box-shadow: 0 5px 0 var(--rosa);
 }
 .btn-pill--outline:hover, .btn-pill--outline:focus-visible {
-  background: var(--marron);
-  color: var(--crema);
+  color: var(--rosa-ink);
+  box-shadow: 0 2px 0 var(--rosa);
 }
 
 .btn-pill--on-rosa {
   background: var(--crema);
   color: var(--marron);
-  box-shadow: 4px 4px 0 var(--marron);
+  box-shadow: 0 5px 0 var(--marron-deep);
 }
 .btn-pill--on-rosa:hover, .btn-pill--on-rosa:focus-visible {
-  box-shadow: 6px 6px 0 var(--marron);
+  box-shadow: 0 2px 0 var(--marron-deep);
 }
 
 .btn-pill--rosa {
   background: var(--rosa-ink);
   color: var(--crema);
-  box-shadow: none;
+  box-shadow: 0 5px 0 var(--marron-deep);
 }
 .btn-pill--rosa:hover, .btn-pill--rosa:focus-visible {
-  background: var(--marron-deep);
+  box-shadow: 0 2px 0 var(--marron-deep);
 }
 
 .btn-pill--outline-crema {
-  background: transparent;
+  background: var(--marron-deep);
   color: var(--crema);
-  border-color: var(--crema);
+  border-color: transparent;
+  box-shadow: 0 5px 0 rgba(251, 246, 239, 0.3);
 }
 .btn-pill--outline-crema:hover, .btn-pill--outline-crema:focus-visible {
-  background: var(--crema);
-  color: var(--marron);
+  box-shadow: 0 2px 0 rgba(251, 246, 239, 0.3);
 }
 
 .btn-pill svg { width: 1.1em; height: 1.1em; flex-shrink: 0; }
 
 /* ==========================================================================
-   Navegación — minimal, siempre menú a pantalla completa (ningún tamaño
-   muestra una barra de links inline; rompe con la barra genérica de sitio)
+   Navegación — píldora flotante centrada, no barra docada al borde.
+   Menú siempre a pantalla completa (ningún tamaño muestra links inline).
    ========================================================================== */
 .nav {
-  position: sticky;
-  top: 0;
+  position: fixed;
+  top: clamp(0.8rem, 2.4vw, 1.5rem);
+  inset-inline: 0;
   z-index: 60;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 1rem;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.nav__pill {
+  pointer-events: auto;
+  display: flex;
   align-items: center;
-  padding: 0.9rem clamp(1.25rem, 4vw, 3rem) 1.6rem;
-  background: var(--crema-header);
-  clip-path: url(#waveBottom);
+  gap: 0.9rem;
+  padding: 0.5rem 0.6rem 0.5rem 1.1rem;
+  border-radius: var(--radius-pill);
+  background: var(--crema);
+  box-shadow: 0 12px 28px -14px rgba(74, 50, 39, 0.4);
 }
 
 .nav__brand { display: flex; align-items: center; justify-content: center; }
-.nav__brand img { height: clamp(30px, 3.4vw, 40px); width: auto; }
-
-.nav__spacer { width: 42px; }
+.nav__brand img { height: clamp(26px, 3vw, 34px); width: auto; }
 
 .nav__toggle {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  height: 42px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  color: var(--marron-mid);
+  gap: 0.4rem;
+  height: 38px;
+  padding-inline: 0.9rem;
+  border-radius: var(--radius-pill);
+  background: var(--rosa);
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--marron-deep);
 }
-.nav__toggle svg { width: 22px; height: 22px; }
+.nav__toggle svg { width: 18px; height: 18px; }
 
 /* Menú mobile plegable */
 .nav-mobile {
@@ -280,84 +306,108 @@ body {
 .nav-mobile__close svg { width: 24px; height: 24px; }
 
 /* ==========================================================================
-   Hero — "el nombre primero, el lugar después"
-   Bloque de color sólido (rosa), no foto+texto en columnas. El wordmark
-   queda fijo a pantalla completa mientras una foto real se revela detrás,
-   atada al progreso del scroll (misma receta que "El gesto").
+   Hero — blob orgánico + producto real flotando delante del wordmark.
+   Nada se revela con el scroll: el producto flota siempre, con una deriva
+   continua (CSS) y un paralaje leve (misma utilidad [data-parallax] que
+   ya usan otras fotos del sitio) — la receta de la referencia, adaptada.
    ========================================================================== */
 .hero {
   position: relative;
-  background: var(--rosa);
+  background: var(--crema);
   overflow: hidden;
-}
-
-.hero__stage {
-  position: relative;
-  height: 190vh;
-}
-.hero__pin {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100svh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  padding-top: clamp(5.5rem, 12vw, 8rem);
   text-align: center;
-  overflow: hidden;
-  padding-inline: clamp(1.25rem, 6vw, 3rem);
 }
 
-.hero__photo-wrap {
+.hero__blob {
   position: absolute;
-  inset: 0;
-  opacity: 0;
-  transform: scale(0.92);
+  top: 38%;
+  left: 50%;
+  width: min(94vw, 620px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: var(--rosa);
+  border-radius: 46% 54% 58% 42% / 52% 44% 56% 48%;
+  animation: blob-morph 14s ease-in-out infinite alternate;
+  z-index: 0;
 }
-.hero__photo-wrap picture, .hero__photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
-.hero__photo-wrap::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(232, 180, 188, 0.6), rgba(74, 50, 39, 0.4));
+@keyframes blob-morph {
+  50% { border-radius: 56% 44% 42% 58% / 44% 58% 42% 56%; }
+  100% { border-radius: 42% 58% 50% 50% / 58% 46% 54% 42%; }
 }
 
 .hero__wordmark {
   position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  z-index: 1;
   font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
   line-height: 0.86;
   letter-spacing: -0.01em;
   color: var(--marron);
-  font-size: clamp(3.6rem, 17vw, 11rem);
+  font-size: clamp(3rem, 13vw, 8rem);
+  margin: 0;
+}
+
+.hero__product {
+  position: relative;
+  z-index: 2;
+  width: clamp(190px, 46vw, 320px);
+  aspect-ratio: 1;
+  margin: clamp(-0.8rem, -1.8vw, -0.2rem) auto 0;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 30px 50px -20px rgba(74, 50, 39, 0.5);
+  animation: float-soft 6.5s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+}
+.hero__product picture, .hero__product img { width: 100%; height: 100%; object-fit: cover; }
+@keyframes float-soft {
+  from { transform: translate3d(0, -1.4%, 0) rotate(-0.8deg); }
+  to { transform: translate3d(0, 1.4%, 0) rotate(0.8deg); }
+}
+
+.hero__toppings { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.hero__topping {
+  position: absolute;
+  width: clamp(54px, 9vw, 92px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 14px 24px -10px rgba(74, 50, 39, 0.4);
+  animation: drift 7s ease-in-out infinite alternate;
+}
+.hero__topping picture, .hero__topping img { width: 100%; height: 100%; object-fit: cover; }
+.hero__topping--a { top: 20%; left: 8%; }
+.hero__topping--b { bottom: 8%; right: 7%; animation-delay: -3.2s; }
+@keyframes drift {
+  from { translate: 0 -10px; }
+  to { translate: 0 12px; }
+}
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  padding-block: clamp(1.6rem, 4vw, 2.4rem) clamp(3rem, 6vw, 4.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hero__tagline {
-  position: relative;
-  z-index: 2;
-  margin-top: clamp(0.8rem, 2vw, 1.4rem);
+  margin-top: 1rem;
   font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 2.4vw, 1.8rem);
   color: var(--marron-deep);
-}
-
-.hero__below {
-  padding-block: clamp(2.5rem, 5vw, 4rem);
 }
 
 .hero__copy {
   font-family: var(--font-display);
   font-weight: 300;
-  font-size: clamp(1.1rem, 0.4vw + 1rem, 1.5rem);
-  max-width: 38ch;
-  color: var(--marron-deep);
+  font-size: clamp(1rem, 0.3vw + 0.95rem, 1.25rem);
+  max-width: 34ch;
+  margin-top: 0.7rem;
+  color: var(--marron-mid);
 }
 
 .hero__cta {
@@ -365,9 +415,12 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__stage { height: auto; }
-  .hero__pin { position: static; height: auto; padding-block: clamp(3rem, 8vw, 5rem); }
-  .hero__photo-wrap { position: static; height: 55vh; margin-top: 1.5rem; opacity: 1; transform: none; }
+  .hero__blob, .hero__product, .hero__topping { animation: none; }
+}
+
+@media (min-width: 641px) {
+  .hero__topping--a { left: 14%; }
+  .hero__topping--b { right: 13%; }
 }
 
 /* Franja de damero — motivo recurrente, no solo piso fotografiado */
@@ -417,12 +470,14 @@ body {
   .arch-top { transition: none; }
 }
 
-/* Marcos con trazo (en vez de sombra difusa) */
+/* Cápsula: sin borde, tapa completamente redonda — reemplaza el marco
+   grueso de panadería vintage de versiones anteriores */
 .framed {
-  border: 3px solid var(--marron);
-  border-radius: var(--radius-soft);
+  border: none;
+  border-radius: 999px 999px 36px 36px;
   overflow: hidden;
   background: var(--crema-deep);
+  box-shadow: 0 14px 30px -16px rgba(74, 50, 39, 0.35);
 }
 
 .photo-cap {
@@ -482,9 +537,10 @@ body {
 
 .clasico__photo {
   aspect-ratio: 1;
-  border-radius: var(--radius-soft);
+  border-radius: 50%;
   overflow: hidden;
   background: var(--crema-deep);
+  box-shadow: 0 14px 26px -14px rgba(74, 50, 39, 0.35);
 }
 .clasico__photo img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -649,10 +705,10 @@ body {
 .gallery-card {
   flex: 0 0 auto;
   width: clamp(200px, 58vw, 320px);
-  border: 3px solid var(--marron);
-  border-radius: var(--radius-soft);
+  border-radius: 999px 999px 36px 36px;
   overflow: hidden;
   background: var(--crema);
+  box-shadow: 0 14px 30px -16px rgba(74, 50, 39, 0.35);
 }
 .gallery-card picture, .gallery-card img { width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; }
 .gallery-card figcaption {
@@ -661,7 +717,7 @@ body {
   font-size: 0.95rem;
 }
 /* Piezas de Dolce Shop integradas en la misma galería — firma de color, sin separarlas aparte */
-.gallery-card.dolce-piece { border-color: var(--coral-dolce); }
+.gallery-card.dolce-piece { box-shadow: 0 0 0 4px var(--coral-dolce), 0 14px 30px -16px rgba(74, 50, 39, 0.35); }
 
 @media (prefers-reduced-motion: reduce) {
   .mesa__gallery-stage { height: auto; }
@@ -702,10 +758,9 @@ body {
   margin-left: auto;
   margin-right: 6%;
   position: relative;
-  border: 5px solid var(--crema);
-  border-radius: var(--radius-soft);
+  border-radius: 999px 999px 36px 36px;
   overflow: hidden;
-  box-shadow: 6px 6px 0 var(--marron-deep);
+  box-shadow: 0 16px 30px -14px rgba(47, 32, 25, 0.4);
 }
 .personal__satellite img { width: 100%; height: auto; aspect-ratio: 4/3; object-fit: cover; }
 
@@ -783,9 +838,9 @@ body {
 }
 .cierre__hero {
   aspect-ratio: 3/4;
-  border: 3px solid var(--crema);
-  border-radius: var(--radius-soft);
+  border-radius: 999px 999px 36px 36px;
   overflow: hidden;
+  box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.45);
 }
 .cierre__hero img { width: 100%; height: 100%; object-fit: cover; }
 .cierre__satellite {
@@ -793,9 +848,9 @@ body {
   margin-top: -2.2rem;
   margin-left: auto;
   margin-right: 8%;
-  border: 3px solid var(--crema);
-  border-radius: var(--radius-soft);
+  border-radius: 999px 999px 36px 36px;
   overflow: hidden;
+  box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.45);
 }
 .cierre__satellite img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
 

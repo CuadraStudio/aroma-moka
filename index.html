@@ -43,19 +43,18 @@
 </svg>
 
 <header class="nav" id="siteNav">
-  <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMobile">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6.5h18M3 12h18M3 17.5h18"/></svg>
-    <span>Menú</span>
-  </button>
-
-  <a class="nav__brand" href="#top" aria-label="Aroma Moka — inicio">
-    <picture>
-      <source srcset="img/logo_completo.webp" type="image/webp">
-      <img src="img/logo_completo.png" width="900" height="589" alt="Aroma Moka">
-    </picture>
-  </a>
-
-  <span class="nav__spacer" aria-hidden="true"></span>
+  <div class="nav__pill">
+    <a class="nav__brand" href="#top" aria-label="Aroma Moka — inicio">
+      <picture>
+        <source srcset="img/logo_completo.webp" type="image/webp">
+        <img src="img/logo_completo.png" width="900" height="589" alt="Aroma Moka">
+      </picture>
+    </a>
+    <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMobile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6.5h18M3 12h18M3 17.5h18"/></svg>
+      <span>Menú</span>
+    </button>
+  </div>
 </header>
 
 <nav class="nav-mobile" id="navMobile" aria-hidden="true">
@@ -71,22 +70,37 @@
 
 <main id="main">
 
-  <!-- ============================= APERTURA / HERO (nombre primero, el lugar después) ============================= -->
+  <!-- ============================= APERTURA / HERO — blob + producto real flotando ============================= -->
   <section class="hero" id="top">
-    <div class="hero__stage" id="heroStage">
-      <div class="hero__pin">
-        <div class="hero__photo-wrap">
-          <picture>
-            <source srcset="img/hero-mostrador-figma.webp" type="image/webp">
-            <img class="hero__photo" src="img/hero-mostrador-figma.png" width="1640" height="923" alt="Mostrador rosa de Aroma Moka con el logo montado en letras 3D y vitrina de pastelería" fetchpriority="high">
-          </picture>
-        </div>
-        <h1 class="hero__wordmark" aria-label="Aroma Moka"><span>Aroma</span><span>Moka</span></h1>
-        <p class="hero__tagline">Se sirve con corazón.</p>
-      </div>
+    <div class="hero__blob" aria-hidden="true"></div>
+
+    <div class="hero__toppings" aria-hidden="true">
+      <figure class="hero__topping hero__topping--a" data-parallax data-parallax-speed="0.14">
+        <picture>
+          <source srcset="img/09_macarons.webp" type="image/webp">
+          <img src="img/09_macarons.jpg" width="700" height="933" alt="" loading="lazy">
+        </picture>
+      </figure>
+      <figure class="hero__topping hero__topping--b" data-parallax data-parallax-speed="-0.1">
+        <picture>
+          <source srcset="img/dolce_cookies_navidad.webp" type="image/webp">
+          <img src="img/dolce_cookies_navidad.jpg" width="480" height="640" alt="" loading="lazy">
+        </picture>
+      </figure>
     </div>
 
-    <div class="container hero__below">
+    <h1 class="hero__wordmark">Aroma<br>Moka</h1>
+
+    <figure class="hero__product" data-parallax data-parallax-speed="0.06">
+      <picture>
+        <source srcset="img/03_cafe_taza_rosa.webp" type="image/webp">
+        <img src="img/03_cafe_taza_rosa.jpg" width="1440" height="1440" alt="Taza rosa con latte art de corazón, sobre plato en forma de flor" fetchpriority="high">
+      </picture>
+    </figure>
+
+    <div class="container hero__content">
+      <span class="eyebrow">Pastelería &amp; café — Las Piedras</span>
+      <p class="hero__tagline">Se sirve con corazón.</p>
       <p class="hero__copy">El corazón que ves en la espuma no es decoración: es la firma de la casa. Café con oficio y pastelería para compartir, en Las Piedras.</p>
       <a class="btn-pill btn-pill--rosa hero__cta" href="#clasicos">
         Ver el menú

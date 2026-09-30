@@ -69,6 +69,24 @@ Feedback directo tras v4.0: "la página sigue teniendo la misma estructura... el
 
 Verificado con scroll programático: la foto del hero responde en proporción exacta al progreso (confirmado a 60% con `resize_window` para forzar repintado, dado el conocido artefacto de capturas del navegador de pruebas justo después de un scroll). Sin scroll horizontal en 375/622px. Menú a pantalla completa verificado abriendo/cerrando por JS (`#navToggle`), 5 links presentes.
 
+## v6.0 (2026-09-30) — se elimina DESIGN.md, se aplica el lenguaje de la referencia directo
+
+Tras v5.0, feedback: "claramente no es lo que estaba buscando... elimines completamente el design.md e intentes aplicar algo relacionado al link que te mandé". Se borró `DESIGN.md` (pedido explícito) y se fue directo a construir a partir del repo de referencia ([triozen-tech/day-3-melt](https://github.com/triozen-tech/day-3-melt)), esta vez leyendo su sitio actual completo (`site/DESIGN.md`, `site/site.css`, `site/components/MeltHero.tsx` — un sitio de helados, "Melt Theory") en vez de solo la librería de patrones genérica. Ese sitio reveló el sistema visual concreto que las versiones anteriores no habían tomado: **cero bordes duros, todo redondeado (píldoras/cápsulas/círculos/blobs), un blob orgánico de fondo, el producto real flotando con deriva continua delante de la palabra gigante (no revelado por scroll), y botones "candy" con una sombra tipo base 3D que se hunde al presionar.** Se intentó levantar el repo localmente (`npm install`) para verlo renderizado; el sandbox lo bloqueó por ser código externo — se leyó el código fuente en su lugar, que alcanzó para extraer las técnicas CSS concretas.
+
+Cambios aplicados a todo el sitio (no solo el hero):
+
+- **Botones → "candy":** `.btn-pill` pasa de sombra plana a `box-shadow: 0 5px 0 <color-base>` que se reduce a `0 2px 0` + `translateY(3px)` al hover/focus — imita un botón físico que se hunde.
+- **Tarjetas → cápsula, sin borde:** `.framed`, `.gallery-card`, `.personal__satellite`, `.cierre__hero`/`.cierre__satellite` pierden el borde grueso marrón (quedaba "panadería vintage") y pasan a `border-radius: 999px 999px 36px 36px` (tapa completamente redonda) con sombra suave, no borde. `.clasico__photo` pasa a círculo completo (`border-radius: 50%`), como las categorías circulares de la referencia.
+- **Eyebrow → píldora:** de texto plano a una píldora blanca con punto de color y sombra, como el `.eyebrow` de la referencia.
+- **Nav → píldora flotante centrada:** deja de ser una barra `sticky` de ancho completo con corte ondulado; ahora es `position: fixed`, centrada, flotando sobre el contenido en todo momento (logo + botón "Menú", siempre el mismo en todos los tamaños).
+- **Hero, reconstruido de nuevo:** ya no hay scroll-reveal. `.hero__blob` es una forma orgánica rosa que muda de contorno sola (`border-radius` animado); el wordmark "Aroma Moka" queda detrás; la foto real de la taza (`03_cafe_taza_rosa`) flota *delante*, recortada en círculo, con una deriva continua (`float-soft`, CSS puro) y un paralaje leve reusando la utilidad `[data-parallax]` que ya existía en el sitio (nada nuevo en JS). Dos fotos reales más (macarons, cookies navideñas de Dolce Shop) flotan como "toppings" a los costados con la misma utilidad. Se eliminó por completo la lógica de scroll-pin del hero en `main.js` — el archivo quedó más corto, no más largo.
+
+Nada de esto usa fotografía generada por IA ni el stack Next.js/GSAP de la referencia: son técnicas CSS (blob orgánico, sombra de botón, cápsulas, deriva) aplicadas con las fotos y el copy reales que ya existían.
+
+**Sobre DESIGN.md:** por pedido explícito, se eliminó. A partir de acá, este documento (`IMPLEMENTACION.md`) es el único registro escrito de las decisiones de diseño del sitio — `FICHA.md` lo señala en su tabla de fuentes de verdad.
+
+Verificado en 375 y ~1292px: sin scroll horizontal, sin errores de consola, sin overlaps entre el wordmark y la foto flotante.
+
 ## Problemas conocidos
 
 - `sites/aroma-moka/` (el original) sigue existiendo en paralelo, ahora desactualizado respecto a `clientes/aroma-moka/site/` — candidato a archivar cuando el cliente apruebe esta versión, no se borró sin confirmar.
