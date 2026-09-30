@@ -45,6 +45,18 @@ El cliente trajo una referencia externa ([triozen-tech/day-3-melt](https://githu
 
 Verificado en 375 y 800px: sin errores de consola, sin scroll horizontal, loader se retira solo y se elimina del DOM, corazón se dibuja al entrar en viewport (confirmado con `getComputedStyle`, no solo visualmente), botones "Pedí"/"Encargá" ambos en paleta rosa/marrón.
 
+## v4.0 (2026-09-30) — estructura, no solo piel
+
+El cliente marcó, con razón, que v3.0 seguía siendo la misma estructura de siempre con lenguaje visual nuevo encima: todas las escenas tenían la misma mecánica ("contenedor → intro + grilla 2 columnas → borde ondulado"), solo cambiaban las fotos. v4.0 cambia la mecánica de dos escenas de verdad, no el estilo:
+
+- **El gesto (café) → momento de firma a pantalla completa.** Se reemplazó `.cafe__layout` (grilla 2 columnas, foto 1:1 chica) por `.cafe__stage` / `.cafe__pin`: un contenedor alto (`220vh`) con la foto en `position: sticky` a pantalla completa. El corazón (`#heartDraw`) ya no usa `IntersectionObserver` — un listener de scroll (`requestAnimationFrame`-throttled) calcula el progreso 0–1 del tramo fijado y lo aplica directo a `stroke-dashoffset`. Responde en los dos sentidos: subís y el trazo retrocede. Las fotos satélite y la nota bajaron, en flujo normal, debajo del stage.
+- **La mesa → galería horizontal fijada.** `.racimo` (grilla asimétrica 12 columnas con reveal por `IntersectionObserver`) y `.surtido` (scroll-snap libre) se fusionaron en `.mesa__gallery-stage`: 10 tarjetas (las 5 del racimo + las 5 del surtido, incluidas las 2 de Dolce Shop) en una sola pista. La sección se ancla (`sticky`) y un `translateX` calculado en JS mueve la pista en horizontal en proporción directa al scroll vertical consumido. La altura exacta del stage la calcula JS (`scrollWidth` real de la pista menos el ancho visible), no un valor fijo — se recalcula en `resize`. Una barra fina (`#mesaGalleryBar`) marca el progreso.
+- **Personalización cambia de onda a arco.** Nuevo `clipPath` `#archTop`, misma mecánica de estiramiento al entrar en pantalla que `wavy-top`, forma distinta — para que dos secciones seguidas no usen el mismo corte.
+
+Las dos mecánicas nuevas se verificaron con scroll programático (no solo visualmente): el trazo del corazón y el `translateX` de la galería responden de forma exactamente proporcional al progreso (50% de scroll → 50% de trazo / 50% de traslado; reversible en ambos sentidos). `prefers-reduced-motion`: el stage del café se aplana a una imagen fija de 60vh con el corazón ya dibujado; la galería se aplana a una grilla normal que envuelve línea, sin pin ni traslado.
+
+Verificado en 375 y ~640px: sin scroll horizontal, sin errores de consola, ninguna escena repite la mecánica de su vecina inmediata.
+
 ## Problemas conocidos
 
 - `sites/aroma-moka/` (el original) sigue existiendo en paralelo, ahora desactualizado respecto a `clientes/aroma-moka/site/` — candidato a archivar cuando el cliente apruebe esta versión, no se borró sin confirmar.

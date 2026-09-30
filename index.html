@@ -36,6 +36,9 @@
     <clipPath id="waveBottom" clipPathUnits="objectBoundingBox">
       <path d="M0,0 L1,0 L1,0.86 C0.95,0.98 0.89,0.8 0.82,0.89 C0.75,0.98 0.68,0.79 0.6,0.9 C0.52,1 0.45,0.78 0.37,0.89 C0.29,0.99 0.21,0.8 0.13,0.91 C0.07,0.98 0.03,0.87 0,0.94 Z" />
     </clipPath>
+    <clipPath id="archTop" clipPathUnits="objectBoundingBox">
+      <path d="M0,0.4 C0.22,0 0.78,0 1,0.4 L1,1 L0,1 Z" />
+    </clipPath>
   </defs>
 </svg>
 
@@ -194,7 +197,7 @@
     </div>
   </section>
 
-  <!-- ============================= EL GESTO — CAFÉ ============================= -->
+  <!-- ============================= EL GESTO — CAFÉ (momento de firma) ============================= -->
   <section class="section cafe" id="cafe">
     <div class="container">
       <div class="section__head">
@@ -202,41 +205,43 @@
         <h2 class="section-heading">Café con oficio</h2>
         <p class="lede">Cada taza sale con un dibujo distinto: un corazón, una hoja, un tulipán. No es una técnica de manual — es la forma en que acá se dice "esto es para vos" antes de que lo pruebes.</p>
       </div>
+    </div>
 
-      <div class="cafe__layout">
-        <figure class="cafe__hero framed" data-parallax data-parallax-speed="0.08">
-          <picture>
-            <source srcset="img/03_cafe_taza_rosa.webp" type="image/webp">
-            <img src="img/03_cafe_taza_rosa.jpg" width="1440" height="1440" alt="Taza rosa sobre plato en forma de flor, con latte art de corazón, apoyada en una mesa de madera" loading="lazy">
-          </picture>
-          <svg class="heart-draw" id="heartDraw" viewBox="0 0 64 56" aria-hidden="true">
-            <circle cx="32" cy="28" r="30" class="heart-draw__bg" />
-            <path d="M32 46 C14 34 6 24 6 15 C6 7 12 2 19 2 C25 2 30 6 32 12 C34 6 39 2 45 2 C52 2 58 7 58 15 C58 24 50 34 32 46 Z" class="heart-draw__path" />
-          </svg>
+    <div class="cafe__stage" id="cafeStage">
+      <div class="cafe__pin">
+        <picture>
+          <source srcset="img/03_cafe_taza_rosa.webp" type="image/webp">
+          <img src="img/03_cafe_taza_rosa.jpg" width="1440" height="1440" alt="Taza rosa sobre plato en forma de flor, con latte art de corazón, apoyada en una mesa de madera" loading="lazy">
+        </picture>
+        <svg class="heart-draw" id="heartDraw" viewBox="0 0 64 56" aria-hidden="true">
+          <circle cx="32" cy="28" r="30" class="heart-draw__bg" />
+          <path d="M32 46 C14 34 6 24 6 15 C6 7 12 2 19 2 C25 2 30 6 32 12 C34 6 39 2 45 2 C52 2 58 7 58 15 C58 24 50 34 32 46 Z" class="heart-draw__path" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="cafe__satellites">
+        <figure class="cafe__satellite">
+          <div class="framed">
+            <picture>
+              <source srcset="img/04_latte_art.webp" type="image/webp">
+              <img src="img/04_latte_art.jpg" width="900" height="1350" alt="Café servido en taza de cerámica artesanal celeste, con latte art detallado" loading="lazy">
+            </picture>
+          </div>
+        </figure>
+        <figure class="cafe__satellite">
+          <div class="framed">
+            <picture>
+              <source srcset="img/14_merienda_completa.webp" type="image/webp">
+              <img src="img/14_merienda_completa.jpg" width="900" height="1125" alt="Persona del equipo con buzo del sello circular de Aroma Moka, sosteniendo una taza rosa" loading="lazy">
+            </picture>
+          </div>
         </figure>
 
-        <div class="cafe__satellites">
-          <figure class="cafe__satellite">
-            <div class="framed">
-              <picture>
-                <source srcset="img/04_latte_art.webp" type="image/webp">
-                <img src="img/04_latte_art.jpg" width="900" height="1350" alt="Café servido en taza de cerámica artesanal celeste, con latte art detallado" loading="lazy">
-              </picture>
-            </div>
-          </figure>
-          <figure class="cafe__satellite">
-            <div class="framed">
-              <picture>
-                <source srcset="img/14_merienda_completa.webp" type="image/webp">
-                <img src="img/14_merienda_completa.jpg" width="900" height="1125" alt="Persona del equipo con buzo del sello circular de Aroma Moka, sosteniendo una taza rosa" loading="lazy">
-              </picture>
-            </div>
-          </figure>
-
-          <div class="cafe__note">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5c-.3 0-5.6-3.4-8-7C1.8 10 2 6.7 4.3 5.2c2-1.3 4.4-.6 5.7 1 .7.8 1.4 1.9 2 3 .6-1.1 1.3-2.2 2-3 1.3-1.6 3.7-2.3 5.7-1 2.3 1.5 2.5 4.8.3 8.3-2.4 3.6-7.7 7-8 7Z"/></svg>
-            <p>El corazón en la taza no es casualidad: es, literalmente, el sello circular de la marca.</p>
-          </div>
+        <div class="cafe__note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5c-.3 0-5.6-3.4-8-7C1.8 10 2 6.7 4.3 5.2c2-1.3 4.4-.6 5.7 1 .7.8 1.4 1.9 2 3 .6-1.1 1.3-2.2 2-3 1.3-1.6 3.7-2.3 5.7-1 2.3 1.5 2.5 4.8.3 8.3-2.4 3.6-7.7 7-8 7Z"/></svg>
+          <p>El corazón en la taza no es casualidad: es, literalmente, el sello circular de la marca. Se dibuja, arriba, al ritmo de tu scroll.</p>
         </div>
       </div>
     </div>
@@ -259,72 +264,61 @@
         </figure>
       </div>
 
-      <div class="racimo" id="racimo">
-        <figure class="stack-item stack-item--a">
-          <picture>
-            <source srcset="img/08_torta_chocolate.webp" type="image/webp">
-            <img src="img/08_torta_chocolate.jpg" width="900" height="1350" alt="Porción de torta de chocolate en capas con copos de dulce de leche" loading="lazy">
-          </picture>
-        </figure>
-        <figure class="stack-item stack-item--b">
-          <picture>
-            <source srcset="img/07_cheesecake_frutilla.webp" type="image/webp">
-            <img src="img/07_cheesecake_frutilla.jpg" width="900" height="1350" alt="Cheesecake con frutos rojos servido en porción" loading="lazy">
-          </picture>
-        </figure>
-        <figure class="stack-item stack-item--c">
-          <picture>
-            <source srcset="img/16_pavlovas.webp" type="image/webp">
-            <img src="img/16_pavlovas.jpg" width="900" height="1028" alt="Mini pavlovas con crema y frutos rojos" loading="lazy">
-          </picture>
-        </figure>
-        <figure class="stack-item stack-item--d dolce-piece">
-          <picture>
-            <source srcset="img/dolce_torta_oli.webp" type="image/webp">
-            <img src="img/dolce_torta_oli.jpg" width="640" height="640" alt="Torta personalizada por Dolce Shop, con toppers de fondant de patines, cámara y zapatilla" loading="lazy">
-          </picture>
-        </figure>
-        <figure class="stack-item stack-item--e dolce-piece">
-          <picture>
-            <source srcset="img/dolce_cookies_navidad.webp" type="image/webp">
-            <img src="img/dolce_cookies_navidad.jpg" width="480" height="640" alt="Galletas navideñas decoradas a mano por Dolce Shop, embaladas individualmente" loading="lazy">
-          </picture>
-        </figure>
-      </div>
-
-      <div class="surtido">
-        <div class="surtido__head">
-          <h3 class="section-heading" style="font-size:var(--fs-h3);">El surtido</h3>
-          <span class="surtido__hint">Deslizá para ver más →</span>
-        </div>
-        <div class="surtido__track" id="surtidoTrack" tabindex="0" role="region" aria-label="Vitrina de surtido, se recorre con las flechas del teclado">
-          <figure class="surtido__card">
-            <picture><source srcset="img/09_macarons.webp" type="image/webp"><img src="img/09_macarons.jpg" width="700" height="933" alt="Macarons rosa recién hechos" loading="lazy"></picture>
-            <figcaption>Macarons</figcaption>
-          </figure>
-          <figure class="surtido__card">
-            <picture><source srcset="img/07_rolls_frutos_rojos.webp" type="image/webp"><img src="img/07_rolls_frutos_rojos.jpg" width="700" height="933" alt="Rolls glaseados con arándanos y queso crema" loading="lazy"></picture>
-            <figcaption>Rolls de arándano</figcaption>
-          </figure>
-          <figure class="surtido__card">
-            <picture><source srcset="img/11_mini_tortas.webp" type="image/webp"><img src="img/11_mini_tortas.jpg" width="700" height="875" alt="Torre de mini tortas y bocaditos dulces" loading="lazy"></picture>
-            <figcaption>Mini tortas</figcaption>
-          </figure>
-          <figure class="surtido__card">
-            <picture><source srcset="img/10_rolls_canela.webp" type="image/webp"><img src="img/10_rolls_canela.jpg" width="700" height="700" alt="Rolls de canela recién horneados" loading="lazy"></picture>
-            <figcaption>Rolls de canela</figcaption>
-          </figure>
-          <figure class="surtido__card">
-            <picture><source srcset="img/15_cinnamon_rolls.webp" type="image/webp"><img src="img/15_cinnamon_rolls.jpg" width="700" height="700" alt="Bandeja de rolls glaseados" loading="lazy"></picture>
-            <figcaption>Glaseados</figcaption>
-          </figure>
+      <div class="mesa__gallery-stage" id="mesaGalleryStage">
+        <div class="mesa__gallery-pin">
+          <div class="mesa__gallery-head">
+            <h3 class="section-heading" style="font-size:var(--fs-h3);">El surtido</h3>
+            <div class="mesa__gallery-progress"><span id="mesaGalleryBar"></span></div>
+          </div>
+          <div class="mesa__gallery-track" id="mesaGalleryTrack">
+            <figure class="gallery-card">
+              <picture><source srcset="img/08_torta_chocolate.webp" type="image/webp"><img src="img/08_torta_chocolate.jpg" width="900" height="1350" alt="Porción de torta de chocolate en capas con copos de dulce de leche" loading="lazy"></picture>
+              <figcaption>Torta de chocolate</figcaption>
+            </figure>
+            <figure class="gallery-card">
+              <picture><source srcset="img/07_cheesecake_frutilla.webp" type="image/webp"><img src="img/07_cheesecake_frutilla.jpg" width="900" height="1350" alt="Cheesecake con frutos rojos servido en porción" loading="lazy"></picture>
+              <figcaption>Cheesecake de frutilla</figcaption>
+            </figure>
+            <figure class="gallery-card">
+              <picture><source srcset="img/16_pavlovas.webp" type="image/webp"><img src="img/16_pavlovas.jpg" width="900" height="1028" alt="Mini pavlovas con crema y frutos rojos" loading="lazy"></picture>
+              <figcaption>Mini pavlovas</figcaption>
+            </figure>
+            <figure class="gallery-card dolce-piece">
+              <picture><source srcset="img/dolce_torta_oli.webp" type="image/webp"><img src="img/dolce_torta_oli.jpg" width="640" height="640" alt="Torta personalizada por Dolce Shop, con toppers de fondant de patines, cámara y zapatilla" loading="lazy"></picture>
+              <figcaption>Torta Oli — Dolce Shop</figcaption>
+            </figure>
+            <figure class="gallery-card dolce-piece">
+              <picture><source srcset="img/dolce_cookies_navidad.webp" type="image/webp"><img src="img/dolce_cookies_navidad.jpg" width="480" height="640" alt="Galletas navideñas decoradas a mano por Dolce Shop, embaladas individualmente" loading="lazy"></picture>
+              <figcaption>Cookies navideñas — Dolce Shop</figcaption>
+            </figure>
+            <figure class="gallery-card">
+              <picture><source srcset="img/09_macarons.webp" type="image/webp"><img src="img/09_macarons.jpg" width="700" height="933" alt="Macarons rosa recién hechos" loading="lazy"></picture>
+              <figcaption>Macarons</figcaption>
+            </figure>
+            <figure class="gallery-card">
+              <picture><source srcset="img/07_rolls_frutos_rojos.webp" type="image/webp"><img src="img/07_rolls_frutos_rojos.jpg" width="700" height="933" alt="Rolls glaseados con arándanos y queso crema" loading="lazy"></picture>
+              <figcaption>Rolls de frutos rojos</figcaption>
+            </figure>
+            <figure class="gallery-card">
+              <picture><source srcset="img/11_mini_tortas.webp" type="image/webp"><img src="img/11_mini_tortas.jpg" width="700" height="875" alt="Torre de mini tortas y bocaditos dulces" loading="lazy"></picture>
+              <figcaption>Mini tortas</figcaption>
+            </figure>
+            <figure class="gallery-card">
+              <picture><source srcset="img/10_rolls_canela.webp" type="image/webp"><img src="img/10_rolls_canela.jpg" width="700" height="700" alt="Rolls de canela recién horneados" loading="lazy"></picture>
+              <figcaption>Rolls de canela</figcaption>
+            </figure>
+            <figure class="gallery-card">
+              <picture><source srcset="img/15_cinnamon_rolls.webp" type="image/webp"><img src="img/15_cinnamon_rolls.jpg" width="700" height="700" alt="Bandeja de rolls glaseados" loading="lazy"></picture>
+              <figcaption>Glaseados</figcaption>
+            </figure>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ============================= PERSONALIZACIÓN ============================= -->
-  <section class="section personal wavy-top" id="personalizacion">
+  <section class="section personal arch-top" id="personalizacion">
     <div class="container">
       <div class="personal__layout">
         <figure class="personal__photo lobe-frame">

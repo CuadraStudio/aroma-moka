@@ -36,7 +36,7 @@
    * Goteo: los bordes con clip-path de gota se estiran un toque al entrar
    * ------------------------------------------------------------------- */
   if (!reduceMotion) {
-    const dripEls = document.querySelectorAll(".wavy-top");
+    const dripEls = document.querySelectorAll(".wavy-top, .arch-top");
     if (dripEls.length) {
       const dripObserver = new IntersectionObserver(
         (entries) => {
@@ -54,35 +54,84 @@
   }
 
   /* ---------------------------------------------------------------------
-   * Corazon que se dibuja: eco del latte art real, una sola vez
+   * Momento de firma: la foto del gesto queda fija (css) mientras el
+   * corazon se dibuja en proporcion directa al scroll dentro del stage.
+   * No es un disparo unico al entrar en pantalla: responde todo el tiempo,
+   * en los dos sentidos, mientras dura el "pin".
    * ------------------------------------------------------------------- */
-  const heartDraw = document.getElementById("heartDraw");
-  if (heartDraw) {
-    const heartPath = heartDraw.querySelector(".heart-draw__path");
-    if (heartPath && heartPath.getTotalLength) {
-      const len = Math.ceil(heartPath.getTotalLength());
-      heartPath.style.strokeDasharray = String(len);
-      heartPath.style.strokeDashoffset = reduceMotion ? "0" : String(len);
-    }
-    if (reduceMotion) {
-      heartDraw.classList.add("in-view");
+  const cafeStage = document.getElementById("cafeStage");
+  const heartPath = document.querySelector("#heartDraw .heart-draw__path");
+  if (heartPath && heartPath.getTotalLength) {
+    const heartLen = Math.ceil(heartPath.getTotalLength());
+    heartPath.style.strokeDasharray = String(heartLen);
+    if (reduceMotion || !cafeStage) {
+      heartPath.style.strokeDashoffset = "0";
     } else {
-      const heartObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              heartDraw.classList.add("in-view");
-              // el offset se fijo inline arriba (mayor especificidad que la regla de clase) -
-              // hay que resetearlo por JS tambien, si no la regla .in-view nunca gana
-              if (heartPath) heartPath.style.strokeDashoffset = "0";
-              heartObserver.unobserve(entry.target);
-            }
-          });
+      const updateHeart = () => {
+        const rect = cafeStage.getBoundingClientRect();
+        const total = rect.height - window.innerHeight;
+        const progress = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
+        heartPath.style.strokeDashoffset = String(heartLen * (1 - progress));
+      };
+      updateHeart();
+      let heartTicking = false;
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!heartTicking) {
+            heartTicking = true;
+            requestAnimationFrame(() => {
+              updateHeart();
+              heartTicking = false;
+            });
+          }
         },
-        { threshold: 0.4 }
+        { passive: true }
       );
-      heartObserver.observe(heartDraw);
+      window.addEventListener("resize", updateHeart);
     }
+  }
+
+  /* ---------------------------------------------------------------------
+   * Galeria fijada: racimo + surtido recorridos en horizontal mientras la
+   * pagina sigue bajando en vertical — segundo momento de firma de "La mesa"
+   * ------------------------------------------------------------------- */
+  const galleryStage = document.getElementById("mesaGalleryStage");
+  const galleryTrack = document.getElementById("mesaGalleryTrack");
+  const galleryBar = document.getElementById("mesaGalleryBar");
+  if (galleryStage && galleryTrack && !reduceMotion) {
+    let maxTranslate = 0;
+    const measureGallery = () => {
+      maxTranslate = Math.max(0, galleryTrack.scrollWidth - galleryStage.clientWidth);
+      galleryStage.style.height = `${window.innerHeight + maxTranslate}px`;
+    };
+    const updateGallery = () => {
+      const rect = galleryStage.getBoundingClientRect();
+      const total = galleryStage.offsetHeight - window.innerHeight;
+      const progress = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
+      galleryTrack.style.transform = `translateX(${-progress * maxTranslate}px)`;
+      if (galleryBar) galleryBar.style.width = `${progress * 100}%`;
+    };
+    measureGallery();
+    updateGallery();
+    let galleryTicking = false;
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!galleryTicking) {
+          galleryTicking = true;
+          requestAnimationFrame(() => {
+            updateGallery();
+            galleryTicking = false;
+          });
+        }
+      },
+      { passive: true }
+    );
+    window.addEventListener("resize", () => {
+      measureGallery();
+      updateGallery();
+    });
   }
 
   /* ---------------------------------------------------------------------
@@ -170,46 +219,4 @@
     }
   }
 
-  /* ---------------------------------------------------------------------
-   * Racimo de pastelería: revelación apilada al hacer scroll
-   * ------------------------------------------------------------------- */
-  const stackItems = document.querySelectorAll(".stack-item");
-  stackItems.forEach((item, i) => {
-    item.style.transitionDelay = `${(i % 5) * 90}ms`;
-  });
-
-  if (stackItems.length) {
-    if (reduceMotion) {
-      stackItems.forEach((item) => item.classList.add("in-view"));
-    } else {
-      const stackObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("in-view");
-              stackObserver.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.15 }
-      );
-      stackItems.forEach((item) => stackObserver.observe(item));
-    }
-  }
-
-  /* ---------------------------------------------------------------------
-   * Vitrina horizontal del surtido: soporte de teclado
-   * ------------------------------------------------------------------- */
-  const surtidoTrack = document.getElementById("surtidoTrack");
-  surtidoTrack?.addEventListener("keydown", (e) => {
-    const card = surtidoTrack.querySelector(".surtido__card");
-    const step = card ? card.getBoundingClientRect().width + 20 : 300;
-    if (e.key === "ArrowRight") {
-      surtidoTrack.scrollBy({ left: step, behavior: "smooth" });
-      e.preventDefault();
-    } else if (e.key === "ArrowLeft") {
-      surtidoTrack.scrollBy({ left: -step, behavior: "smooth" });
-      e.preventDefault();
-    }
-  });
 })();
