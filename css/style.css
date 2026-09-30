@@ -19,6 +19,10 @@
   --mostaza: #dda75b;
   --damero-dark: #241811;
 
+  /* Dolce Shop — marca hermana, mismos dueños. Solo en piezas/momentos de Dolce Shop, nunca en la identidad base */
+  --menta-dolce: #b8d4c8;
+  --coral-dolce: #e88a7d;
+
   --font-display: "Fredoka", system-ui, sans-serif;
   --font-body: "Inter", system-ui, -apple-system, sans-serif;
   --font-script: "Caveat", cursive;
@@ -167,6 +171,16 @@ body {
 }
 .btn-pill--rosa:hover, .btn-pill--rosa:focus-visible {
   background: var(--marron-deep);
+}
+
+/* Dolce Shop — firma de color acotada a sus propias piezas/CTA, no reemplaza la paleta base */
+.btn-pill--dolce {
+  background: var(--coral-dolce);
+  color: var(--marron-deep);
+  box-shadow: 4px 4px 0 var(--menta-dolce);
+}
+.btn-pill--dolce:hover, .btn-pill--dolce:focus-visible {
+  box-shadow: 6px 6px 0 var(--menta-dolce);
 }
 
 .btn-pill svg { width: 1.1em; height: 1.1em; flex-shrink: 0; }
@@ -546,6 +560,9 @@ body {
   translate: 0 0;
 }
 .stack-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Piezas de Dolce Shop integradas en el mismo racimo — firma de color, sin separarlas en otra grilla */
+.stack-item.dolce-piece { border-color: var(--coral-dolce); }
 
 .stack-item--a { aspect-ratio: 4/3.6; }
 .stack-item--b, .stack-item--d { width: 78%; margin-left: auto; margin-top: -2.2rem; }
