@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aroma Moka — Pastelería &amp; Café en Las Piedras</title>
+<meta name="description" content="Aroma Moka, pastelería y café de especialidad en Las Piedras, Canelones. Latte art con corazón, tortas de mesa compartida y repostería hecha para regalar.">
+<meta name="theme-color" content="#fbf6ef">
+<link rel="icon" type="image/webp" href="img/isotipo.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;500;600;700&family=Inter:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<!-- Formas reutilizables (marco lobulado tipo flor/nube) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <clipPath id="lobeShape" clipPathUnits="objectBoundingBox">
+      <path d="M 1.0106 0.5000 C 1.0106 0.5185 1.0030 0.5384 0.9927 0.5555 C 0.9823 0.5726 0.9638 0.5883 0.9485 0.6024 C 0.9331 0.6165 0.9137 0.6276 0.9004 0.6401 C 0.8871 0.6527 0.8757 0.6634 0.8689 0.6776 C 0.8620 0.6919 0.8607 0.7075 0.8592 0.7257 C 0.8577 0.7439 0.8611 0.7660 0.8596 0.7868 C 0.8582 0.8076 0.8575 0.8318 0.8506 0.8506 C 0.8437 0.8693 0.8328 0.8877 0.8184 0.8992 C 0.8039 0.9107 0.7836 0.9172 0.7638 0.9198 C 0.7440 0.9223 0.7202 0.9177 0.6996 0.9144 C 0.6790 0.9112 0.6582 0.9030 0.6401 0.9004 C 0.6220 0.8979 0.6065 0.8956 0.5911 0.8991 C 0.5757 0.9027 0.5627 0.9114 0.5475 0.9216 C 0.5323 0.9317 0.5172 0.9481 0.5000 0.9600 C 0.4828 0.9719 0.4634 0.9864 0.4445 0.9927 C 0.4256 0.9990 0.4044 1.0019 0.3864 0.9978 C 0.3683 0.9937 0.3506 0.9819 0.3363 0.9680 C 0.3219 0.9541 0.3107 0.9326 0.3004 0.9144 C 0.2901 0.8963 0.2836 0.8749 0.2743 0.8592 C 0.2650 0.8435 0.2571 0.8300 0.2447 0.8201 C 0.2324 0.8102 0.2174 0.8055 0.2000 0.8000 C 0.1826 0.7944 0.1603 0.7928 0.1404 0.7868 C 0.1204 0.7808 0.0969 0.7746 0.0802 0.7638 C 0.0635 0.7529 0.0480 0.7382 0.0400 0.7215 C 0.0319 0.7049 0.0301 0.6836 0.0320 0.6637 C 0.0340 0.6439 0.0438 0.6217 0.0515 0.6024 C 0.0593 0.5830 0.0719 0.5646 0.0784 0.5475 C 0.0850 0.5304 0.0906 0.5158 0.0906 0.5000 C 0.0906 0.4842 0.0850 0.4696 0.0784 0.4525 C 0.0719 0.4354 0.0593 0.4170 0.0515 0.3976 C 0.0438 0.3783 0.0340 0.3561 0.0320 0.3363 C 0.0301 0.3164 0.0319 0.2951 0.0400 0.2785 C 0.0480 0.2618 0.0635 0.2471 0.0802 0.2362 C 0.0969 0.2254 0.1204 0.2192 0.1404 0.2132 C 0.1603 0.2072 0.1826 0.2056 0.2000 0.2000 C 0.2174 0.1945 0.2324 0.1898 0.2447 0.1799 C 0.2571 0.1700 0.2650 0.1565 0.2743 0.1408 C 0.2836 0.1251 0.2901 0.1037 0.3004 0.0856 C 0.3107 0.0674 0.3219 0.0459 0.3363 0.0320 C 0.3506 0.0181 0.3683 0.0063 0.3864 0.0022 C 0.4044 -0.0019 0.4256 0.0010 0.4445 0.0073 C 0.4634 0.0136 0.4828 0.0281 0.5000 0.0400 C 0.5172 0.0519 0.5323 0.0683 0.5475 0.0784 C 0.5627 0.0886 0.5757 0.0973 0.5911 0.1009 C 0.6065 0.1044 0.6220 0.1021 0.6401 0.0996 C 0.6582 0.0970 0.6790 0.0888 0.6996 0.0856 C 0.7202 0.0823 0.7440 0.0777 0.7638 0.0802 C 0.7836 0.0828 0.8039 0.0893 0.8184 0.1008 C 0.8328 0.1123 0.8437 0.1307 0.8506 0.1494 C 0.8575 0.1682 0.8582 0.1924 0.8596 0.2132 C 0.8611 0.2340 0.8577 0.2561 0.8592 0.2743 C 0.8607 0.2925 0.8620 0.3081 0.8689 0.3224 C 0.8757 0.3366 0.8871 0.3473 0.9004 0.3599 C 0.9137 0.3724 0.9331 0.3835 0.9485 0.3976 C 0.9638 0.4117 0.9823 0.4274 0.9927 0.4445 C 1.0030 0.4616 1.0106 0.4815 1.0106 0.5000 Z" />
+    </clipPath>
+    <clipPath id="heroBlob" clipPathUnits="objectBoundingBox">
+      <path d="M0.14,0 C0.06,0.06 0.02,0.14 0.05,0.22 C0.09,0.31 0.02,0.39 0.01,0.5 C0,0.61 0.08,0.67 0.06,0.77 C0.04,0.86 0.1,0.94 0.19,1 L0.87,1 C0.95,1 1,0.95 1,0.87 L1,0.06 C1,0.03 0.97,0 0.94,0 Z" />
+    </clipPath>
+    <clipPath id="waveTop" clipPathUnits="objectBoundingBox">
+      <path d="M0,0.07 C0.08,0 0.17,0.09 0.27,0.06 C0.37,0.03 0.46,0.1 0.56,0.06 C0.66,0.02 0.75,0.09 0.85,0.05 C0.93,0.02 0.97,0.06 1,0.03 L1,1 L0,1 Z" />
+    </clipPath>
+    <clipPath id="waveBottom" clipPathUnits="objectBoundingBox">
+      <path d="M0,0 L1,0 L1,0.93 C0.93,1 0.83,0.91 0.73,0.94 C0.63,0.97 0.54,0.9 0.44,0.94 C0.34,0.98 0.25,0.91 0.15,0.95 C0.07,0.98 0.03,0.94 0,0.97 Z" />
+    </clipPath>
+  </defs>
+</svg>
+
+<header class="nav" id="siteNav">
+  <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMobile">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6.5h18M3 12h18M3 17.5h18"/></svg>
+  </button>
+
+  <ul class="nav__links" id="navLinks">
+    <li><a href="#top" class="is-active">Inicio</a></li>
+    <li><a href="#lugar">El local</a></li>
+    <li><a href="#clasicos">Menú</a></li>
+    <li><a href="#pasteleria">Galería</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+
+  <a class="nav__brand" href="#top" aria-label="Aroma Moka — inicio">
+    <picture>
+      <source srcset="img/logo_completo.webp" type="image/webp">
+      <img src="img/logo_completo.png" width="900" height="589" alt="Aroma Moka">
+    </picture>
+  </a>
+
+  <div class="nav__meta">
+    <span class="nav__location">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 1.25C4.824 1.25 2.25 3.824 2.25 7C2.25 11.231 8 15.25 8 15.25C8 15.25 13.75 11.231 13.75 7C13.75 3.824 11.176 1.25 8 1.25ZM8 9.25C6.75736 9.25 5.75 8.24264 5.75 7C5.75 5.75736 6.75736 4.75 8 4.75C9.24264 4.75 10.25 5.75736 10.25 7C10.25 8.24264 9.24264 9.25 8 9.25Z"/></svg>
+      Las Piedras, Canelones
+    </span>
+    <a class="btn-pill btn-pill--outline nav__hours" href="#info">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5.33 1.33v2.67M10.67 1.33v2.67M2 6.67h12M3.33 2.67h9.34c.73 0 1.33.6 1.33 1.33v9.33c0 .74-.6 1.34-1.33 1.34H3.33c-.73 0-1.33-.6-1.33-1.34V4c0-.73.6-1.33 1.33-1.33Z"/></svg>
+      Horario
+    </a>
+  </div>
+</header>
+
+<nav class="nav-mobile" id="navMobile" aria-hidden="true">
+  <button class="nav-mobile__close" id="navClose" aria-label="Cerrar menú">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <a href="#top">Inicio</a>
+  <a href="#lugar">El local</a>
+  <a href="#clasicos">Menú</a>
+  <a href="#pasteleria">Galería</a>
+  <a href="#contacto">Contacto</a>
+</nav>
+
+<main id="main">
+
+  <!-- ============================= APERTURA / HERO ============================= -->
+  <section class="hero" id="top">
+    <div class="container hero__grid">
+      <div class="hero__text">
+        <h1 class="hero__title">Se sirve<br>con corazón.</h1>
+        <span class="hero__divider" aria-hidden="true"></span>
+        <p class="hero__copy">El corazón que ves en la espuma no es decoración: es la firma de la casa. Café con oficio y pastelería para compartir, en Las Piedras.</p>
+        <a class="btn-pill btn-pill--rosa hero__cta" href="#clasicos">
+          Ver el menú
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+
+      <div class="hero__media">
+        <picture>
+          <source srcset="img/hero-mostrador-figma.webp" type="image/webp">
+          <img class="hero__photo" src="img/hero-mostrador-figma.png" width="1640" height="923" alt="Mostrador rosa de Aroma Moka con el logo montado en letras 3D y vitrina de pastelería" fetchpriority="high">
+        </picture>
+
+        <svg class="stamp-badge" viewBox="0 0 158 160" aria-hidden="true">
+          <circle cx="79" cy="80" r="79" class="stamp-badge__fill"/>
+          <circle cx="79" cy="80" r="79" class="stamp-badge__ring"/>
+          <path id="stampArcTop" d="M24.5,60.2 A58,58 0 0 1 133.5,60.2" fill="none"/>
+          <text class="stamp-badge__text"><textPath href="#stampArcTop" startOffset="50%" text-anchor="middle">· PASTELERÍA &amp; CAFÉ ·</textPath></text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= NUESTROS CLÁSICOS ============================= -->
+  <section class="section clasicos wavy-top" id="clasicos">
+    <div class="container">
+      <div class="clasicos__layout">
+        <div class="clasicos__intro">
+          <span class="eyebrow">Descubrí</span>
+          <h2 class="section-heading">Nuestros clásicos</h2>
+          <p class="lede">Café de especialidad, pastelería artesanal y todo lo que hace especial a un buen momento.</p>
+          <a class="link-arrow" href="#pasteleria">Ver todo el menú →</a>
+        </div>
+
+        <div class="clasicos__grid">
+          <article class="clasico">
+            <figure class="clasico__photo">
+              <picture>
+                <source srcset="img/03_cafe_taza_rosa.webp" type="image/webp">
+                <img src="img/03_cafe_taza_rosa.jpg" width="1440" height="1440" alt="Taza rosa con latte art de corazón, sobre plato en forma de flor" loading="lazy">
+              </picture>
+            </figure>
+            <span class="clasico__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13a2 2 0 0 1 0 4h-1"/><path d="M4 8v7a4 4 0 0 0 4 4h4a4 4 0 0 0 4-4V8"/><path d="M8 3.2c-.5 1 .5 1.3 0 2.3M12 3.2c-.5 1 .5 1.3 0 2.3"/></svg>
+            </span>
+            <p class="clasico__label">Cafés de<br>especialidad</p>
+          </article>
+
+          <article class="clasico">
+            <figure class="clasico__photo">
+              <picture>
+                <source srcset="img/07_cheesecake_frutilla.webp" type="image/webp">
+                <img src="img/07_cheesecake_frutilla.jpg" width="900" height="1350" alt="Porción de cheesecake con frutos rojos" loading="lazy">
+              </picture>
+            </figure>
+            <span class="clasico__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19h18"/><path d="M4 19 12 5l8 14Z"/><path d="M8 12.5h8"/><circle cx="12" cy="7.4" r="1"/></svg>
+            </span>
+            <p class="clasico__label">Pastelería<br>artesanal</p>
+          </article>
+
+          <article class="clasico">
+            <figure class="clasico__photo">
+              <picture>
+                <source srcset="img/09_macarons.webp" type="image/webp">
+                <img src="img/09_macarons.jpg" width="700" height="933" alt="Macarons rosa recién hechos" loading="lazy">
+              </picture>
+            </figure>
+            <span class="clasico__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="9" cy="9.5" rx="5" ry="3"/><path d="M4 9.5c0 2 2.2 3.6 5 3.6s5-1.6 5-3.6"/><ellipse cx="16.5" cy="15" rx="4" ry="2.5"/><path d="M12.5 15c0 1.6 1.8 2.9 4 2.9s4-1.3 4-2.9"/></svg>
+            </span>
+            <p class="clasico__label">Macarons<br>y dulces</p>
+          </article>
+
+          <article class="clasico">
+            <figure class="clasico__photo">
+              <picture>
+                <source srcset="img/13_salon_cafe.webp" type="image/webp">
+                <img src="img/13_salon_cafe.jpg" width="1200" height="1600" alt="Salón de Aroma Moka con piso a damero" loading="lazy">
+              </picture>
+            </figure>
+            <span class="clasico__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10 5 4h14l1 6"/><path d="M4 10v9h16v-9"/><path d="M9 19v-5h6v5"/><path d="M4 10a3 3 0 0 0 3-2 3 3 0 0 0 3 2 3 3 0 0 0 3-2 3 3 0 0 0 3 2 3 3 0 0 0 3-2"/></svg>
+            </span>
+            <p class="clasico__label">Un lugar<br>con historia</p>
+          </article>
+
+          <article class="clasico">
+            <figure class="clasico__photo">
+              <picture>
+                <source srcset="img/03_vasos_y_bolsa.webp" type="image/webp">
+                <img src="img/03_vasos_y_bolsa.jpg" width="1200" height="1600" alt="Vaso y bolsa de papel kraft con el sello de Aroma Moka" loading="lazy">
+              </picture>
+            </figure>
+            <span class="clasico__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l1 12H5Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+            </span>
+            <p class="clasico__label">Para llevar<br>y a domicilio</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= EL GESTO — CAFÉ ============================= -->
+  <section class="section cafe" id="cafe">
+    <div class="container">
+      <div class="section__head">
+        <span class="eyebrow">El gesto</span>
+        <h2 class="section-heading">Café con oficio</h2>
+        <p class="lede">Cada taza sale con un dibujo distinto: un corazón, una hoja, un tulipán. No es una técnica de manual — es la forma en que acá se dice "esto es para vos" antes de que lo pruebes.</p>
+      </div>
+
+      <div class="cafe__layout">
+        <figure class="cafe__hero framed" data-parallax data-parallax-speed="0.08">
+          <picture>
+            <source srcset="img/03_cafe_taza_rosa.webp" type="image/webp">
+            <img src="img/03_cafe_taza_rosa.jpg" width="1440" height="1440" alt="Taza rosa sobre plato en forma de flor, con latte art de corazón, apoyada en una mesa de madera" loading="lazy">
+          </picture>
+        </figure>
+
+        <div class="cafe__satellites">
+          <figure class="cafe__satellite">
+            <div class="framed">
+              <picture>
+                <source srcset="img/04_latte_art.webp" type="image/webp">
+                <img src="img/04_latte_art.jpg" width="900" height="1350" alt="Café servido en taza de cerámica artesanal celeste, con latte art detallado" loading="lazy">
+              </picture>
+            </div>
+          </figure>
+          <figure class="cafe__satellite">
+            <div class="framed">
+              <picture>
+                <source srcset="img/14_merienda_completa.webp" type="image/webp">
+                <img src="img/14_merienda_completa.jpg" width="900" height="1125" alt="Persona del equipo con buzo del sello circular de Aroma Moka, sosteniendo una taza rosa" loading="lazy">
+              </picture>
+            </div>
+          </figure>
+
+          <div class="cafe__note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5c-.3 0-5.6-3.4-8-7C1.8 10 2 6.7 4.3 5.2c2-1.3 4.4-.6 5.7 1 .7.8 1.4 1.9 2 3 .6-1.1 1.3-2.2 2-3 1.3-1.6 3.7-2.3 5.7-1 2.3 1.5 2.5 4.8.3 8.3-2.4 3.6-7.7 7-8 7Z"/></svg>
+            <p>El corazón en la taza no es casualidad: es, literalmente, el sello circular de la marca.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= LA MESA — PASTELERÍA ============================= -->
+  <section class="section mesa" id="pasteleria">
+    <div class="container">
+      <div class="mesa__intro">
+        <div>
+          <span class="eyebrow">La mesa</span>
+          <h2 class="section-heading">Se sirve para compartir</h2>
+          <p class="lede" style="margin-top:1.1rem;">Torres de dos y tres pisos, bandejas que se vacían entre varios, mesas largas con más de lo que entra en un plato. Acá la pastelería se sirve para el medio de la mesa, no para uno solo.</p>
+        </div>
+        <figure class="mesa__intro-photo framed" data-parallax data-parallax-speed="-0.06">
+          <picture>
+            <source srcset="img/06_mesa_completa.webp" type="image/webp">
+            <img src="img/06_mesa_completa.jpg" width="1200" height="1600" alt="Mesa larga compartida con una torre de pastelería de tres pisos, tazas rosa y varias personas alrededor" loading="lazy">
+          </picture>
+        </figure>
+      </div>
+
+      <div class="racimo" id="racimo">
+        <figure class="stack-item stack-item--a">
+          <picture>
+            <source srcset="img/08_torta_chocolate.webp" type="image/webp">
+            <img src="img/08_torta_chocolate.jpg" width="900" height="1350" alt="Porción de torta de chocolate en capas con copos de dulce de leche" loading="lazy">
+          </picture>
+        </figure>
+        <figure class="stack-item stack-item--b">
+          <picture>
+            <source srcset="img/07_cheesecake_frutilla.webp" type="image/webp">
+            <img src="img/07_cheesecake_frutilla.jpg" width="900" height="1350" alt="Cheesecake con frutos rojos servido en porción" loading="lazy">
+          </picture>
+        </figure>
+        <figure class="stack-item stack-item--c">
+          <picture>
+            <source srcset="img/16_pavlovas.webp" type="image/webp">
+            <img src="img/16_pavlovas.jpg" width="900" height="1028" alt="Mini pavlovas con crema y frutos rojos" loading="lazy">
+          </picture>
+        </figure>
+        <figure class="stack-item stack-item--d">
+          <picture>
+            <source srcset="img/09_tortas_porcion.webp" type="image/webp">
+            <img src="img/09_tortas_porcion.jpg" width="900" height="1125" alt="Selección de tortas individuales de distintos sabores" loading="lazy">
+          </picture>
+        </figure>
+        <figure class="stack-item stack-item--e">
+          <picture>
+            <source srcset="img/11_brunch.webp" type="image/webp">
+            <img src="img/11_brunch.jpg" width="900" height="1200" alt="Mesa de brunch vista desde arriba con bagel, croissant y jugo de naranja" loading="lazy">
+          </picture>
+        </figure>
+      </div>
+
+      <div class="surtido">
+        <div class="surtido__head">
+          <h3 class="section-heading" style="font-size:var(--fs-h3);">El surtido</h3>
+          <span class="surtido__hint">Deslizá para ver más →</span>
+        </div>
+        <div class="surtido__track" id="surtidoTrack" tabindex="0" role="region" aria-label="Vitrina de surtido, se recorre con las flechas del teclado">
+          <figure class="surtido__card">
+            <picture><source srcset="img/09_macarons.webp" type="image/webp"><img src="img/09_macarons.jpg" width="700" height="933" alt="Macarons rosa recién hechos" loading="lazy"></picture>
+            <figcaption>Macarons</figcaption>
+          </figure>
+          <figure class="surtido__card">
+            <picture><source srcset="img/07_rolls_frutos_rojos.webp" type="image/webp"><img src="img/07_rolls_frutos_rojos.jpg" width="700" height="933" alt="Rolls glaseados con arándanos y queso crema" loading="lazy"></picture>
+            <figcaption>Rolls de arándano</figcaption>
+          </figure>
+          <figure class="surtido__card">
+            <picture><source srcset="img/11_mini_tortas.webp" type="image/webp"><img src="img/11_mini_tortas.jpg" width="700" height="875" alt="Torre de mini tortas y bocaditos dulces" loading="lazy"></picture>
+            <figcaption>Mini tortas</figcaption>
+          </figure>
+          <figure class="surtido__card">
+            <picture><source srcset="img/10_rolls_canela.webp" type="image/webp"><img src="img/10_rolls_canela.jpg" width="700" height="700" alt="Rolls de canela recién horneados" loading="lazy"></picture>
+            <figcaption>Rolls de canela</figcaption>
+          </figure>
+          <figure class="surtido__card">
+            <picture><source srcset="img/15_cinnamon_rolls.webp" type="image/webp"><img src="img/15_cinnamon_rolls.jpg" width="700" height="700" alt="Bandeja de rolls glaseados" loading="lazy"></picture>
+            <figcaption>Glaseados</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= PERSONALIZACIÓN ============================= -->
+  <section class="section personal" id="personalizacion">
+    <div class="container">
+      <div class="personal__layout">
+        <figure class="personal__photo lobe-frame">
+          <picture>
+            <source srcset="img/08_surtido_pasteleria.webp" type="image/webp">
+            <img src="img/08_surtido_pasteleria.jpg" width="1440" height="1439" alt="Tabla de merienda con una galletita impresa con la foto de tres amigas y una galletita flor con mermelada" loading="lazy">
+          </picture>
+        </figure>
+
+        <div>
+          <span class="eyebrow">Para alguien</span>
+          <h2 class="section-heading">Lo que se sirve para regalar</h2>
+          <p class="lede" style="margin-top:1.1rem;">Una galletita con la foto de las tres, un corazón en la espuma que dice "para mamá", una torta que se pide para compartir en la mesa de otro. Acá la personalización no es un servicio aparte: es cómo se atiende siempre.</p>
+          <p class="personal__quote">"para mamá"</p>
+
+          <figure class="personal__satellite">
+            <picture>
+              <source srcset="img/05_desayuno_bandeja.webp" type="image/webp">
+              <img src="img/05_desayuno_bandeja.jpg" width="900" height="675" alt="Taza rosa con la palabra para mamá escrita en la espuma, junto a una porción de torta de zanahoria" loading="lazy">
+            </picture>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= EL LUGAR ============================= -->
+  <section class="section lugar" id="lugar">
+    <div class="lugar__damero" aria-hidden="true"></div>
+    <div class="container">
+      <div class="section__head">
+        <span class="badge-salvia">El lugar</span>
+        <h2 class="section-heading">Un lugar para quedarse</h2>
+      </div>
+
+      <div class="lugar__layout">
+        <figure class="lugar__hero framed" data-parallax data-parallax-speed="0.07">
+          <picture>
+            <source srcset="img/13_salon_cafe.webp" type="image/webp">
+            <img src="img/13_salon_cafe.jpg" width="1200" height="1600" alt="Salón de Aroma Moka con piso a damero blanco y negro, banquina rosa y luces colgantes" loading="lazy">
+          </picture>
+        </figure>
+
+        <div class="lugar__side">
+          <figure class="lugar__side-item">
+            <div class="framed">
+              <picture>
+                <source srcset="img/01_mostrador_logo.webp" type="image/webp">
+                <img src="img/01_mostrador_logo.jpg" width="900" height="1600" alt="Mostrador rosa con el logo de Aroma Moka montado en letras 3D" loading="lazy">
+              </picture>
+            </div>
+          </figure>
+          <figure class="lugar__side-item">
+            <div class="framed">
+              <picture>
+                <source srcset="img/14_salon_mueble.webp" type="image/webp">
+                <img src="img/14_salon_mueble.jpg" width="900" height="1200" alt="Aparador antiguo de madera con espejo, junto a una silla con almohadón a rayas rosa sobre el piso a damero" loading="lazy">
+              </picture>
+            </div>
+          </figure>
+        </div>
+      </div>
+
+      <p class="lede lugar__text">Sillas de alambre con almohadones a rayas, banquina de terciopelo rosa viejo, un aparador de época reconvertido en vitrina. Un lugar cómodo para quedarse un rato largo, con niños o sin apuro.</p>
+    </div>
+  </section>
+
+  <!-- ============================= CIERRE — PARA LLEVAR ============================= -->
+  <section class="section cierre" id="cierre">
+    <div class="container">
+      <div class="cierre__layout">
+        <div>
+          <span class="eyebrow">Para llevar</span>
+          <h2 class="section-heading">Envuelto con cariño</h2>
+          <p class="lede" style="margin-top:1.1rem; color:inherit;">El mismo cariño de la mesa, empaquetado: vaso y bolsa con el sello de la casa, listos para el camino.</p>
+        </div>
+        <div style="position:relative;">
+          <figure class="cierre__hero">
+            <picture>
+              <source srcset="img/03_vasos_y_bolsa.webp" type="image/webp">
+              <img src="img/03_vasos_y_bolsa.jpg" width="1200" height="1600" alt="Vaso de café y bolsa de papel kraft con el sello stencil de Aroma Moka, sobre una mesa de madera" loading="lazy">
+            </picture>
+          </figure>
+          <figure class="cierre__satellite">
+            <picture>
+              <source srcset="img/02_vaso_marca.webp" type="image/webp">
+              <img src="img/02_vaso_marca.jpg" width="900" height="1200" alt="Detalle del sello Aroma Moka estampado en la manga de cartón kraft del vaso" loading="lazy">
+            </picture>
+          </figure>
+        </div>
+      </div>
+
+      <div class="info-label" id="info">
+        <div class="info-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21c-4-4-7-7.7-7-11.2C5 5.9 8.1 3 12 3s7 2.9 7 6.8c0 3.5-3 7.2-7 11.2Z"/><circle cx="12" cy="9.6" r="2.4"/></svg>
+          <div>
+            <h3>Dónde</h3>
+            <p>Las Piedras, Canelones</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3.2 2"/></svg>
+          <div>
+            <h3>Horario</h3>
+            <p>Consultanos por WhatsApp</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16.5V12l1.8-4.3A2 2 0 0 1 7.6 6.5h8.8a2 2 0 0 1 1.8 1.2L20 12v4.5"/><path d="M4 16.5h16M6.5 16.5V19M17.5 16.5V19"/><circle cx="7.5" cy="14" r=".8"/><circle cx="16.5" cy="14" r=".8"/></svg>
+          <div>
+            <h3>Estacionamiento</h3>
+            <p>Gratuito</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20V8.5C6 6 8 4 10.5 4h3C16 4 18 6 18 8.5V13c0 2.5-2 4.5-4.5 4.5H10l-4 3.5Z"/><path d="M10 9.5c1.3 2.2 2.8 3.5 4.8 4.4"/></svg>
+          <div>
+            <h3>Pedidos</h3>
+            <p>Por WhatsApp, para acá o para llevar</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cierre__cta">
+        <a class="btn-pill btn-pill--solid" href="https://wa.me/59800000000" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20V8.5C6 6 8 4 10.5 4h3C16 4 18 6 18 8.5V13c0 2.5-2 4.5-4.5 4.5H10l-4 3.5Z"/><path d="M10 9.5c1.3 2.2 2.8 3.5 4.8 4.4"/></svg>
+          Escribinos por WhatsApp
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer wavy-top" id="contacto">
+  <div class="container footer__layout">
+    <a class="footer__brand" href="#top" aria-label="Aroma Moka — inicio">
+      <picture>
+        <source srcset="img/logo_completo.webp" type="image/webp">
+        <img src="img/logo_completo.png" width="900" height="589" alt="Aroma Moka">
+      </picture>
+    </a>
+
+    <p class="footer__address">Pastelería &amp; Café de especialidad<br>Las Piedras, Canelones</p>
+
+    <div class="footer__social">
+      <div class="footer__social-icons">
+        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Aroma Moka en Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="0.8" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="https://wa.me/59800000000" target="_blank" rel="noopener" aria-label="Escribir a Aroma Moka por WhatsApp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20V8.5C6 6 8 4 10.5 4h3C16 4 18 6 18 8.5V13c0 2.5-2 4.5-4.5 4.5H10l-4 3.5Z"/><path d="M10 9.5c1.3 2.2 2.8 3.5 4.8 4.4"/></svg>
+        </a>
+      </div>
+      <p class="footer__social-text"><strong>Seguinos en Instagram</strong>Novedades, fotos y pedidos</p>
+    </div>
+  </div>
+
+  <svg class="footer__badge" viewBox="0 0 120 120" aria-hidden="true">
+    <path class="footer__badge-fill" d="M60 2c6 0 8 6 14 7s11-4 16 1 -2 12 2 17 10 5 10 12-7 9-9 15 5 12 0 17-12 2-17 6-4 11-11 11-8-7-15-7-11 6-17 2-2-12-7-16-11-4-11-11 7-9 9-15-5-12 0-17 12-2 16-7 6-13 12-13 4-2 8-2Z"/>
+    <text x="60" y="47" text-anchor="middle" class="footer__badge-text">Hecho con</text>
+    <text x="60" y="63" text-anchor="middle" class="footer__badge-text">cariño</text>
+    <path d="M60 82c-2 0-9-5.4-9-11 0-2.8 2.2-5 5-5 1.8 0 3.4.9 4 2.3.6-1.4 2.2-2.3 4-2.3 2.8 0 5 2.2 5 5 0 5.6-7 11-9 11Z" fill="var(--rosa-ink)"/>
+  </svg>
+</footer>
+
+<a class="whatsapp-pill" id="whatsappPill" href="https://wa.me/59800000000" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20V8.5C6 6 8 4 10.5 4h3C16 4 18 6 18 8.5V13c0 2.5-2 4.5-4.5 4.5H10l-4 3.5Z"/><path d="M10 9.5c1.3 2.2 2.8 3.5 4.8 4.4"/></svg>
+  Pedir
+</a>
+
+<script src="js/main.js"></script>
+</body>
+</html>
