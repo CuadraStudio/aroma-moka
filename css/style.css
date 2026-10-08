@@ -1,1028 +1,389 @@
 /* ==========================================================================
-   Aroma Moka — Pastelería & Café — Las Piedras, Canelones
-   "Se sirve con corazón"
-   Mobile-first: reglas base = movil, min-width para escalar hacia arriba.
+   Aroma Moka & Dolce Shop · v7.0
+   Mobile-first: la base es el layout móvil; todo lo que escala vive en los
+   min-width del final. El interruptor cambia html[data-mode] y con él los
+   tokens de campo (hero y cierre).
    ========================================================================== */
 
 :root {
-  /* Color — crema y rosa dominan siempre; marrón es la voz (texto/trazo) */
-  --rosa: #e8b4bc;
-  --rosa-deep: #d89aa6;
-  --rosa-ink: #7a4550;
-  --marron: #4a3227;
-  --marron-deep: #2f2019;
-  --marron-mid: #5c3d2e;
-  --crema: #fbf6ef;
-  --crema-deep: #f7efe6;
-  --crema-header: #eae0d1;
-  --salvia: #b9c9b8;
-  --mostaza: #dda75b;
-  --damero-dark: #241811;
+  --moka: #4f2c14;
+  --hueso: #fff6ee;
+  --durazno: #fee7d9;
+  --porcelana: #f2ced5;
+  --chicle: #efa6bc;
+  --madera: #7e411a;
 
-  /* Dolce Shop — marca hermana, mismos dueños. Solo en piezas/momentos de Dolce Shop, nunca en la identidad base */
-  --menta-dolce: #b8d4c8;
-  --coral-dolce: #e88a7d;
+  --serif: "Young Serif", Georgia, serif;
+  --sans: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
 
-  --font-display: "Fredoka", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, -apple-system, sans-serif;
-  --font-script: "Caveat", cursive;
+  --pad: clamp(16px, 4.5vw, 64px);
+  --header-h: 64px;
 
-  --fs-hero: clamp(2.9rem, 4vw + 2rem, 6.6rem);
-  --fs-h2: clamp(2.3rem, 2vw + 1.6rem, 4rem);
-  --fs-h3: clamp(1.3rem, 0.6vw + 1.1rem, 1.7rem);
-  --fs-body: clamp(1rem, 0.2vw + 0.95rem, 1.15rem);
-  --fs-label: 0.76rem;
-
-  --space-section: clamp(4.5rem, 6vw + 2rem, 9rem);
-  --radius-pill: 999px;
-  --radius-soft: 28px;
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-
-  --max-w: 1320px;
+  /* campo: color de apertura y cierre. Aroma = madera, Dolce = rosa chicle */
+  --field: var(--madera);
+  --field-ink: var(--hueso);
+  --field-sub: var(--porcelana);
+  --u: var(--chicle);
 }
 
-/* ---- Loader de marca ---- */
-.brand-loader {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--crema);
-  opacity: 1;
-  transition: opacity 0.5s ease;
-}
-.brand-loader img {
-  width: clamp(90px, 22vw, 150px);
-  height: auto;
-  border-radius: 50%;
-  animation: loader-pulse 1.4s ease-in-out infinite;
-}
-.brand-loader.is-hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-@keyframes loader-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.06); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .brand-loader { display: none; }
+html[data-mode="dolce"] {
+  --field: var(--chicle);
+  --field-ink: var(--moka);
+  --field-sub: var(--moka);
+  --u: var(--moka);
 }
 
-/* ---- Reset ---- */
-*, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
 
-body, h1, h2, h3, p, figure, blockquote { margin: 0; }
-ul { margin: 0; padding: 0; list-style: none; }
-img { max-width: 100%; display: block; }
-a { color: inherit; text-decoration: none; }
-button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: var(--header-h); }
 
 body {
-  font-family: var(--font-body);
-  background: var(--crema);
-  color: var(--marron);
-  font-size: var(--fs-body);
+  margin: 0;
+  background: var(--hueso);
+  color: var(--moka);
+  font-family: var(--sans);
   line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
-.container {
-  max-width: var(--max-w);
-  margin-inline: auto;
-  padding-inline: clamp(1.25rem, 4vw, 3rem);
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+h1, h2, h3, p, dl, dd, ol, figure { margin: 0; }
+ol { padding: 0; list-style: none; }
+button { font-family: inherit; }
+[hidden] { display: none !important; }
+
+/* interruptor: cada bloque se muestra solo en su modo */
+html[data-mode="aroma"] [data-only="dolce"],
+html[data-mode="dolce"] [data-only="aroma"] { display: none !important; }
+
+:focus-visible { outline: 3px solid var(--moka); outline-offset: 3px; }
+.on-field :focus-visible { outline-color: var(--field-ink); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip {
+  position: fixed; left: 12px; top: -60px; z-index: 200; padding: 10px 16px;
+  background: var(--moka); color: var(--hueso); font-weight: 700; text-decoration: none;
+  border-radius: 999px; transition: top 0.2s;
+}
+.skip:focus { top: 10px; }
+
+.wrap { max-width: 1440px; margin: 0 auto; padding: 0 var(--pad); }
+
+/* ---------- Tipografía y piezas ---------- */
+.label {
+  font-size: 12.5px; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; line-height: 1.4;
+}
+.label--accent { color: var(--madera); }
+.label--field { color: var(--field-sub); }
+
+.lead { font-size: clamp(17px, 1.5vw, 19px); line-height: 1.6; max-width: 560px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5em;
+  min-height: 52px; padding: 0 28px; border: 1.5px solid currentColor; border-radius: 999px;
+  background: transparent; color: inherit; cursor: pointer; text-decoration: none; text-align: center;
+  font: 700 12.5px/1.2 var(--sans); letter-spacing: 0.16em; text-transform: uppercase;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.btn:hover { background: var(--btn-fill, var(--moka)); color: var(--btn-on, var(--hueso)); border-color: var(--btn-fill, var(--moka)); }
+.btn--field { --btn-fill: var(--field-ink); --btn-on: var(--field); }
+.btn--sm { min-height: 44px; padding: 0 22px; }
+
+.link {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0; border: 0;
+  background: none; color: inherit; cursor: pointer; text-align: left;
+  font: 700 12.5px/1.3 var(--sans); letter-spacing: 0.16em; text-transform: uppercase;
+  text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1.5px;
+}
+.link:hover { text-decoration-thickness: 3px; }
+
+.round {
+  width: 44px; height: 44px; border: 1.5px solid var(--moka); border-radius: 50%;
+  background: transparent; color: var(--moka); font-size: 18px; line-height: 1; cursor: pointer;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+.round:hover { background: var(--moka); color: var(--hueso); }
+
+/* ---------- Progreso y cortina ---------- */
+.progress {
+  position: fixed; left: 0; top: 0; z-index: 60; width: 100%; height: 3px; pointer-events: none;
+  background: var(--chicle); transform-origin: left; transform: scaleX(var(--page, 0));
+}
+.curtain {
+  position: fixed; inset: 0; z-index: 100; pointer-events: none; background: var(--madera);
+  clip-path: inset(100% 0 0 0);
+}
+.curtain.is-in { clip-path: inset(0 0 0 0); transition: clip-path 0.45s var(--ease); }
+.curtain.is-out { clip-path: inset(0 0 100% 0); transition: clip-path 0.45s var(--ease); }
+
+/* ---------- Encabezado e interruptor ---------- */
+.site-header {
+  position: sticky; top: 0; z-index: 40; background: var(--hueso); border-bottom: 1px solid var(--moka);
+}
+.site-header__in {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  max-width: 1440px; min-height: var(--header-h); margin: 0 auto; padding: 8px var(--pad);
+}
+.brand { display: block; line-height: 0; text-decoration: none; }
+.brand img { width: 72px; }
+.brand--dolce { display: flex; flex-direction: column; gap: 3px; line-height: 1; color: var(--moka); }
+.brand__name { font: 400 24px/1 var(--serif); }
+.brand__sub { font: 700 10.5px/1.2 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; }
+
+.switch {
+  position: relative; display: inline-grid; grid-template-columns: 1fr 1fr; flex: 0 0 auto;
+  height: 44px; padding: 3px; border: 1.5px solid var(--moka); border-radius: 999px; background: var(--hueso);
+}
+.switch__btn {
+  position: relative; z-index: 1; min-width: 0; padding: 0 14px; border: 0; border-radius: 999px;
+  background: transparent; color: var(--moka); cursor: pointer; white-space: nowrap;
+  font: 700 11.5px/1 var(--sans); letter-spacing: 0.12em; text-transform: uppercase;
+  transition: color 0.3s var(--ease);
+}
+.switch__btn[aria-pressed="true"] { color: var(--field-ink); }
+.switch__thumb {
+  position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 999px;
+  background: var(--field); transition: transform 0.45s var(--ease), background-color 0.45s var(--ease);
+}
+html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
+
+.nav { display: none; }
+
+/* ---------- Hero: campo de color + foto que crece ---------- */
+.hero__field { position: relative; background: var(--field); color: var(--field-ink); }
+.hero__grid { display: flex; flex-direction: column; gap: 24px; padding-top: 32px; padding-bottom: 88px; }
+.hero__text { display: flex; flex-direction: column; gap: 18px; }
+.hero__title { font: 400 clamp(44px, 7vw, 88px)/1 var(--serif); letter-spacing: -0.02em; }
+.hero__aside { display: flex; flex-direction: column; gap: 18px; }
+.hero__aside .lead { max-width: 340px; }
+.hero__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
+
+.line { display: block; overflow: hidden; padding-bottom: 0.2em; margin-bottom: -0.2em; }
+.line > span { display: block; }
+
+.u {
+  background-image: linear-gradient(var(--u), var(--u));
+  background-repeat: no-repeat; background-position: 0 100%; background-size: 100% 0.07em;
 }
 
-.skip-link {
-  position: absolute;
-  left: -999px;
-  top: 0;
-  background: var(--marron);
-  color: var(--crema);
-  padding: 0.8em 1.2em;
-  border-radius: 0 0 12px 0;
-  z-index: 999;
+.ring {
+  position: absolute; right: var(--pad); bottom: -56px; z-index: 5;
+  width: 112px; aspect-ratio: 1; color: var(--field-ink);
 }
-.skip-link:focus {
-  left: 0;
-}
+.ring::before { content: ""; position: absolute; inset: -4px; border-radius: 50%; background: var(--field); }
+.ring__text { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; }
+.ring__text text { font: 700 13px/1 var(--sans); fill: currentColor; }
+.ring__text text.ring__text--sm { font-size: 12px; }
+.ring__core { position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; border-radius: 50%; object-fit: cover; }
+.ring__heart { position: absolute; left: 32%; top: 32%; width: 36%; height: 36%; }
+.ring--static { position: relative; right: auto; bottom: auto; flex: 0 0 auto; width: 140px; }
+.ring--static::before { display: none; }
 
-:focus-visible {
-  outline: 3px solid var(--marron);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
+.band { background: linear-gradient(var(--field) 0 50%, var(--hueso) 50% 100%); }
+.band .wrap { padding-bottom: 40px; }
 
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4em 0.9em 0.4em 0.7em;
-  border-radius: var(--radius-pill);
-  background: var(--crema);
-  box-shadow: 0 6px 16px -10px rgba(74, 50, 39, 0.35);
-  font-size: var(--fs-label);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-weight: 700;
-  color: var(--rosa-ink);
+.grow {
+  --r: 24px;
+  display: flex; gap: 3px; aspect-ratio: 3 / 2; overflow: hidden; background: var(--hueso);
+  border-radius: var(--r);
+  clip-path: inset(
+    calc((1 - var(--p, 1)) * 14%) calc((1 - var(--p, 1)) * 18%) 0 calc((1 - var(--p, 1)) * 18%)
+    round calc(var(--r) + (1 - var(--p, 1)) * 12px)
+  );
 }
-.eyebrow::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: currentColor;
-  flex-shrink: 0;
-}
+.grow__half { flex: 1 1 0; min-width: 0; overflow: hidden; }
+.grow__half img { width: 100%; height: 100%; object-fit: cover; }
 
-.section-heading {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: var(--fs-h2);
-  line-height: 1.05;
-  color: var(--marron);
-  letter-spacing: -0.01em;
-}
+.captions { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 10px; }
+.cap { display: flex; flex-direction: column; gap: 2px; border-top: 1px solid var(--moka); padding-top: 8px; }
+.cap__name { font: 400 19px/1.2 var(--serif); }
 
-.lede {
-  max-width: 46ch;
-  font-size: var(--fs-body);
-  color: var(--marron-mid);
+/* ---------- Juntos / A medida ---------- */
+.juntos { border-top: 1px solid var(--moka); }
+.juntos__in {
+  display: flex; flex-direction: column; align-items: center; gap: clamp(28px, 4vw, 48px);
+  max-width: 1100px; margin: 0 auto; padding: clamp(48px, 8vw, 112px) var(--pad); text-align: center;
 }
+.juntos__head { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.juntos__statement { font: 400 clamp(26px, 3.8vw, 54px)/1.15 var(--serif); letter-spacing: -0.01em; }
+.promises { display: flex; flex-direction: column; width: 100%; text-align: left; }
+.promises li { display: flex; align-items: baseline; gap: 16px; padding: 12px 0; border-top: 1px solid var(--moka); }
+.promises li:last-child { border-bottom: 1px solid var(--moka); }
+.promises__text { font: 400 20px/1.2 var(--serif); }
 
-/* ---- Botones "candy": pill con un borde inferior grueso que hace de
-   base 3D — al presionar, el botón baja y la base se acorta, como un
-   botón físico. Reemplaza la sombra plana de versiones anteriores. */
-.btn-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55em;
-  padding: 0.85em 1.6em;
-  border-radius: var(--radius-pill);
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 0.95rem;
-  border: 2px solid transparent;
-  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
-  white-space: nowrap;
-}
-.btn-pill:hover, .btn-pill:focus-visible { transform: translateY(3px); }
+/* ---------- Dos carriles ---------- */
+.lanes { position: relative; display: flex; flex-direction: column; border-top: 1px solid var(--moka); }
+.seam, .amp { display: none; }
 
-.btn-pill--solid {
-  background: var(--marron);
-  color: var(--crema);
-  box-shadow: 0 5px 0 var(--marron-deep);
-}
-.btn-pill--solid:hover, .btn-pill--solid:focus-visible {
-  box-shadow: 0 2px 0 var(--marron-deep);
-}
+.lane { min-width: 0; padding: 0 var(--pad) clamp(48px, 6vw, 88px); }
+.lane--l { --lane-bg: var(--hueso); background: var(--hueso); }
+.lane--r { --lane-bg: var(--porcelana); background: var(--porcelana); border-top: 1px solid var(--moka); }
 
-.btn-pill--outline {
-  background: var(--crema);
-  color: var(--marron);
-  border-color: transparent;
-  box-shadow: 0 5px 0 var(--rosa);
+.lane__bar {
+  position: sticky; top: var(--header-h); z-index: 5; display: flex; justify-content: space-between;
+  align-items: baseline; gap: 12px; padding: 14px 0 12px; background: var(--lane-bg);
+  border-bottom: 1px solid var(--moka);
 }
-.btn-pill--outline:hover, .btn-pill--outline:focus-visible {
-  color: var(--rosa-ink);
-  box-shadow: 0 2px 0 var(--rosa);
-}
+.lane__name { font: 400 20px/1.2 var(--serif); }
+.lane__text { display: flex; flex-direction: column; gap: 16px; max-width: 440px; margin-top: clamp(28px, 4vw, 56px); }
+.lane__title { font: 400 clamp(34px, 5vw, 64px)/1 var(--serif); letter-spacing: -0.01em; }
 
-.btn-pill--on-rosa {
-  background: var(--crema);
-  color: var(--marron);
-  box-shadow: 0 5px 0 var(--marron-deep);
-}
-.btn-pill--on-rosa:hover, .btn-pill--on-rosa:focus-visible {
-  box-shadow: 0 2px 0 var(--marron-deep);
-}
+.stack-wrap { width: calc(100% - 44px); margin-top: 48px; }
+.lane--l .stack-wrap { margin-left: 30px; }
+.lane--r .stack-wrap { margin-right: 30px; }
 
-.btn-pill--rosa {
-  background: var(--rosa-ink);
-  color: var(--crema);
-  box-shadow: 0 5px 0 var(--marron-deep);
+.stack { --d: -1; position: relative; aspect-ratio: 4 / 5; }
+.stack--r { --d: 1; }
+.stack__card {
+  position: absolute; inset: 0; overflow: hidden; border-radius: 22px; border: 1.5px solid var(--lane-bg);
+  background: var(--hueso); touch-action: pan-y; transition: transform 0.6s var(--ease);
 }
-.btn-pill--rosa:hover, .btn-pill--rosa:focus-visible {
-  box-shadow: 0 2px 0 var(--marron-deep);
-}
+.stack__card img { width: 100%; height: 100%; object-fit: cover; }
+.stack__card[data-pos="0"] { z-index: 3; transform: none; }
+.stack__card[data-pos="1"] { z-index: 2; transform: translate(calc(var(--d) * 14px), -12px) scale(0.96) rotate(calc(var(--d) * 2deg)); }
+.stack__card[data-pos="2"] { z-index: 1; transform: translate(calc(var(--d) * 26px), -22px) scale(0.92) rotate(calc(var(--d) * 4deg)); }
+/* recorte vertical del papel de Dolce Shop (de la foto cuadrada de 1440 px) */
+.stack__card--paper img { position: absolute; max-width: none; width: 327.27%; height: auto; left: -200%; top: -167%; }
 
-.btn-pill--outline-crema {
-  background: var(--marron-deep);
-  color: var(--crema);
-  border-color: transparent;
-  box-shadow: 0 5px 0 rgba(251, 246, 239, 0.3);
+.stack__bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 20px; padding-top: 10px; border-top: 1px solid var(--moka);
 }
-.btn-pill--outline-crema:hover, .btn-pill--outline-crema:focus-visible {
-  box-shadow: 0 2px 0 rgba(251, 246, 239, 0.3);
-}
+.stack__caption { font: 400 18px/1.2 var(--serif); }
+.stack__ctrl { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+.stack__count { font: 700 12.5px/1 var(--sans); letter-spacing: 0.12em; }
 
-.btn-pill svg { width: 1.1em; height: 1.1em; flex-shrink: 0; }
+/* ---------- Cierre ---------- */
+.closing { background: var(--field); color: var(--field-ink); overflow: hidden; }
+.closing__in {
+  display: flex; flex-direction: column; gap: clamp(28px, 4vw, 48px);
+  padding-top: clamp(48px, 7vw, 88px); padding-bottom: clamp(48px, 7vw, 88px);
+}
+.closing__head { display: flex; flex-direction: column; gap: 16px; }
+.closing__title { font: 400 clamp(34px, 5vw, 64px)/1 var(--serif); letter-spacing: -0.01em; }
 
-/* ==========================================================================
-   Navegación — píldora flotante centrada, no barra docada al borde.
-   Menú siempre a pantalla completa (ningún tamaño muestra links inline).
-   ========================================================================== */
-.nav {
-  position: fixed;
-  top: clamp(0.8rem, 2.4vw, 1.5rem);
-  inset-inline: 0;
-  z-index: 60;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
+.converge { display: flex; flex-direction: column; gap: 28px; }
+.info { min-width: 0; flex: 1 1 0; }
+.info__title { font: 400 22px/1.1 var(--serif); padding-bottom: 10px; }
+.info dl > div {
+  display: flex; justify-content: space-between; gap: 16px; padding: 10px 0;
+  border-top: 1px solid currentColor; font-size: 16px;
 }
+.info dl > div:last-child { border-bottom: 1px solid currentColor; }
+.info dt { font-size: 12.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--field-sub); }
+.info dd { font-weight: 700; text-align: right; }
+.info a { text-underline-offset: 4px; }
+.conv-l { transform: translateX(calc((1 - var(--p, 1)) * -10vw)); }
+.conv-r { transform: translateX(calc((1 - var(--p, 1)) * 10vw)); }
 
-.nav__pill {
-  pointer-events: auto;
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 0.5rem 0.6rem 0.5rem 1.1rem;
-  border-radius: var(--radius-pill);
-  background: var(--crema);
-  box-shadow: 0 12px 28px -14px rgba(74, 50, 39, 0.4);
-}
+.closing__foot { display: flex; flex-direction: column; gap: 28px; }
+.closing__cta { display: flex; flex-direction: column; gap: 12px; }
 
-.nav__brand { display: flex; align-items: center; justify-content: center; }
-.nav__brand img { height: clamp(26px, 3vw, 34px); width: auto; }
+.foot { background: var(--hueso); border-top: 1px solid var(--moka); }
+.foot__in {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px;
+  max-width: 1440px; margin: 0 auto; padding: 16px var(--pad);
+}
+.foot img { width: 88px; }
+.foot p { font-size: 13px; font-weight: 600; }
 
-.nav__toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  height: 38px;
-  padding-inline: 0.9rem;
-  border-radius: var(--radius-pill);
-  background: var(--rosa);
-  font-weight: 700;
-  font-size: 0.82rem;
-  color: var(--marron-deep);
-}
-.nav__toggle svg { width: 18px; height: 18px; }
+/* ---------- Movimiento (solo si el usuario no pidió menos) ---------- */
+@keyframes rise { from { transform: translateY(105%); } to { transform: translateY(0); } }
+@keyframes settle { from { transform: scale(1.15); } to { transform: scale(1); } }
+@keyframes uline { from { background-size: 0% 0.07em; } to { background-size: 100% 0.07em; } }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-/* Menú mobile plegable */
-.nav-mobile {
-  position: fixed;
-  inset: 0;
-  background: var(--crema);
-  z-index: 90;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 1.6rem;
-  padding: 2rem clamp(1.5rem, 8vw, 4rem);
-  transform: translateY(-100%);
-  transition: transform 0.4s var(--ease-out);
-}
-.nav-mobile.is-open { transform: translateY(0); }
-.nav-mobile a {
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 8vw, 2.6rem);
-  font-weight: 600;
-  color: var(--marron);
-  transition: color 0.2s ease;
-}
-.nav-mobile a.is-active { color: var(--rosa-ink); }
-.nav-mobile__close {
-  position: absolute;
-  top: 1.4rem; right: clamp(1.25rem, 6vw, 3rem);
-  width: 46px; height: 46px;
-}
-.nav-mobile__close svg { width: 24px; height: 24px; }
-
-/* ==========================================================================
-   Hero — blob orgánico + producto real flotando delante del wordmark.
-   Nada se revela con el scroll: el producto flota siempre, con una deriva
-   continua (CSS) y un paralaje leve (misma utilidad [data-parallax] que
-   ya usan otras fotos del sitio) — la receta de la referencia, adaptada.
-   ========================================================================== */
-.hero {
-  position: relative;
-  background: var(--crema);
-  overflow: hidden;
-  padding-top: clamp(5.5rem, 12vw, 8rem);
-  text-align: center;
-}
-
-.hero__blob {
-  position: absolute;
-  top: 38%;
-  left: 50%;
-  width: min(94vw, 620px);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  background: var(--rosa);
-  border-radius: 46% 54% 58% 42% / 52% 44% 56% 48%;
-  animation: blob-morph 14s ease-in-out infinite alternate;
-  z-index: 0;
-}
-@keyframes blob-morph {
-  50% { border-radius: 56% 44% 42% 58% / 44% 58% 42% 56%; }
-  100% { border-radius: 42% 58% 50% 50% / 58% 46% 54% 42%; }
-}
-
-.hero__wordmark {
-  position: relative;
-  z-index: 1;
-  font-family: var(--font-display);
-  font-weight: 700;
-  text-transform: uppercase;
-  line-height: 0.86;
-  letter-spacing: -0.01em;
-  color: var(--marron);
-  font-size: clamp(3rem, 13vw, 8rem);
-  margin: 0;
-}
-
-.hero__product {
-  position: relative;
-  z-index: 2;
-  width: clamp(190px, 46vw, 320px);
-  aspect-ratio: 1;
-  margin: clamp(-0.8rem, -1.8vw, -0.2rem) auto 0;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 30px 50px -20px rgba(74, 50, 39, 0.5);
-  animation: float-soft 6.5s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
-}
-.hero__product picture, .hero__product img { width: 100%; height: 100%; object-fit: cover; }
-@keyframes float-soft {
-  from { transform: translate3d(0, -1.4%, 0) rotate(-0.8deg); }
-  to { transform: translate3d(0, 1.4%, 0) rotate(0.8deg); }
-}
-
-.hero__toppings { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-.hero__topping {
-  position: absolute;
-  width: clamp(54px, 9vw, 92px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 14px 24px -10px rgba(74, 50, 39, 0.4);
-  animation: drift 7s ease-in-out infinite alternate;
-}
-.hero__topping picture, .hero__topping img { width: 100%; height: 100%; object-fit: cover; }
-.hero__topping--a { top: 20%; left: 8%; }
-.hero__topping--b { bottom: 8%; right: 7%; animation-delay: -3.2s; }
-@keyframes drift {
-  from { translate: 0 -10px; }
-  to { translate: 0 12px; }
-}
-
-.hero__content {
-  position: relative;
-  z-index: 2;
-  padding-block: clamp(1.6rem, 4vw, 2.4rem) clamp(3rem, 6vw, 4.5rem);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.hero__tagline {
-  margin-top: 1rem;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(1.3rem, 2.4vw, 1.8rem);
-  color: var(--marron-deep);
-}
-
-.hero__copy {
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-size: clamp(1rem, 0.3vw + 0.95rem, 1.25rem);
-  max-width: 34ch;
-  margin-top: 0.7rem;
-  color: var(--marron-mid);
-}
-
-.hero__cta {
-  margin-top: 1.6rem;
+@media (prefers-reduced-motion: no-preference) {
+  .rise { animation: rise 0.9s var(--ease) both; }
+  .rise.d1 { animation-delay: 0.1s; }
+  .rise.d2 { animation-delay: 0.2s; }
+  .u { animation: uline 0.9s var(--ease) 0.9s both; }
+  .settle { animation: settle 1.8s var(--ease) both; }
+  .spin { animation: spin 24s linear infinite; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__blob, .hero__product, .hero__topping { animation: none; }
-}
-
-@media (min-width: 641px) {
-  .hero__topping--a { left: 14%; }
-  .hero__topping--b { right: 13%; }
-}
-
-/* Franja de damero — motivo recurrente, no solo piso fotografiado */
-.damero-strip {
-  height: clamp(18px, 2.6vw, 30px);
-  background-image: conic-gradient(var(--damero-dark) 90deg, var(--crema) 90deg 180deg, var(--damero-dark) 180deg 270deg, var(--crema) 270deg);
-  background-size: clamp(18px, 2.6vw, 30px) clamp(18px, 2.6vw, 30px);
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
 
 /* ==========================================================================
-   Secciones — genérico
+   Escalar hacia arriba
    ========================================================================== */
-.section {
-  padding-block: var(--space-section);
-  position: relative;
+@media (min-width: 640px) {
+  :root { --header-h: 72px; }
+  .brand img { width: 84px; }
+  .switch__btn { padding: 0 18px; font-size: 12px; }
+
+  .hero__grid { padding-top: 56px; padding-bottom: 112px; }
+  .ring { width: 150px; bottom: -68px; }
+  .band .wrap { padding-bottom: 56px; }
+  .grow { --r: 28px; aspect-ratio: 2 / 1; }
+
+  .cap { flex-direction: row; justify-content: space-between; align-items: baseline; }
+  .cap__name { font-size: 22px; }
+
+  .promises { flex-direction: row; gap: 32px; }
+  .promises li { flex: 1 1 0; flex-direction: column; gap: 6px; border-bottom: 0; }
+  .promises li:last-child { border-bottom: 0; }
+  .promises__text { font-size: 22px; }
+
+  .converge { flex-direction: row; gap: 28px 48px; }
+  .info__title { font-size: 24px; }
+  .closing__foot { flex-direction: row; align-items: center; justify-content: space-between; }
+  .closing__cta { flex-direction: row; flex-wrap: wrap; }
+  .ring--static { width: 170px; }
 }
 
-.section__head {
-  max-width: 44rem;
-  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
-}
-.section__head .section-heading { margin-top: 0.4rem; }
-.section__head .lede { margin-top: 1.1rem; }
+@media (min-width: 1000px) {
+  .hero__grid { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 28px 48px; padding-top: 72px; }
+  .hero__text { flex: 3 1 480px; }
+  .hero__aside { flex: 1 1 300px; max-width: 380px; }
 
-/* Borde superior ondulado — transición entre secciones */
-.wavy-top {
-  clip-path: url(#waveTop);
-  transform-origin: top center;
-  transform: scaleY(1);
-  transition: transform 0.6s var(--ease-out);
-}
-.wavy-top.drip-stretch { transform: scaleY(1.025); }
-@media (prefers-reduced-motion: reduce) {
-  .wavy-top { transition: none; }
-}
+  .nav { display: flex; align-items: center; gap: 4px; }
+  .nav__set { display: flex; gap: 4px; }
+  .nav a:not(.btn) {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px;
+    font: 700 12.5px/1 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none;
+  }
+  .nav a:not(.btn):hover { text-decoration: underline; text-underline-offset: 6px; }
+  .nav .btn { margin-left: 8px; }
+  .site-header__in { gap: 20px; }
 
-/* Borde superior en arco — misma mecánica que wavy-top, forma distinta.
-   No toda transición entre secciones tiene que ser la misma gota. */
-.arch-top {
-  clip-path: url(#archTop);
-  transform-origin: top center;
-  transform: scaleY(1);
-  transition: transform 0.6s var(--ease-out);
-}
-.arch-top.drip-stretch { transform: scaleY(1.025); }
-@media (prefers-reduced-motion: reduce) {
-  .arch-top { transition: none; }
-}
+  .lanes { flex-direction: row; }
+  .lane { flex: 1 1 50%; }
+  .lane--l { padding-right: clamp(16px, 3.5vw, 48px); }
+  .lane--r { padding-left: clamp(16px, 3.5vw, 48px); border-top: 0; }
+  .lane--l .lane__text { margin-left: auto; }
+  .lane--r .lane__text { margin-right: auto; }
+  .lane--l .stack-wrap { width: 72%; margin-left: auto; margin-right: 0; }
+  .lane--r .stack-wrap { width: 72%; margin-left: 0; margin-right: auto; }
 
-/* Cápsula: sin borde, tapa completamente redonda — reemplaza el marco
-   grueso de panadería vintage de versiones anteriores */
-.framed {
-  border: none;
-  border-radius: 999px 999px 36px 36px;
-  overflow: hidden;
-  background: var(--crema-deep);
-  box-shadow: 0 14px 30px -16px rgba(74, 50, 39, 0.35);
+  .seam {
+    display: block; position: absolute; left: 50%; top: 0; bottom: 0; z-index: 6; width: 1px; margin-left: -0.5px;
+    background: var(--moka); transform-origin: top; transform: scaleY(var(--p, 1)); pointer-events: none;
+  }
+  .amp {
+    position: absolute; left: 50%; top: 8px; z-index: 8; transform: translateX(-50%);
+    display: flex; align-items: center; justify-content: center; width: 46px; height: 46px;
+    border: 1.5px solid var(--moka); border-radius: 50%; background: var(--hueso); font: 400 24px/1 var(--serif);
+  }
 }
 
-.photo-cap {
-  font-size: 0.82rem;
-  color: var(--marron-mid);
-  margin-top: 0.6rem;
-  font-weight: 500;
+@media (min-width: 1280px) {
+  .ring--static { width: 190px; }
 }
 
-/* Marco lobulado (flor) — reservado a momentos de énfasis */
-.lobe-frame {
-  clip-path: url(#lobeShape);
-  aspect-ratio: 1;
+/* el mouse no existe en móvil: la deriva de carriles solo en pantallas anchas */
+@media (max-width: 999px) {
+  .stack-wrap[data-parallax] { transform: none !important; }
 }
-
-/* ==========================================================================
-   Nuestros clásicos — grilla de categorías
-   Mobile-first: base = 1 col intro + grilla 2 col; escala a 3 y luego 5
-   ========================================================================== */
-.clasicos {
-  background: var(--salvia);
-  padding-top: clamp(4rem, 7vw, 6.5rem);
-}
-.clasicos .eyebrow { color: var(--marron-deep); opacity: 0.7; }
-.clasicos .section-heading { color: var(--marron-deep); margin-top: 0.4rem; }
-.clasicos .lede { color: var(--marron-mid); margin-top: 1rem; }
-
-.clasicos__layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(1.5rem, 4vw, 3rem);
-  align-items: center;
-}
-
-.clasicos__intro { max-width: none; }
-
-.link-arrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4em;
-  margin-top: 1.4rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--marron);
-  border-bottom: 2px solid transparent;
-  transition: border-color 0.25s ease;
-}
-.link-arrow:hover, .link-arrow:focus-visible { border-color: var(--marron); }
-
-.clasicos__grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(1rem, 2vw, 1.6rem);
-}
-
-.clasico { text-align: center; }
-
-.clasico__photo {
-  aspect-ratio: 1;
-  border-radius: 50%;
-  overflow: hidden;
-  background: var(--crema-deep);
-  box-shadow: 0 14px 26px -14px rgba(74, 50, 39, 0.35);
-}
-.clasico__photo img { width: 100%; height: 100%; object-fit: cover; }
-
-.clasico__icon {
-  width: 46px;
-  height: 46px;
-  margin: -23px auto 0;
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  border: 3px solid var(--crema);
-  background: var(--rosa);
-}
-.clasico__icon svg { width: 22px; height: 22px; color: var(--marron-deep); }
-.clasico:nth-child(even) .clasico__icon { background: var(--crema); }
-
-.clasico__label {
-  margin-top: 0.7rem;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--marron-deep);
-  line-height: 1.3;
-}
-
-/* ==========================================================================
-   El gesto — Café
-   Mobile-first: base = 1 columna; min-width:861px = grid 2 columnas
-   ========================================================================== */
-.cafe { background: var(--crema); }
-
-/* Momento de firma: la foto queda fija (sticky) mientras el corazón se
-   dibuja en proporción directa al progreso del scroll dentro del stage —
-   no es un disparo único al entrar en pantalla, responde todo el tiempo. */
-.cafe__stage {
-  position: relative;
-  height: 220vh;
-}
-.cafe__pin {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100svh;
-  overflow: hidden;
-}
-.cafe__pin picture, .cafe__pin img { width: 100%; height: 100%; object-fit: cover; }
-
-.heart-draw {
-  position: absolute;
-  right: clamp(1.2rem, 5vw, 4rem);
-  bottom: clamp(1.2rem, 5vw, 4rem);
-  width: clamp(140px, 22vw, 320px);
-  height: auto;
-  z-index: 2;
-}
-.heart-draw__bg { fill: var(--crema); opacity: 0.9; }
-.heart-draw__path {
-  fill: none;
-  stroke: var(--rosa-ink);
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-/* stroke-dasharray inicial se fija por JS con getTotalLength() (exacto);
-   el dashoffset lo controla el scroll, no CSS */
-.heart-draw__path { stroke-dasharray: 210; stroke-dashoffset: 210; }
-@media (prefers-reduced-motion: reduce) {
-  .cafe__stage { height: auto; }
-  .cafe__pin { position: static; height: 60vh; }
-}
-
-.cafe__satellites {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.4rem;
-  margin-top: clamp(2rem, 6vw, 3.5rem);
-}
-
-.cafe__satellite:nth-child(2) { margin-top: 3rem; }
-.cafe__satellite .framed { aspect-ratio: 4 / 5; }
-.cafe__satellite .framed img { width: 100%; height: 100%; object-fit: cover; }
-
-.cafe__note {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.5rem;
-  padding: 1.1rem 1.4rem;
-  background: var(--crema-deep);
-  border-radius: var(--radius-soft);
-  border: 2px solid var(--rosa-deep);
-}
-.cafe__note svg { width: 30px; height: 30px; flex-shrink: 0; color: var(--rosa-ink); }
-.cafe__note p { font-size: 0.95rem; color: var(--marron-mid); }
-
-/* ==========================================================================
-   La mesa — Pastelería (intro 2 col + galería horizontal fijada)
-   Mobile-first: la altura del stage y el ancho recorrido los calcula JS
-   ========================================================================== */
-.mesa { background: var(--crema-deep); }
-
-.mesa__intro {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: center;
-  margin-bottom: clamp(3.5rem, 7vw, 6rem);
-}
-.mesa__intro-photo { aspect-ratio: 3/4; }
-.mesa__intro-photo img { width: 100%; height: 100%; object-fit: cover; }
-
-/* Galería fijada: racimo + surtido en una sola mecánica — la sección se
-   ancla en pantalla y el recorrido se hace en horizontal mientras la
-   página sigue bajando. La altura del stage la calcula JS (depende del
-   ancho real de las tarjetas); el valor de acá es solo el arranque. */
-.mesa__gallery-stage {
-  position: relative;
-  margin-top: clamp(3.5rem, 7vw, 6rem);
-  height: 200vh;
-}
-.mesa__gallery-pin {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
-}
-.mesa__gallery-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.2rem;
-}
-.mesa__gallery-progress {
-  flex: 0 0 auto;
-  width: clamp(80px, 20vw, 160px);
-  height: 4px;
-  border-radius: var(--radius-pill);
-  background: var(--marron-mid);
-  opacity: 0.25;
-  overflow: hidden;
-}
-.mesa__gallery-progress span {
-  display: block;
-  height: 100%;
-  width: 0%;
-  background: var(--rosa-ink);
-}
-.mesa__gallery-track {
-  display: flex;
-  gap: 1.2rem;
-  width: max-content;
-  will-change: transform;
-}
-.gallery-card {
-  flex: 0 0 auto;
-  width: clamp(200px, 58vw, 320px);
-  border-radius: 999px 999px 36px 36px;
-  overflow: hidden;
-  background: var(--crema);
-  box-shadow: 0 14px 30px -16px rgba(74, 50, 39, 0.35);
-}
-.gallery-card picture, .gallery-card img { width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; }
-.gallery-card figcaption {
-  padding: 0.8rem 1rem 1rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-/* Piezas de Dolce Shop integradas en la misma galería — firma de color, sin separarlas aparte */
-.gallery-card.dolce-piece { box-shadow: 0 0 0 4px var(--coral-dolce), 0 14px 30px -16px rgba(74, 50, 39, 0.35); }
-
-@media (prefers-reduced-motion: reduce) {
-  .mesa__gallery-stage { height: auto; }
-  .mesa__gallery-pin { position: static; height: auto; overflow: visible; }
-  .mesa__gallery-track { flex-wrap: wrap; width: auto; transform: none !important; }
-  .mesa__gallery-progress { display: none; }
-}
-
-/* ==========================================================================
-   Personalización — bloque rosa, íntimo
-   Mobile-first: base = foto 100%; min-width:901px = foto 84% + layout 2 col
-   ========================================================================== */
-.personal {
-  background: var(--rosa);
-  color: var(--marron-deep);
-}
-.personal .eyebrow { color: var(--marron-deep); opacity: 0.75; }
-.personal .section-heading { color: var(--marron-deep); }
-.personal .lede { color: var(--marron-mid); }
-
-.personal__layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: center;
-}
-
-.personal__photo {
-  width: 100%;
-  border: 6px solid var(--crema);
-  background: var(--crema);
-}
-.personal__photo img { width: 100%; height: 100%; object-fit: cover; }
-
-.personal__satellite {
-  width: 68%;
-  margin-top: -2.2rem;
-  margin-left: auto;
-  margin-right: 6%;
-  position: relative;
-  border-radius: 999px 999px 36px 36px;
-  overflow: hidden;
-  box-shadow: 0 16px 30px -14px rgba(47, 32, 25, 0.4);
-}
-.personal__satellite img { width: 100%; height: auto; aspect-ratio: 4/3; object-fit: cover; }
-
-.personal__quote {
-  font-family: var(--font-script);
-  font-size: clamp(1.8rem, 3vw + 1rem, 3rem);
-  line-height: 1.15;
-  margin-top: 1.6rem;
-  color: var(--marron-deep);
-}
-
-/* ==========================================================================
-   El lugar — damero como piso, no como patrón
-   Mobile-first: base = 1 col, side en 2 columnas; min-width:901px = layout 2 col, side apilado
-   ========================================================================== */
-.lugar { background: var(--crema); }
-
-.lugar__damero {
-  height: clamp(46px, 7vw, 84px);
-  background-image: conic-gradient(var(--damero-dark) 90deg, var(--crema-deep) 90deg 180deg, var(--damero-dark) 180deg 270deg, var(--crema-deep) 270deg);
-  background-size: clamp(28px, 4vw, 42px) clamp(28px, 4vw, 42px);
-  margin-bottom: clamp(3rem, 6vw, 5rem);
-}
-
-.lugar__layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(1.5rem, 4vw, 3rem);
-  align-items: start;
-}
-.lugar__hero { aspect-ratio: 3/4; }
-.lugar__hero img { width: 100%; height: 100%; object-fit: cover; }
-
-.lugar__side { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
-.lugar__side .framed { aspect-ratio: 4/3; }
-.lugar__side .framed img { width: 100%; height: 100%; object-fit: cover; }
-.lugar__side-item:nth-child(2) { margin-left: 0; margin-top: 1.6rem; }
-
-.lugar__text { margin-top: clamp(2.5rem, 5vw, 4rem); max-width: 56ch; }
-
-.badge-salvia {
-  display: inline-block;
-  background: var(--salvia);
-  color: var(--marron-deep);
-  padding: 0.3em 0.8em;
-  border-radius: var(--radius-pill);
-  font-size: var(--fs-label);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-weight: 700;
-  margin-bottom: 0.9rem;
-}
-
-/* ==========================================================================
-   Cierre — Para llevar (kraft + stencil). Bloque de color sólido (marrón,
-   invertido), segundo momento de convicción de color junto con el hero.
-   Mobile-first: base = 1 columna; min-width:901px = layout 2 columnas
-   ========================================================================== */
-.cierre {
-  background:
-    conic-gradient(rgba(251, 246, 239, 0.05) 90deg, transparent 90deg 180deg, rgba(251, 246, 239, 0.05) 180deg 270deg, transparent 270deg) 0 0 / 34px 34px,
-    var(--marron);
-  color: var(--crema);
-}
-.cierre .eyebrow { color: var(--rosa); }
-.cierre .section-heading { color: var(--crema); }
-.cierre .lede { color: var(--crema-header); }
-
-.cierre__layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: center;
-  margin-bottom: clamp(3rem, 6vw, 5rem);
-}
-.cierre__hero {
-  aspect-ratio: 3/4;
-  border-radius: 999px 999px 36px 36px;
-  overflow: hidden;
-  box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.45);
-}
-.cierre__hero img { width: 100%; height: 100%; object-fit: cover; }
-.cierre__satellite {
-  width: 66%;
-  margin-top: -2.2rem;
-  margin-left: auto;
-  margin-right: 8%;
-  border-radius: 999px 999px 36px 36px;
-  overflow: hidden;
-  box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.45);
-}
-.cierre__satellite img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
-
-.info-label {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.6rem 2rem;
-  padding: clamp(1.6rem, 3vw, 2.4rem);
-  background: var(--crema);
-  border-radius: var(--radius-soft);
-}
-.info-item { display: flex; gap: 0.9rem; align-items: flex-start; }
-.info-item svg { width: 26px; height: 26px; flex-shrink: 0; margin-top: 2px; color: var(--marron); }
-.info-item h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; color: var(--marron); margin-bottom: 0.2rem; }
-.info-item p { font-size: 0.92rem; color: var(--marron-mid); }
-
-.cierre__cta {
-  margin-top: clamp(2.2rem, 4vw, 3rem);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1.2rem;
-}
-
-/* ==========================================================================
-   Footer — rosa sólido, borde ondulado, sello final
-   ========================================================================== */
-.footer {
-  position: relative;
-  background: var(--rosa-ink);
-  color: var(--crema);
-  padding-top: clamp(3.5rem, 7vw, 5.5rem);
-  padding-bottom: clamp(2.5rem, 5vw, 3.5rem);
-}
-
-.footer__layout {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-}
-
-.footer__brand { display: flex; align-items: center; }
-.footer__brand img {
-  height: 34px;
-  width: auto;
-  filter: brightness(0) invert(1);
-}
-
-.footer__address {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  opacity: 0.92;
-}
-
-.footer__social {
-  display: flex;
-  align-items: center;
-  gap: 1.6rem;
-  flex-wrap: wrap;
-}
-.footer__social-icons { display: flex; gap: 0.9rem; }
-.footer__social-icons a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  border: 2px solid var(--crema);
-  transition: background 0.25s ease, color 0.25s ease;
-}
-.footer__social-icons svg { width: 18px; height: 18px; }
-.footer__social-icons a:hover, .footer__social-icons a:focus-visible {
-  background: var(--crema);
-  color: var(--rosa-ink);
-}
-.footer__social-text { font-size: 0.85rem; line-height: 1.4; opacity: 0.92; }
-.footer__social-text strong { display: block; font-weight: 700; }
-
-.footer__badge {
-  display: none;
-  position: absolute;
-  right: clamp(1rem, 5vw, 3.5rem);
-  top: 0;
-  transform: translateY(-58%);
-  width: clamp(88px, 8vw, 116px);
-  height: auto;
-}
-.footer__badge-fill { fill: var(--crema); }
-.footer__badge-text {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 11px;
-  fill: var(--rosa-ink);
-}
-.footer__badge-text tspan { text-anchor: middle; }
-.footer__badge svg + svg { margin-top: -4px; }
-
-/* ==========================================================================
-   Pill de WhatsApp fija — "mozo disponible"
-   ========================================================================== */
-.whatsapp-pill {
-  position: fixed;
-  right: clamp(1rem, 3vw, 1.8rem);
-  bottom: clamp(1rem, 3vw, 1.8rem);
-  z-index: 70;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  padding: 0.75em 1.15em;
-  border-radius: var(--radius-pill);
-  background: var(--marron);
-  color: var(--crema);
-  font-weight: 600;
-  font-size: 0.9rem;
-  box-shadow: 4px 4px 0 var(--rosa-deep);
-  transform: translateY(120%);
-  transition: transform 0.45s var(--ease-out), box-shadow 0.25s ease;
-}
-.whatsapp-pill.is-visible { transform: translateY(0); }
-.whatsapp-pill:hover, .whatsapp-pill:focus-visible { box-shadow: 6px 6px 0 var(--rosa-deep); }
-.whatsapp-pill svg { width: 20px; height: 20px; }
-
-/* ==========================================================================
-   Parallax util
-   ========================================================================== */
-[data-parallax] { will-change: transform; }
-
-/* ==========================================================================
-   Utilidades de imagen responsive
-   ========================================================================== */
-picture { display: block; width: 100%; height: 100%; }
-
-/* ==========================================================================
-   ESCALA HACIA ARRIBA — mobile-first: todo lo que sigue son mejoras
-   progresivas para pantallas más grandes. Nunca hay estilos de layout
-   exclusivos de móvil de este punto en adelante.
-   ========================================================================== */
-
-/* Clásicos: 2 -> 3 columnas */
-@media (min-width: 561px) {
-  .clasicos__grid { grid-template-columns: repeat(3, 1fr); gap: 1.4rem 1rem; }
-}
-
-/* Footer: se agrega el sello decorativo */
-@media (min-width: 641px) {
-  .footer__badge { display: block; }
-}
-
-/* Café, Racimo/Mesa, Personalización, Lugar, Cierre: pasan a layout de 2 columnas.
-   El nav se mantiene igual en todos los tamaños: siempre menú a pantalla completa. */
-@media (min-width: 901px) {
-  .mesa__intro { grid-template-columns: 1fr 1fr; }
-  .gallery-card { width: 360px; }
-
-  .personal__layout { grid-template-columns: 1fr 1fr; }
-  .personal__photo { width: 84%; margin-inline: auto; }
-  .personal__satellite { width: 58%; margin-top: -3.5rem; }
-
-  .lugar__layout { grid-template-columns: 1.15fr 0.85fr; }
-  .lugar__side { grid-template-columns: none; gap: 1.4rem; }
-  .lugar__side-item:nth-child(2) { margin-left: 10%; margin-top: 0; }
-
-  .cierre__layout { grid-template-columns: 1fr 1fr; }
-  .cierre__satellite { width: 62%; margin-top: -3rem; }
-}
-
-/* Clásicos: layout de intro pasa a 2 columnas, grilla a 5 */
-@media (min-width: 981px) {
-  .clasicos__layout { grid-template-columns: 0.62fr 1.38fr; }
-  .clasicos__intro { max-width: 26rem; }
-  .clasicos__grid { grid-template-columns: repeat(5, 1fr); gap: clamp(1rem, 2vw, 1.6rem); }
-}
-

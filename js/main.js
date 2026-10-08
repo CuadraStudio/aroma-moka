@@ -1,222 +1,164 @@
-(() => {
+/* ==========================================================================
+   Aroma Moka & Dolce Shop · v7.0
+   - El motor de Cuadra pone los reveals y la deriva de los carriles.
+   - Todo lo de acá es del sitio: interruptor de modo, "foto que crece",
+     cierre que se junta, línea central, barra de progreso y pilas de fotos.
+   Sin librerías. prefers-reduced-motion: nada se anima y todo queda en su
+   estado final.
+   ========================================================================== */
+(function () {
   "use strict";
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var root = document.documentElement;
+  var reduce = window.CuadraMotion
+    ? window.CuadraMotion.reduceMotion()
+    : window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------------------------------------------------------------------
-   * Loader de marca: isologo breve antes de abrir la pagina.
-   * Se saca solo (clase is-hidden) al primero entre "load" o un minimo,
-   * asi nunca tapa la pagina mas de la cuenta si algo tarda.
-   * ------------------------------------------------------------------- */
-  const loader = document.getElementById("brandLoader");
-  if (loader) {
-    if (reduceMotion) {
-      loader.classList.add("is-hidden");
-    } else {
-      const MIN_MS = 900;
-      const MAX_MS = 2200;
-      let hidden = false;
-      const hide = () => {
-        if (hidden) return;
-        hidden = true;
-        loader.classList.add("is-hidden");
-        loader.addEventListener("transitionend", () => loader.remove(), { once: true });
-      };
-      const start = Date.now();
-      window.addEventListener(
-        "load",
-        () => setTimeout(hide, Math.max(0, MIN_MS - (Date.now() - start))),
-        { once: true }
-      );
-      setTimeout(hide, MAX_MS); // nunca deja la pagina tapada si "load" no llega
-    }
+  /* ---------- 1. Motor de Cuadra: reveals + parallax declarativo ---------- */
+  if (window.CuadraMotion) window.CuadraMotion.init();
+
+  /* ---------- 2. Progreso de scroll → variable --p / --page ---------- */
+  var scrubEls = [].slice.call(document.querySelectorAll("[data-scrub]"));
+
+  function clamp01(n) {
+    return n < 0 ? 0 : n > 1 ? 1 : n;
   }
 
-  /* ---------------------------------------------------------------------
-   * Goteo: los bordes con clip-path de gota se estiran un toque al entrar
-   * ------------------------------------------------------------------- */
-  if (!reduceMotion) {
-    const dripEls = document.querySelectorAll(".wavy-top, .arch-top");
-    if (dripEls.length) {
-      const dripObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            entry.target.classList.add("drip-stretch");
-            setTimeout(() => entry.target.classList.remove("drip-stretch"), 550);
-            dripObserver.unobserve(entry.target);
-          });
-        },
-        { threshold: 0.15 }
-      );
-      dripEls.forEach((el) => dripObserver.observe(el));
+  function scrub() {
+    if (reduce) return;
+    var vh = window.innerHeight;
+    for (var i = 0; i < scrubEls.length; i++) {
+      var el = scrubEls[i];
+      var r = el.getBoundingClientRect();
+      if (!r.height) continue; // está en el otro modo (oculto)
+      // 0 cuando el borde superior entra por abajo, 1 cuando llegó a 25% del alto
+      el.style.setProperty("--p", clamp01((vh - r.top) / (vh * 0.75)).toFixed(3));
     }
+    var max = root.scrollHeight - vh;
+    root.style.setProperty("--page", max > 0 ? clamp01(window.scrollY / max).toFixed(4) : "0");
   }
 
-  /* ---------------------------------------------------------------------
-   * Momento de firma: la foto del gesto queda fija (css) mientras el
-   * corazon se dibuja en proporcion directa al scroll dentro del stage.
-   * No es un disparo unico al entrar en pantalla: responde todo el tiempo,
-   * en los dos sentidos, mientras dura el "pin".
-   * ------------------------------------------------------------------- */
-  const cafeStage = document.getElementById("cafeStage");
-  const heartPath = document.querySelector("#heartDraw .heart-draw__path");
-  if (heartPath && heartPath.getTotalLength) {
-    const heartLen = Math.ceil(heartPath.getTotalLength());
-    heartPath.style.strokeDasharray = String(heartLen);
-    if (reduceMotion || !cafeStage) {
-      heartPath.style.strokeDashoffset = "0";
-    } else {
-      const updateHeart = () => {
-        const rect = cafeStage.getBoundingClientRect();
-        const total = rect.height - window.innerHeight;
-        const progress = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
-        heartPath.style.strokeDashoffset = String(heartLen * (1 - progress));
-      };
-      updateHeart();
-      let heartTicking = false;
-      window.addEventListener(
-        "scroll",
-        () => {
-          if (!heartTicking) {
-            heartTicking = true;
-            requestAnimationFrame(() => {
-              updateHeart();
-              heartTicking = false;
-            });
-          }
-        },
-        { passive: true }
-      );
-      window.addEventListener("resize", updateHeart);
-    }
-  }
-
-  /* ---------------------------------------------------------------------
-   * Galeria fijada: racimo + surtido recorridos en horizontal mientras la
-   * pagina sigue bajando en vertical — segundo momento de firma de "La mesa"
-   * ------------------------------------------------------------------- */
-  const galleryStage = document.getElementById("mesaGalleryStage");
-  const galleryTrack = document.getElementById("mesaGalleryTrack");
-  const galleryBar = document.getElementById("mesaGalleryBar");
-  if (galleryStage && galleryTrack && !reduceMotion) {
-    let maxTranslate = 0;
-    const measureGallery = () => {
-      maxTranslate = Math.max(0, galleryTrack.scrollWidth - galleryStage.clientWidth);
-      galleryStage.style.height = `${window.innerHeight + maxTranslate}px`;
-    };
-    const updateGallery = () => {
-      const rect = galleryStage.getBoundingClientRect();
-      const total = galleryStage.offsetHeight - window.innerHeight;
-      const progress = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
-      galleryTrack.style.transform = `translateX(${-progress * maxTranslate}px)`;
-      if (galleryBar) galleryBar.style.width = `${progress * 100}%`;
-    };
-    measureGallery();
-    updateGallery();
-    let galleryTicking = false;
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (!galleryTicking) {
-          galleryTicking = true;
-          requestAnimationFrame(() => {
-            updateGallery();
-            galleryTicking = false;
-          });
-        }
-      },
-      { passive: true }
-    );
-    window.addEventListener("resize", () => {
-      measureGallery();
-      updateGallery();
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () {
+      scrub();
+      ticking = false;
     });
   }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  scrub();
 
-  /* ---------------------------------------------------------------------
-   * Nav: sombra al scrollear + link activo por sección + menú mobile
-   * ------------------------------------------------------------------- */
-  const navToggle = document.getElementById("navToggle");
-  const navMobile = document.getElementById("navMobile");
-  const navClose = document.getElementById("navClose");
+  /* ---------- 3. Pilas de fotos (tarjetas apiladas) ---------- */
+  [].forEach.call(document.querySelectorAll("[data-stack]"), function (stack) {
+    var wrap = stack.closest(".stack-wrap");
+    var cards = [].slice.call(stack.querySelectorAll(".stack__card"));
+    var caption = wrap.querySelector(".stack__caption");
+    var count = wrap.querySelector(".stack__count");
+    var n = cards.length;
+    var idx = 0;
 
-  function openMobileNav() {
-    navMobile.classList.add("is-open");
-    navMobile.setAttribute("aria-hidden", "false");
-    navToggle.setAttribute("aria-expanded", "true");
-  }
-  function closeMobileNav() {
-    navMobile.classList.remove("is-open");
-    navMobile.setAttribute("aria-hidden", "true");
-    navToggle.setAttribute("aria-expanded", "false");
-  }
-  navToggle?.addEventListener("click", openMobileNav);
-  navClose?.addEventListener("click", closeMobileNav);
-  navMobile?.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMobileNav));
-
-  const navLinks = document.querySelectorAll(".nav-mobile a");
-  const navSections = ["lugar", "clasicos", "pasteleria"]
-    .map((id) => document.getElementById(id))
-    .filter(Boolean);
-
-  if (navSections.length) {
-    const sectionObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          navLinks.forEach((link) => {
-            link.classList.toggle("is-active", link.getAttribute("href") === `#${entry.target.id}`);
-          });
-        });
-      },
-      { rootMargin: "-45% 0px -50% 0px" }
-    );
-    navSections.forEach((section) => sectionObserver.observe(section));
-  }
-
-  /* ---------------------------------------------------------------------
-   * Pill de WhatsApp fija: aparece después del hero
-   * ------------------------------------------------------------------- */
-  const whatsappPill = document.getElementById("whatsappPill");
-  const heroSection = document.querySelector(".hero");
-  if (whatsappPill && heroSection) {
-    const pillObserver = new IntersectionObserver(
-      ([entry]) => whatsappPill.classList.toggle("is-visible", !entry.isIntersecting),
-      { threshold: 0 }
-    );
-    pillObserver.observe(heroSection);
-  }
-
-  /* ---------------------------------------------------------------------
-   * Parallax de una capa — fotos de producto se mueven más lento
-   * ------------------------------------------------------------------- */
-  if (!reduceMotion) {
-    const parallaxEls = Array.from(document.querySelectorAll("[data-parallax]"));
-    if (parallaxEls.length) {
-      let ticking = false;
-      const applyParallax = () => {
-        ticking = false;
-        const vh = window.innerHeight;
-        parallaxEls.forEach((el) => {
-          const speed = parseFloat(el.dataset.parallaxSpeed || "0.1");
-          const rect = el.getBoundingClientRect();
-          const centerDelta = rect.top + rect.height / 2 - vh / 2;
-          el.style.transform = `translateY(${(-centerDelta * speed).toFixed(1)}px)`;
-        });
-      };
-      window.addEventListener(
-        "scroll",
-        () => {
-          if (!ticking) {
-            ticking = true;
-            requestAnimationFrame(applyParallax);
-          }
-        },
-        { passive: true }
-      );
-      applyParallax();
+    function render() {
+      cards.forEach(function (card, i) {
+        card.setAttribute("data-pos", String((i - idx + n) % n));
+      });
+      caption.textContent = cards[idx].getAttribute("data-caption");
+      count.textContent = idx + 1 + " / " + n;
     }
+
+    function go(dir) {
+      idx = (idx + dir + n) % n;
+      render();
+    }
+
+    [].forEach.call(wrap.querySelectorAll("[data-dir]"), function (btn) {
+      btn.addEventListener("click", function () {
+        go(parseInt(btn.getAttribute("data-dir"), 10));
+      });
+    });
+
+    // deslizar con el dedo o el mouse
+    var x0 = null;
+    stack.addEventListener("pointerdown", function (e) { x0 = e.clientX; });
+    stack.addEventListener("pointerup", function (e) {
+      if (x0 === null) return;
+      var dx = e.clientX - x0;
+      x0 = null;
+      if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+    });
+    stack.addEventListener("pointercancel", function () { x0 = null; });
+
+    // teclado: flechas con la pila enfocada
+    stack.setAttribute("tabindex", "0");
+    stack.setAttribute("role", "group");
+    stack.setAttribute("aria-label", "Fotos, usá las flechas para cambiar");
+    stack.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
+    });
+
+    render();
+  });
+
+  /* ---------- 4. Interruptor Aroma Moka / Dolce Shop ---------- */
+  var curtain = document.querySelector(".curtain");
+  var announce = document.getElementById("modeAnnounce");
+  var themeMeta = document.querySelector('meta[name="theme-color"]');
+  var switchBtns = [].slice.call(document.querySelectorAll(".switch__btn"));
+
+  var TITLES = {
+    aroma: "Aroma Moka & Dolce Shop · Un café y algo dulce",
+    dolce: "Dolce Shop · Pastelería artesanal, tortas y galletas decoradas",
+  };
+  var FIELD = { aroma: "#7E411A", dolce: "#EFA6BC" };
+  var NAMES = { aroma: "Aroma Moka", dolce: "Dolce Shop" };
+
+  var mode = root.getAttribute("data-mode") === "dolce" ? "dolce" : "aroma";
+
+  function apply(next, silent) {
+    mode = next;
+    root.setAttribute("data-mode", next);
+    switchBtns.forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-set-mode") === next));
+    });
+    document.title = TITLES[next];
+    if (themeMeta) themeMeta.setAttribute("content", FIELD[next]);
+    try {
+      localStorage.setItem("am-mode", next);
+      var url = new URL(window.location.href);
+      url.searchParams.set("v", next);
+      window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+    } catch (e) { /* sin storage o file://: no pasa nada */ }
+    if (announce && !silent) announce.textContent = "Mostrando la web de " + NAMES[next];
+    scrub();
   }
 
+  function switchTo(next) {
+    if (next === mode) return;
+    if (reduce || !curtain) {
+      apply(next);
+      window.scrollTo({ top: 0, behavior: "instant" });
+      return;
+    }
+    curtain.style.background = FIELD[next];
+    curtain.className = "curtain";
+    void curtain.offsetWidth; // reinicia la transición
+    curtain.classList.add("is-in");
+    window.setTimeout(function () {
+      apply(next);
+      window.scrollTo({ top: 0, behavior: "instant" });
+      curtain.classList.remove("is-in");
+      curtain.classList.add("is-out");
+      window.setTimeout(function () { curtain.className = "curtain"; }, 480);
+    }, 470);
+  }
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-set-mode]");
+    if (btn) switchTo(btn.getAttribute("data-set-mode"));
+  });
+
+  apply(mode, true);
 })();
