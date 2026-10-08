@@ -10,7 +10,9 @@ Esta laptop no tiene Python. Desde la raíz del repo (`Webs/`):
 node .claude/serve.js 3021
 ```
 
-y abrir `http://localhost:3021/clientes/aroma-moka/site/`. Hay que servir **desde la raíz del repo** (no desde `site/`), porque el sitio carga el motor por ruta relativa `../../../engine/`. La entrada `aroma-moka` de `.claude/launch.json` ya apunta a ese comando. `.claude/serve.js` es un servidor estático mínimo que se agregó en esta pasada.
+y abrir `http://localhost:3021/clientes/aroma-moka/site/`. La entrada `aroma-moka` de `.claude/launch.json` ya apunta a ese comando. `.claude/serve.js` es un servidor estático mínimo que se agregó en esta pasada.
+
+El sitio es autónomo: el motor de movimiento está copiado en `engine/` (ver abajo), así que también se puede servir directo desde esta carpeta con cualquier servidor estático.
 
 Enlace directo a cada web: `?v=aroma` y `?v=dolce`.
 
@@ -35,7 +37,7 @@ Todo en una sola página, con dos modos. El modo vive en `html[data-mode]` (`aro
 - `index.html`: estructura y contenido de las dos webs.
 - `css/style.css`: tokens, componentes y escalado (mobile-first: base móvil, `min-width` 640 / 1000 / 1280). El modo cambia solo las variables `--field`, `--field-ink`, `--field-sub` y `--u`: madera con texto hueso en Aroma Moka, rosa chicle con texto moka en Dolce Shop.
 - `js/main.js`: interruptor de modo, "foto que crece", cierre que se junta, línea central, barra de progreso y pilas de fotos.
-- `engine/cuadra-motion.css|js` (raíz del repo): reveals (`data-reveal`) y deriva de los carriles (`data-parallax`). No se copió ni reescribió su lógica.
+- `engine/cuadra-motion.css|js`: reveals (`data-reveal`) y deriva de los carriles (`data-parallax`). Es una **copia sin cambios** del motor de Cuadra (`engine/` en la raíz de `Webs/`, copiada el 2026-10-07), puesta acá para que el repo de este sitio se publique solo. Si el motor cambia en `Webs/`, hay que volver a copiarlo.
 
 ## Movimiento más allá del reveal básico, y por qué
 
