@@ -62,7 +62,9 @@
 
     function render() {
       cards.forEach(function (card, i) {
-        card.setAttribute("data-pos", String((i - idx + n) % n));
+        var pos = (i - idx + n) % n;
+        card.setAttribute("data-pos", String(pos));
+        card.setAttribute("aria-hidden", pos === 0 ? "false" : "true");
       });
       caption.textContent = cards[idx].getAttribute("data-caption");
       count.textContent = idx + 1 + " / " + n;

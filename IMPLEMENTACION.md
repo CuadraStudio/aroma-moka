@@ -1,95 +1,96 @@
-# aroma-moka — IMPLEMENTACION.md
+# aroma-moka — IMPLEMENTACION.md (v7.0 · 2026-10-07)
 
-Este sitio no se construyó desde cero en esta pasada — ya existía en `sites/aroma-moka/` desde antes del workflow formal. Este documento cubre lo que cambió al formalizarlo en `clientes/aroma-moka/site/`.
+Reimplementación completa. Reemplaza `index.html`, `css/style.css` y `js/main.js` de la v6.0; la v6.0 y todas las anteriores quedan en el historial de git de esta carpeta.
 
 ## Cómo abrir o servir el sitio
 
+Esta laptop no tiene Python. Desde la raíz del repo (`Webs/`):
+
 ```
-python -m http.server 3021 --directory clientes/aroma-moka/site
+node .claude/serve.js 3021
 ```
 
-## Qué se hizo en esta pasada (2026-09-30)
+y abrir `http://localhost:3021/clientes/aroma-moka/site/`. Hay que servir **desde la raíz del repo** (no desde `site/`), porque el sitio carga el motor por ruta relativa `../../../engine/`. La entrada `aroma-moka` de `.claude/launch.json` ya apunta a ese comando. `.claude/serve.js` es un servidor estático mínimo que se agregó en esta pasada.
 
-1. **Migración:** contenido copiado de `sites/aroma-moka/` a `clientes/aroma-moka/site/`, con su propio historial de git desde acá en adelante. `sites/aroma-moka/` queda como el original pre-workflow — no se borró, ver nota abajo.
-2. **Corrección de datos falsos:** el sitio tenía un WhatsApp inventado (`59800000000`) y un link de Instagram genérico (`instagram.com`). Se reemplazaron por los reales, verificados en Google Maps e Instagram el 2026-09-30: WhatsApp `59895741364`, Instagram [@aroma.moka](https://www.instagram.com/aroma.moka/). 4 lugares corregidos (botón "Escribinos por WhatsApp", ícono de Instagram del footer, ícono de WhatsApp del footer, píldora fija "Pedir").
-3. **CSS reescrito mobile-first:** antes era desktop-first (`max-width` en 8 breakpoints). Ahora las reglas base (sin media query) son el layout móvil, y todo lo que escala hacia arriba vive en una sección final de `min-width` (561, 641, 781, 901, 981, 1080px — mismos breakpoints que antes, invertidos). Verificado en 375, 1030 y 1400px sin scroll horizontal, sin errores de consola, sin regresiones visuales en desktop.
-4. **DESIGN.md migrado** a `clientes/aroma-moka/DESIGN.md`, reformateado a la plantilla de 13 secciones — el concepto ("Se sirve con corazón") no cambió, se sumó evidencia nueva (terraza exterior, personalización con galletas) que lo refuerza.
+Enlace directo a cada web: `?v=aroma` y `?v=dolce`.
 
-## No se tocó en esta pasada
+## Fuente de diseño
 
-- El JS (`js/main.js`) — reveal del corazón de latte art, parallax, scroll-snap del surtido — sigue siendo el mismo, no tenía nada desktop-first que corregir.
-- El texto "Horario: Consultanos por WhatsApp" — ya hay un horario real verificado (Martes a Sábado, 9 a 20h) pero no se pidió corregirlo, queda señalado en DESIGN.md §12.
-- "Estacionamiento: Gratuito" — no se verificó, queda señalado en DESIGN.md §12.
+No hay `DESIGN.md` (se eliminó el 2026-09-30 a pedido de Luciano). El contrato de esta pasada es el **Artifact Design "Aroma Moka — Design Concept"** (https://claude.ai/artifact/MYgK5VvxpF7Qomp2fo2ex8) y las decisiones tomadas en la conversación del 2026-10-07. Nada de esto está marcado APROBADO. **No se usó el `DESIGN.md` anterior** (`sites/aroma-moka/DESIGN.md`) como referencia, por pedido explícito.
 
-## v2.0 (2026-09-30) — integración de Dolce Shop
+Decisiones [YO] que gobiernan esta versión: dirección fotográfica y editorial; sin tablero de ajedrez como recurso gráfico; sin QR (era solo de una pieza publicitaria); no explicar que Dolce Shop es de la misma dueña, sino presentar a los dos negocios siempre unidos; landing simple; dos botones, uno por negocio; **interruptor** que cambia la web entera entre Aroma Moka (que incluye a Dolce Shop) y Dolce Shop.
 
-DESIGN.md pasó a v2.0 porque el cliente no aprobó v1.0 ("el diseño sigue siendo el mismo") y confirmó que Dolce Shop (tortas/cookies personalizadas) es la misma familia/negocio. Cambios en el sitio:
+## Mapa de escenas → archivos
 
-- 2 fotos reales nuevas de Dolce Shop (torta "Oli", cookies navideñas) reemplazan 2 piezas del racimo de "La mesa" (`dolce_torta_oli`, `dolce_cookies_navidad` en `img/`, WebP+JPG). Llevan un borde coral sutil (`.dolce-piece`) — integradas en el mismo racimo, no en sección aparte.
-- Sección "Personalización": se agrega mención a Dolce Shop (por marca, no por nombre personal — pedido explícito del cliente) y un botón "Encargá tu torta" al WhatsApp de Dolce Shop.
-- Sección "Cierre": pasa de una CTA a dos, lado a lado — "Pedí — café y vitrina" (Aroma Moka, 095 741 364) y "Encargá — Dolce Shop" (093 329 614) — mismo peso visual, ninguna es la principal.
-- Nuevos tokens de color `--menta-dolce` / `--coral-dolce`, usados únicamente en el botón/CTA de Dolce Shop y el borde de sus piezas en el racimo — la paleta base de Aroma Moka (rosa/crema) no cambia.
-- Verificado en 375 y 800px: sin errores de consola, imágenes cargando (200 OK), CTAs apiladas correctamente en mobile.
+Todo en una sola página, con dos modos. El modo vive en `html[data-mode]` (`aroma` o `dolce`); cada bloque se muestra según `data-only`.
 
-## v3.0 (2026-09-30) — lenguaje visual más seguro (referencia del cliente)
+| Escena | Aroma Moka | Dolce Shop |
+|---|---|---|
+| Apertura + foto que crece | `#inicio` | `#d-inicio` |
+| Manifiesto | `#juntos` ("Juntos") | `#d-medida` ("A medida") |
+| Dos carriles + pilas de fotos | `#cafe` / `#comer` | `#d-tortas` / `#d-galletas` |
+| Cierre con datos y botones | `#visitanos` (compartido; solo cambian título y etiqueta) | igual |
+| Pie | `.foot` (compartido) | igual |
 
-El cliente trajo una referencia externa ([triozen-tech/day-3-melt](https://github.com/triozen-tech/day-3-melt), un sitio-demo ficticio con fotos generadas por IA) pidiendo "algo así". Se tomó el lenguaje visual/estructural, nunca sus fotos ni su motor (Next.js, cursor personalizado, video scroll-driven — ninguno es parte del stack de Cuadra). Cambios:
+- `index.html`: estructura y contenido de las dos webs.
+- `css/style.css`: tokens, componentes y escalado (mobile-first: base móvil, `min-width` 640 / 1000 / 1280). El modo cambia solo las variables `--field`, `--field-ink`, `--field-sub` y `--u`: madera con texto hueso en Aroma Moka, rosa chicle con texto moka en Dolce Shop.
+- `js/main.js`: interruptor de modo, "foto que crece", cierre que se junta, línea central, barra de progreso y pilas de fotos.
+- `engine/cuadra-motion.css|js` (raíz del repo): reveals (`data-reveal`) y deriva de los carriles (`data-parallax`). No se copió ni reescribió su lógica.
 
-- **Loader de marca:** `#brandLoader`, isologo real (`isotipo.jpg/webp` — el de las letras "AM" con la tacita, no el sello circular que describía DESIGN.md; es el único isologo suelto que existe como archivo limpio) sobre crema, pulso breve, se retira solo (mínimo ~900ms, máximo 2.2s aunque `load` no llegue nunca). `prefers-reduced-motion`: no se muestra.
-- **Goteo marcado:** se rediseñaron los `clipPath` `waveTop`/`waveBottom` con más oscilaciones y más amplitud (de ~0.05-0.1 a ~0.1-0.2 de la altura). Se sumó `wavy-top` a `.mesa` y `.personal` (antes solo estaba en `.clasicos` y el footer) para reforzar el corte entre "El gesto" y "La mesa". Estiramiento leve al entrar en viewport vía clase `.drip-stretch` (`scaleY`, 550ms, se retira sola).
-- **Tipografía mayor:** `.hero__title` de `clamp(2.6rem,...,4.4rem)` a `clamp(3.2rem,...,6rem)`; `--fs-h2` de `clamp(2rem,...,3.4rem)` a `clamp(2.3rem,...,4rem)`.
-- **Corazón que se dibuja:** nuevo SVG `#heartDraw` en `.cafe__hero` (esquina inferior derecha de la foto de la taza), trazo animado con `stroke-dasharray`/`getTotalLength()`, disparado por `IntersectionObserver`. **No existía en ninguna versión anterior** — DESIGN.md lo describía desde v1.0 pero nunca se había implementado; se construyó recién ahora.
-- **Un solo color de acción:** se sacó `--coral-dolce` de los botones "Encargá" (ambos vuelven a la paleta rosa/marrón — `btn-pill--on-rosa` y `btn-pill--outline`). Menta/coral quedan solo en el borde de las piezas de Dolce Shop en el racimo (`.dolce-piece`), nunca en botones.
+## Movimiento más allá del reveal básico, y por qué
 
-**Bug real encontrado y corregido en esta pasada:** el corazón no se dibujaba — el JS fijaba `stroke-dashoffset` inline (mayor especificidad que la regla CSS `.in-view`), así que la clase se agregaba bien pero el offset nunca volvía a 0 visualmente. Se corrigió reseteando el offset por JS también, no solo por clase.
+El concepto pide un recorrido con un solo gesto fuerte por pantalla, así que hay más que el reveal:
 
-Verificado en 375 y 800px: sin errores de consola, sin scroll horizontal, loader se retira solo y se elimina del DOM, corazón se dibuja al entrar en viewport (confirmado con `getComputedStyle`, no solo visualmente), botones "Pedí"/"Encargá" ambos en paleta rosa/marrón.
+- **Foto que crece (momento de firma):** la pareja de fotos del inicio sube y se abre del 64% al 100% del ancho con esquinas redondeadas, mientras el fondo pasa de campo de color a hueso. Es `clip-path` con la variable `--p`, que `main.js` calcula con el scroll (en los dos sentidos). Se eligió JS y no `animation-timeline` para que funcione en todos los navegadores.
+- **Dos carriles a contramarcha:** las pilas de fotos derivan en sentidos opuestos con `data-parallax` del motor (velocidad ±0.07, solo ≥ 1000 px). Una línea central se dibuja con el scroll y un "&" marca la unión.
+- **Cierre que se junta:** los datos de las dos casas se acercan desde ±10 vw.
+- **Anillo de texto:** SVG con `textPath` que gira una vuelta cada 24 s.
+- **Pilas de fotos:** tres tarjetas apiladas con flechas, teclado (flechas con la pila enfocada) y swipe.
+- **Interruptor:** una cortina del color del modo de destino sube, se cambia el contenido y se retira (0.9 s en total).
+- **Barra de progreso** rosa de 3 px arriba.
 
-## v4.0 (2026-09-30) — estructura, no solo piel
+`prefers-reduced-motion`: sin animación de ninguna clase; el interruptor cambia al instante y todo queda en su estado final. En móvil no hay deriva de carriles.
 
-El cliente marcó, con razón, que v3.0 seguía siendo la misma estructura de siempre con lenguaje visual nuevo encima: todas las escenas tenían la misma mecánica ("contenedor → intro + grilla 2 columnas → borde ondulado"), solo cambiaban las fotos. v4.0 cambia la mecánica de dos escenas de verdad, no el estilo:
+Registrado en `docs/operacion/MOTION-LOG.md`. No repite el momento de firma de los clientes recientes (trazo SVG, producto flotante).
 
-- **El gesto (café) → momento de firma a pantalla completa.** Se reemplazó `.cafe__layout` (grilla 2 columnas, foto 1:1 chica) por `.cafe__stage` / `.cafe__pin`: un contenedor alto (`220vh`) con la foto en `position: sticky` a pantalla completa. El corazón (`#heartDraw`) ya no usa `IntersectionObserver` — un listener de scroll (`requestAnimationFrame`-throttled) calcula el progreso 0–1 del tramo fijado y lo aplica directo a `stroke-dashoffset`. Responde en los dos sentidos: subís y el trazo retrocede. Las fotos satélite y la nota bajaron, en flujo normal, debajo del stage.
-- **La mesa → galería horizontal fijada.** `.racimo` (grilla asimétrica 12 columnas con reveal por `IntersectionObserver`) y `.surtido` (scroll-snap libre) se fusionaron en `.mesa__gallery-stage`: 10 tarjetas (las 5 del racimo + las 5 del surtido, incluidas las 2 de Dolce Shop) en una sola pista. La sección se ancla (`sticky`) y un `translateX` calculado en JS mueve la pista en horizontal en proporción directa al scroll vertical consumido. La altura exacta del stage la calcula JS (`scrollWidth` real de la pista menos el ancho visible), no un valor fijo — se recalcula en `resize`. Una barra fina (`#mesaGalleryBar`) marca el progreso.
-- **Personalización cambia de onda a arco.** Nuevo `clipPath` `#archTop`, misma mecánica de estiramiento al entrar en pantalla que `wavy-top`, forma distinta — para que dos secciones seguidas no usen el mismo corte.
+## Desviaciones del Artifact y cómo se conserva la intención
 
-Las dos mecánicas nuevas se verificaron con scroll programático (no solo visualmente): el trazo del corazón y el `translateX` de la galería responden de forma exactamente proporcional al progreso (50% de scroll → 50% de trazo / 50% de traslado; reversible en ambos sentidos). `prefers-reduced-motion`: el stage del café se aplana a una imagen fija de 60vh con el corazón ya dibujado; la galería se aplana a una grilla normal que envuelve línea, sin pin ni traslado.
+- **Scroll con JS en vez de CSS `animation-timeline`:** el Artifact usaba CSS para el prototipo; acá se pasó a JS para soportar Safari y Firefox. Mismo efecto.
+- **Lugar de la mascota:** el Artifact tenía un círculo punteado. En el sitio **no se muestra**: el anillo del cierre gira alrededor del isotipo (Aroma Moka) o de un corazón (Dolce Shop). Cuando llegue la mascota en vectorial y sin QR, entra en el centro de ese anillo.
+- **Dolce Shop como tarjeta de texto:** no hay logo vectorial de Dolce Shop, así que el encabezado usa un "wordmark" tipográfico ("Dolce Shop / Pastelería artesanal", texto que sí aparece en sus tarjetas de torta). Es provisorio.
+- **Datos reales en vez de corchetes:** dirección, horario, WhatsApp e Instagram salen de `research/RESEARCH.md` y de lo confirmado por Luciano.
 
-Verificado en 375 y ~640px: sin scroll horizontal, sin errores de consola, ninguna escena repite la mecánica de su vecina inmediata.
+## Decisiones [IA] donde no había contrato
 
-## v5.0 (2026-09-30) — identidad visual completa, no una escena más
+- La web de Dolce Shop (titular "Tortas y galletas hechas a tu medida", sección "A medida", carriles "Tortas" y "Galletas y cajas") es una **propuesta mía** a partir de las fotos de sus tortas y galletas, el texto "Pastelería artesanal" de sus tarjetas y los destacados de su Instagram (Mamá, San Valentín, Pascuas, Fiestas, Tortas, Cookies).
+- Campo de Dolce Shop en rosa chicle (el rosa de su papel de empaque) y el de Aroma Moka en madera.
+- Corazón de línea genérico como centro del anillo de Dolce Shop.
+- Orden de las pilas de fotos y repetición de algunas fotos entre secciones, porque Dolce Shop tiene solo 4 fotos reales.
 
-Feedback directo tras v4.0: "la página sigue teniendo la misma estructura... el mismo texto, la misma distribución del ícono de menú, el sello en el medio, la imagen a la derecha". Correcto — v4.0 cambió la mecánica de "El gesto" y "La mesa" pero nunca tocó el hero ni el nav, que seguían siendo los de la v1.0 pre-workflow. v5.0 redefine la identidad visual completa:
+## Copy escrito por IA, para revisar
 
-- **Hero rehecho de cero.** `.hero__grid` (texto-izquierda/foto-derecha con `.stamp-badge` circular superpuesto) se reemplaza por `.hero__stage`/`.hero__pin`: bloque rosa sólido con "AROMA MOKA" en wordmark gigante (Fredoka, `clamp(3.6rem, 17vw, 11rem)`). Misma receta de `sticky` + progreso de scroll que el corazón de "El gesto": la foto real del mostrador (`hero-mostrador-figma`) se revela detrás del wordmark (`opacity` 0→1, `scale` 0.92→1) mientras el wordmark cede protagonismo (`scale` 1→0.9, `opacity` 1→0.65). El copy real y el CTA bajaron a flujo normal, debajo del stage. Se sacó el `.stamp-badge` (sello circular decorativo): no aportaba nada que el wordmark + el corazón real de "El gesto" no cubrieran ya.
-- **Nav reducido a pantalla completa en todos los tamaños.** Se eliminó la barra de links inline que solo existía en desktop (`min-width:781px`) y el bloque de ubicación/horario del header (esa info ya está en el cierre, no hacía falta duplicarla). El nav queda en logo + botón "Menú" siempre, abriendo el mismo overlay (`.nav-mobile`) que antes era exclusivo de mobile.
-- **Cierre pasa a bloque marrón sólido, invertido** (texto crema), con una textura de damero muy sutil de fondo (`conic-gradient` a 5% de opacidad). Botones cambiaron de `--solid`/`--outline` (invisibles sobre marrón) a `--on-rosa` y una variante nueva `--outline-crema`.
-- **Damero como motivo recurrente:** nueva franja (`.damero-strip`) entre el hero y "Nuestros clásicos", sumada a la ya existente en "El lugar" y la nueva textura del cierre — 3 apariciones en vez de 1.
-- Paleta (rosa/crema/marrón) y tipografía (Fredoka/Inter/Caveat) no cambiaron: siguen documentadas en fotos reales. Lo que cambió es la composición y el peso con que se usan.
+- Aroma Moka: titular "Un café y algo dulce, en la misma mesa."; "Dos pasiones, una sola mesa…"; "Juntos" y sus tres promesas; "Cada taza, con dibujo"; "Hecho para el café"; "Venite: la mesa te espera".
+- Dolce Shop: "Tortas y galletas hechas a tu medida."; "Cada torta y cada galleta se piensa para una ocasión…"; sus tres promesas; "Tortas para cada ocasión"; "Galletas y cajas con tu mensaje"; "Contanos tu ocasión".
+- "Mejor servicio" se transmite como tono ("recibirte bien", "bien servida"), no como afirmación comprobable.
+- Los pies de foto describen lo que se ve en cada foto.
 
-Verificado con scroll programático: la foto del hero responde en proporción exacta al progreso (confirmado a 60% con `resize_window` para forzar repintado, dado el conocido artefacto de capturas del navegador de pruebas justo después de un scroll). Sin scroll horizontal en 375/622px. Menú a pantalla completa verificado abriendo/cerrando por JS (`#navToggle`), 5 links presentes.
+## Datos faltantes
 
-## v6.0 (2026-09-30) — se elimina DESIGN.md, se aplica el lenguaje de la referencia directo
+- **Link de PedidosYa:** solo se menciona como texto, no encontrado.
+- **Horario de Dolce Shop:** no encontrado (el de la bio es el de Aroma Moka). En su web solo figura "Presupuestos únicamente por WhatsApp".
+- **Logo de Dolce Shop** en vectorial.
+- **Mascota** (taza con gorro tejido y cara sonriente) en vectorial y sin QR. La imagen recibida mide 140×162 px.
+- **Isotipo** en alta: el actual mide 150 px y solo se usa en tamaño chico.
+- **Fotos de Dolce Shop:** solo 4, de 480 a 640 px de ancho, bajadas de Instagram. Se ven bien en las tarjetas, pero no aguantan una foto grande. Hacen falta más y en mejor calidad.
+- Carta y precios: no encontrados, no hay ninguno en el sitio.
 
-Tras v5.0, feedback: "claramente no es lo que estaba buscando... elimines completamente el design.md e intentes aplicar algo relacionado al link que te mandé". Se borró `DESIGN.md` (pedido explícito) y se fue directo a construir a partir del repo de referencia ([triozen-tech/day-3-melt](https://github.com/triozen-tech/day-3-melt)), esta vez leyendo su sitio actual completo (`site/DESIGN.md`, `site/site.css`, `site/components/MeltHero.tsx` — un sitio de helados, "Melt Theory") en vez de solo la librería de patrones genérica. Ese sitio reveló el sistema visual concreto que las versiones anteriores no habían tomado: **cero bordes duros, todo redondeado (píldoras/cápsulas/círculos/blobs), un blob orgánico de fondo, el producto real flotando con deriva continua delante de la palabra gigante (no revelado por scroll), y botones "candy" con una sombra tipo base 3D que se hunde al presionar.** Se intentó levantar el repo localmente (`npm install`) para verlo renderizado; el sandbox lo bloqueó por ser código externo — se leyó el código fuente en su lugar, que alcanzó para extraer las técnicas CSS concretas.
+## Funcionalidades simuladas (etapa 15)
 
-Cambios aplicados a todo el sitio (no solo el hero):
-
-- **Botones → "candy":** `.btn-pill` pasa de sombra plana a `box-shadow: 0 5px 0 <color-base>` que se reduce a `0 2px 0` + `translateY(3px)` al hover/focus — imita un botón físico que se hunde.
-- **Tarjetas → cápsula, sin borde:** `.framed`, `.gallery-card`, `.personal__satellite`, `.cierre__hero`/`.cierre__satellite` pierden el borde grueso marrón (quedaba "panadería vintage") y pasan a `border-radius: 999px 999px 36px 36px` (tapa completamente redonda) con sombra suave, no borde. `.clasico__photo` pasa a círculo completo (`border-radius: 50%`), como las categorías circulares de la referencia.
-- **Eyebrow → píldora:** de texto plano a una píldora blanca con punto de color y sombra, como el `.eyebrow` de la referencia.
-- **Nav → píldora flotante centrada:** deja de ser una barra `sticky` de ancho completo con corte ondulado; ahora es `position: fixed`, centrada, flotando sobre el contenido en todo momento (logo + botón "Menú", siempre el mismo en todos los tamaños).
-- **Hero, reconstruido de nuevo:** ya no hay scroll-reveal. `.hero__blob` es una forma orgánica rosa que muda de contorno sola (`border-radius` animado); el wordmark "Aroma Moka" queda detrás; la foto real de la taza (`03_cafe_taza_rosa`) flota *delante*, recortada en círculo, con una deriva continua (`float-soft`, CSS puro) y un paralaje leve reusando la utilidad `[data-parallax]` que ya existía en el sitio (nada nuevo en JS). Dos fotos reales más (macarons, cookies navideñas de Dolce Shop) flotan como "toppings" a los costados con la misma utilidad. Se eliminó por completo la lógica de scroll-pin del hero en `main.js` — el archivo quedó más corto, no más largo.
-
-Nada de esto usa fotografía generada por IA ni el stack Next.js/GSAP de la referencia: son técnicas CSS (blob orgánico, sombra de botón, cápsulas, deriva) aplicadas con las fotos y el copy reales que ya existían.
-
-**Sobre DESIGN.md:** por pedido explícito, se eliminó. A partir de acá, este documento (`IMPLEMENTACION.md`) es el único registro escrito de las decisiones de diseño del sitio — `FICHA.md` lo señala en su tabla de fuentes de verdad.
-
-Verificado en 375 y ~1292px: sin scroll horizontal, sin errores de consola, sin overlaps entre el wordmark y la foto flotante.
+Ninguna: no hay formularios. Los dos botones abren WhatsApp con un mensaje de saludo prellenado; el link "Cómo llegar" abre una búsqueda de Google Maps con la dirección.
 
 ## Problemas conocidos
 
-- `sites/aroma-moka/` (el original) sigue existiendo en paralelo, ahora desactualizado respecto a `clientes/aroma-moka/site/` — candidato a archivar cuando el cliente apruebe esta versión, no se borró sin confirmar.
-- `research/RESEARCH.md` marca 04-personas en 0 pese a búsqueda activa — si aparece una foto real con personas, sumarla.
-- El loader usa el isologo "AM + tacita" (bubble), no el sello circular con el corazón que describía DESIGN.md — es el único logo suelto disponible como archivo limpio; si el negocio tiene el sello circular como archivo aparte, se puede reemplazar.
-- "Estacionamiento: Gratuito" sigue sin verificar; el horario del sitio sigue sin actualizarse al real (Martes a Sábado 9-20h) — ninguno de los dos fue pedido en esta pasada.
+- **Verificación visual incompleta:** al verificar, el panel del navegador estuvo oculto y no repintaba al hacer scroll. Se verificó por DOM (no hay scroll horizontal en 375, 768, 1280 y 1920 px; sin errores de consola; recursos y fuentes cargan; interruptor, pilas de fotos y variables de scroll responden) y visualmente solo el inicio en 375 y 1100 px. **No se vieron las secciones de abajo ni el modo Dolce Shop en pantalla.** Pendiente de revisión visual en la etapa 7.
+- **Imágenes sin uso en `img/`:** quedan los WebP/JPG de versiones anteriores que esta versión ya no usa. No se borraron.
+- **Fuentes:** Young Serif y Figtree vienen de Google Fonts (necesita conexión).
+- La deriva de carriles depende de `requestAnimationFrame`: si la pestaña está oculta, se pausa (es normal).
