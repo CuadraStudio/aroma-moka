@@ -16,6 +16,14 @@ El sitio es autónomo: el motor de movimiento está copiado en `engine/` (ver ab
 
 Enlace directo a cada web: `?v=aroma` y `?v=dolce`.
 
+## Publicación (demo)
+
+- Repo: `CuadraStudio/aroma-moka` en GitHub (privado), rama `main`. La raíz del repo es esta carpeta `site/`.
+- Render: sitio estático `aroma-moka-web` (workspace CuadraStudio), sin build, publica `.`, deploy automático con cada push a `main`. URL: https://aroma-moka-web.onrender.com
+- Para actualizar la demo: `git push` desde esta carpeta.
+- Mantiene `<meta name="robots" content="noindex">`: es una demo para el prospecto, no producción.
+- Los nombres de Render son únicos: `aroma-moka` ya estaba tomado, por eso termina en `-web`.
+
 ## Fuente de diseño
 
 No hay `DESIGN.md` (se eliminó el 2026-09-30 a pedido de Luciano). El contrato de esta pasada es el **Artifact Design "Aroma Moka — Design Concept"** (https://claude.ai/artifact/MYgK5VvxpF7Qomp2fo2ex8) y las decisiones tomadas en la conversación del 2026-10-07. Nada de esto está marcado APROBADO. **No se usó el `DESIGN.md` anterior** (`sites/aroma-moka/DESIGN.md`) como referencia, por pedido explícito.
