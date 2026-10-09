@@ -129,10 +129,6 @@ html[data-mode="dolce"] [data-only="aroma"] { display: none !important; }
 .site-header {
   position: sticky; top: 0; z-index: 40; background: var(--hueso); border-bottom: 1px solid var(--moka);
 }
-/* En Aroma Moka el encabezado va en rosa chicle; la barra de progreso pasa a moka para no perderse sobre él.
-   En Dolce Shop queda hueso: su logo es rosa y el inicio ya es rosa chicle. */
-html[data-mode="aroma"] .site-header { background: var(--chicle); }
-html[data-mode="aroma"] .progress { background: var(--moka); }
 .site-header__in {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   max-width: 1440px; min-height: var(--header-h); margin: 0 auto; padding: 8px var(--pad);
