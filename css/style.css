@@ -135,9 +135,7 @@ html[data-mode="dolce"] [data-only="aroma"] { display: none !important; }
 }
 .brand { display: block; line-height: 0; text-decoration: none; }
 .brand img { width: 72px; }
-.brand--dolce { display: flex; flex-direction: column; gap: 3px; line-height: 1; color: var(--moka); }
-.brand__name { font: 400 24px/1 var(--serif); }
-.brand__sub { font: 700 10.5px/1.2 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; }
+.brand--dolce img { width: 80px; }
 
 .switch {
   position: relative; display: inline-grid; grid-template-columns: 1fr 1fr; flex: 0 0 auto;
@@ -322,6 +320,7 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 @media (min-width: 640px) {
   :root { --header-h: 72px; }
   .brand img { width: 84px; }
+  .brand--dolce img { width: 96px; }
   .switch__btn { padding: 0 18px; font-size: 12px; }
 
   .hero__grid { padding-top: 56px; padding-bottom: 112px; }

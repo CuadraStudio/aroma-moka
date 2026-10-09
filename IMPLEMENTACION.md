@@ -67,7 +67,7 @@ Registrado en `docs/operacion/MOTION-LOG.md`. No repite el momento de firma de l
 
 - **Scroll con JS en vez de CSS `animation-timeline`:** el Artifact usaba CSS para el prototipo; acá se pasó a JS para soportar Safari y Firefox. Mismo efecto.
 - **Lugar de la mascota:** el Artifact tenía un círculo punteado. En el sitio **no se muestra**: el anillo del cierre gira alrededor del isotipo (Aroma Moka) o de un corazón (Dolce Shop). Cuando llegue la mascota en vectorial y sin QR, entra en el centro de ese anillo.
-- **Dolce Shop como tarjeta de texto:** no hay logo vectorial de Dolce Shop, así que el encabezado usa un "wordmark" tipográfico ("Dolce Shop / Pastelería artesanal", texto que sí aparece en sus tarjetas de torta). Es provisorio.
+- **Logo de Dolce Shop (2026-10-09):** el encabezado del modo Dolce Shop y el pie usan `img/dolce_logo.webp`, el logo que mandó Luciano (PNG con transparencia, 1536×1024) recortado al contorno y pasado a WebP de 800 px. El original queda en `img/dolce_logo_original.png`. Es rosa sobre transparente: se ve bien sobre hueso y madera, pero se pierde sobre el rosa chicle del inicio de Dolce Shop, por eso ahí no se usa. Reemplazó al texto provisorio ("Dolce Shop / Pastelería artesanal").
 - **Datos reales en vez de corchetes:** dirección, horario, WhatsApp e Instagram salen de `research/RESEARCH.md` y de lo confirmado por Luciano.
 
 ## Decisiones [IA] donde no había contrato
@@ -88,7 +88,7 @@ Registrado en `docs/operacion/MOTION-LOG.md`. No repite el momento de firma de l
 
 - **Link de PedidosYa:** solo se menciona como texto, no encontrado.
 - **Horario de Dolce Shop:** no encontrado (el de la bio es el de Aroma Moka). En su web solo figura "Presupuestos únicamente por WhatsApp".
-- **Logo de Dolce Shop** en vectorial.
+- **Logo de Dolce Shop en vectorial (SVG):** hoy se usa el PNG recortado; en tamaño chico alcanza, pero un vectorial queda más nítido y permitiría una versión de un solo color para fondos rosas.
 - **Mascota** (taza con gorro tejido y cara sonriente) en vectorial y sin QR. La imagen recibida mide 140×162 px.
 - **Isotipo** en alta: el actual mide 150 px y solo se usa en tamaño chico.
 - **Fotos de Dolce Shop:** solo 4, de 480 a 640 px de ancho, bajadas de Instagram. Se ven bien en las tarjetas, pero no aguantan una foto grande. Hacen falta más y en mejor calidad.
