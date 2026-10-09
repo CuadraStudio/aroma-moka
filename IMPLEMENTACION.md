@@ -24,6 +24,10 @@ Enlace directo a cada web: `?v=aroma` y `?v=dolce`.
 - Mantiene `<meta name="robots" content="noindex">`: es una demo para el prospecto, no producción.
 - Los nombres de Render son únicos: `aroma-moka` ya estaba tomado, por eso termina en `-web`.
 
+## Ajustes después de la entrega
+
+- **Encabezado rosa (2026-10-09, pedido de Luciano):** en la web de Aroma Moka el encabezado usa el rosa chicle de la paleta (`--chicle`, `#EFA6BC`) en vez de hueso. La barra de progreso pasa a moka en ese modo para no perderse sobre el rosa. En Dolce Shop el encabezado queda hueso: su logo es rosa y el inicio ya es rosa chicle. Si se prefiere el rosa más claro (porcelana `#F2CED5`), es cambiar una variable en `css/style.css`.
+
 ## Fuente de diseño
 
 No hay `DESIGN.md` (se eliminó el 2026-09-30 a pedido de Luciano). El contrato de esta pasada es el **Artifact Design "Aroma Moka — Design Concept"** (https://claude.ai/artifact/MYgK5VvxpF7Qomp2fo2ex8) y las decisiones tomadas en la conversación del 2026-10-07. Nada de esto está marcado APROBADO. **No se usó el `DESIGN.md` anterior** (`sites/aroma-moka/DESIGN.md`) como referencia, por pedido explícito.
