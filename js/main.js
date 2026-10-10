@@ -244,6 +244,11 @@
     aroma: "Aroma Moka & Dolce Shop · Un café y algo dulce",
     dolce: "Dolce Shop · Pastelería artesanal, tortas y galletas decoradas",
   };
+  var DESCS = {
+    aroma: "Aroma Moka y Dolce Shop: café con dibujo, pastelería artesanal y una mesa donde quedarse. Las Piedras, Canelones.",
+    dolce: "Dolce Shop: tortas, cookies y galletas decoradas a medida, con presupuesto por WhatsApp. Las Piedras, Canelones.",
+  };
+  var descMeta = document.querySelector('meta[name="description"]');
   var FIELD = { aroma: "#7E411A", dolce: "#EFA6BC" };
   var NAMES = { aroma: "Aroma Moka", dolce: "Dolce Shop" };
 
@@ -256,6 +261,7 @@
       b.setAttribute("aria-pressed", String(b.getAttribute("data-set-mode") === next));
     });
     document.title = TITLES[next];
+    if (descMeta) descMeta.setAttribute("content", DESCS[next]);
     if (themeMeta) themeMeta.setAttribute("content", FIELD[next]);
     try {
       localStorage.setItem("am-mode", next);
@@ -414,6 +420,44 @@
         h.addEventListener("pointerleave", function () { tx = 0; ty = 0; kick(); });
       });
     }
+  }
+
+  /* ---------- 6. "Abierto ahora" de Aroma Moka: horario habitual, hora de Montevideo ---------- */
+  var openEl = document.querySelector("[data-open]");
+  if (openEl) {
+    var openText = openEl.querySelector("[data-open-text]");
+    var OPEN_DAYS = openEl.getAttribute("data-days").split(",").map(Number); // 0 = domingo
+    var FROM = Number(openEl.getAttribute("data-from"));
+    var TO = Number(openEl.getAttribute("data-to"));
+    var DAY_NAMES = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+    var DOW = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+    var fmt = new Intl.DateTimeFormat("en-US", { timeZone: "America/Montevideo", weekday: "short", hour: "numeric", minute: "numeric", hourCycle: "h23" });
+
+    var openStatus = function () {
+      var p = {};
+      fmt.formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+      var day = DOW[p.weekday];
+      var minutes = (Number(p.hour) % 24) * 60 + Number(p.minute);
+      var today = OPEN_DAYS.indexOf(day) !== -1;
+      if (today && minutes >= FROM * 60 && minutes < TO * 60) return { open: true, text: "Abierto ahora · hasta las " + TO + " h" };
+      if (today && minutes < FROM * 60) return { open: false, text: "Cerrado ahora · abre hoy a las " + FROM + " h" };
+      for (var k = 1; k <= 7; k++) {
+        var d = (day + k) % 7;
+        if (OPEN_DAYS.indexOf(d) !== -1) return { open: false, text: "Cerrado ahora · abre " + (k === 1 ? "mañana" : "el " + DAY_NAMES[d]) + " a las " + FROM + " h" };
+      }
+      return null;
+    };
+    var paintOpen = function () {
+      var s;
+      try { s = openStatus(); } catch (e) { s = null; } // sin Intl o sin zona horaria: queda oculto
+      if (!s) return;
+      openEl.hidden = false;
+      openEl.classList.toggle("is-open", s.open);
+      if (openText.textContent !== s.text) openText.textContent = s.text;
+    };
+    paintOpen();
+    window.setInterval(paintOpen, 60000);
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) paintOpen(); });
   }
 
   apply(mode, true);

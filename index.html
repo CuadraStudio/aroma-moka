@@ -6,6 +6,16 @@
 <meta name="robots" content="noindex">
 <title>Aroma Moka &amp; Dolce Shop · Un café y algo dulce</title>
 <meta name="description" content="Aroma Moka y Dolce Shop: café con dibujo, pastelería artesanal y una mesa donde quedarse. Las Piedras, Canelones.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Aroma Moka &amp; Dolce Shop">
+<meta property="og:locale" content="es_UY">
+<meta property="og:title" content="Aroma Moka &amp; Dolce Shop · Un café y algo dulce">
+<meta property="og:description" content="Café con dibujo, pastelería artesanal y una mesa donde quedarse. Las Piedras, Canelones.">
+<meta property="og:image" content="https://aroma-moka-web.onrender.com/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aroma Moka, café y pastelería, a la izquierda sobre madera, y Dolce Shop, tortas y galletas decoradas, a la derecha sobre rosa.">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#7E411A">
 <script>try{var m=new URLSearchParams(location.search).get("v")||localStorage.getItem("am-mode");if(m==="dolce"||m==="aroma")document.documentElement.setAttribute("data-mode",m)}catch(e){}</script>
 <link rel="icon" type="image/webp" href="img/isotipo.webp">
@@ -14,6 +24,65 @@
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&amp;family=Young+Serif&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="engine/cuadra-motion.css">
 <link rel="stylesheet" href="css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CafeOrCoffeeShop",
+      "@id": "https://aroma-moka-web.onrender.com/#aroma-moka",
+      "name": "Aroma Moka",
+      "description": "Café y pastelería en Las Piedras, Canelones.",
+      "url": "https://aroma-moka-web.onrender.com/?v=aroma",
+      "image": "https://aroma-moka-web.onrender.com/img/og.jpg",
+      "telephone": "+59895741364",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Av. Instrucciones del Año XIII 619",
+        "postalCode": "15900",
+        "addressLocality": "Las Piedras",
+        "addressRegion": "Canelones",
+        "addressCountry": "UY"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+          ],
+          "opens": "09:00",
+          "closes": "20:00"
+        }
+      ],
+      "sameAs": [
+        "https://www.instagram.com/aroma.moka/"
+      ]
+    },
+    {
+      "@type": "Bakery",
+      "@id": "https://aroma-moka-web.onrender.com/#dolce-shop",
+      "name": "Dolce Shop",
+      "description": "Pastelería artesanal: tortas, cookies y galletas decoradas a medida, con presupuesto por WhatsApp.",
+      "url": "https://aroma-moka-web.onrender.com/?v=dolce",
+      "image": "https://aroma-moka-web.onrender.com/img/og.jpg",
+      "telephone": "+59893329614",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Las Piedras",
+        "addressRegion": "Canelones",
+        "addressCountry": "UY"
+      },
+      "sameAs": [
+        "https://www.instagram.com/dolceshop.uy/"
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -257,9 +326,13 @@
     <div class="converge" data-scrub>
       <div class="info conv-l">
         <h3 class="info__title">Aroma Moka · Café</h3>
+        <div class="info__meta">
+          <p class="pill" data-open data-days="2,3,4,5,6" data-from="9" data-to="20" hidden><span class="pill__dot" aria-hidden="true"></span><span data-open-text></span></p>
+          <a class="pill" href="https://www.google.com/maps/search/?api=1&amp;query=Aroma+Moka+Av.+Instrucciones+del+A%C3%B1o+XIII+619%2C+Las+Piedras%2C+Canelones" target="_blank" rel="noopener" aria-label="Calificación 4,6 de 5 en Google, 63 reseñas. Ver en Google Maps, se abre en otra pestaña"><svg class="pill__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.5l7.1-.6z" fill="currentColor"/></svg>4,6 <span class="pill__sub">· 63 reseñas en Google</span></a>
+        </div>
         <dl>
           <div><dt>Dirección</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Av.+Instrucciones+del+A%C3%B1o+XIII+619%2C+Las+Piedras%2C+Canelones" target="_blank" rel="noopener">Av. Instrucciones del Año XIII 619, Las Piedras</a></dd></div>
-          <div><dt>Horario</dt><dd>Martes a sábado, 9 a 20 h</dd></div>
+          <div><dt>Horario</dt><dd>Martes a sábado, 9 a 20 h<small class="info__note">En feriados, confirmá por WhatsApp</small></dd></div>
           <div><dt>WhatsApp</dt><dd><a href="https://wa.me/59895741364" target="_blank" rel="noopener">095 741 364</a></dd></div>
           <div><dt>Instagram</dt><dd><a href="https://www.instagram.com/aroma.moka/" target="_blank" rel="noopener">@aroma.moka</a></dd></div>
           <div><dt>Delivery</dt><dd>PedidosYa</dd></div>
@@ -275,6 +348,13 @@
           <div><dt>Ubicación</dt><dd>Las Piedras, Canelones</dd></div>
         </dl>
       </div>
+    </div>
+
+    <div class="map" data-only="aroma" data-reveal>
+      <div class="map__frame">
+        <iframe title="Mapa: Aroma Moka, Av. Instrucciones del Año XIII 619, Las Piedras" src="https://www.google.com/maps?q=Aroma+Moka+Av.+Instrucciones+del+A%C3%B1o+XIII+619%2C+Las+Piedras%2C+Canelones&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <a class="btn btn--field" href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Instrucciones+del+A%C3%B1o+XIII+619%2C+Las+Piedras%2C+Canelones" target="_blank" rel="noopener">Cómo llegar</a>
     </div>
 
     <div class="closing__foot">
