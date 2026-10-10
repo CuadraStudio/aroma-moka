@@ -200,6 +200,14 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 .hero--cover .ring { left: 50%; right: auto; transform: translateX(-50%); }
 .hero--cover .ring::before { background: var(--hueso); }
 .hero--cover .hero__title { font-size: clamp(36px, 11vw, 44px); }
+/* celulares angostos: la franja libre de la foto es más baja que el texto, así que se compacta */
+@media (max-width: 399px) {
+  .hero--cover .hero__text { gap: 14px; }
+  .hero--cover .hero__cta { gap: 4px 20px; }
+}
+@media (max-width: 359px) {
+  .hero--cover .hero__title { font-size: 30px; }
+}
 @media (min-width: 640px) {
   .hero--cover .hero__field { aspect-ratio: 1536 / 1600; }
   .hero--cover .hero__title { font-size: clamp(44px, 7vw, 88px); }
