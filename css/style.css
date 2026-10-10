@@ -82,7 +82,7 @@ html[data-mode="dolce"] [data-only="aroma"] { display: none !important; }
   font-size: 12.5px; font-weight: 700; letter-spacing: 0.16em;
   text-transform: uppercase; line-height: 1.4;
 }
-.label--accent { color: var(--madera); }
+.label--accent { color: var(--moka); }
 .label--field { color: var(--field-sub); }
 
 .lead { font-size: clamp(17px, 1.5vw, 19px); line-height: 1.6; max-width: 560px; }
@@ -189,7 +189,7 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 /* ---------- Portada de Aroma Moka: foto de fondo, texto al centro ----------
    Solo aplica a .hero--cover (la portada de Dolce Shop no cambia). En celular la foto va arriba con
    su proporción y el texto debajo, sobre el tono de la madera; desde 1000 px la foto es el fondo. */
-.hero--cover { --field: #f4d6bb; --field-ink: var(--moka); --field-sub: var(--madera); }
+.hero--cover { --field: #f4d6bb; --field-ink: var(--moka); --field-sub: var(--moka); }
 .hero--cover .hero__field { background: var(--field); }
 .hero__media { overflow: hidden; }
 .hero__bg { display: block; width: 100%; height: auto; aspect-ratio: 1860 / 846; object-fit: cover; }
