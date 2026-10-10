@@ -46,23 +46,23 @@ Al tocar el interruptor (o un enlace "Mirá lo que prepara…"), la web nueva se
 
 Verificado: cambio de modo, conservación de la posición en ida y vuelta (diferencia de 0,1 % de la altura de la sección), doble clic, respaldo sin la API y consola sin errores; el círculo se midió creciendo (82 px a los 200 ms, 982 px a los 500 ms, 0,69 s en total) y se vio una captura a mitad de camino. **No se vio en movimiento real ni en un celular**, y el fundido de `prefers-reduced-motion` no se probó. Con la pestaña o el panel oculto el navegador omite la animación y el cambio ocurre directo.
 
-## Movimiento "vivo" de la portada: prueba (2026-10-09, [IA], a decidir)
+## Movimiento de la portada (2026-10-09, aprobado por Luciano salvo el desvanecimiento, que se quitó)
 
-Se agregó, **solo con `?m=vivo` en la URL**, un movimiento leve en las dos portadas para que no se sientan estáticas. Sin parámetro no cambia nada (se verificó: sin `data-m`, sin transformaciones y con la animación de siempre). El parámetro se conserva al cambiar de web.
+Las dos portadas tienen un movimiento leve para que la web no se sienta estática. Se probó antes detrás de `?m=vivo`; Luciano pidió dejarlo todo igual salvo el desvanecimiento del texto al hacer scroll, que le pareció demasiado, y se **quitó** (sin él, el texto sale de pantalla de forma natural y no queda un estado a medio desvanecer). El parámetro se borró: es el comportamiento por defecto.
 
 Restricción de las imágenes: la comida está en las esquinas y a solo 10 a 20 px del texto en celular y tablet, así que un parallax clásico (la foto sube y baja) haría que el título toque los platos. Todo lo que se agregó **agranda** la foto desde el centro, de modo que la comida se aleja del texto, nunca se acerca.
 
 | Efecto | Qué hace | Dónde |
 |---|---|---|
-| Zoom al hacer scroll | La foto pasa de 1,02 a 1,08 mientras se sale de la portada. El texto sube (64 px en pantallas de 900 px o más, 28 px en menores) y se desvanece. Arriba de todo no cambia nada del diseño | Todas |
+| Zoom al hacer scroll | La foto pasa de 1,02 a 1,08 mientras se sale de la portada. El texto sube un poco más rápido que la página (64 px en pantallas de 900 px o más, 28 px en menores), sin desvanecerse. Arriba de todo no cambia nada del diseño | Todas |
 | Respiración | La foto se agranda un 3,5 % y vuelve, en ~22 s, desde que termina el asentado inicial. Se pausa cuando la portada no se ve (o está en la otra web) | Todas |
 | Mouse | La foto se mueve hasta 6 × 4 px en sentido opuesto al puntero y el texto hasta 4 × 3 px a favor | Solo puntero fino y 900 px o más |
 | Sello | Flota 6 px arriba y abajo en ciclos de 7 s | Todas |
-| Botones | El relleno entra desde la izquierda al pasar el mouse | Todos los `.btn` |
+| Botones | El relleno entra desde la izquierda al pasar el mouse | Todos los `.btn` (regla base) |
 
-Todo es `transform` u opacidad, y desaparece con `prefers-reduced-motion`. Código: `VIVO`, `--hp` en `scrub()` y la sección 5 de `js/main.js`; bloque "Movimiento vivo" en `css/style.css` (el zoom va en el `<picture>` y el asentado y la respiración en la `<img>`, para no pisarse).
+Todo es `transform` y desaparece con `prefers-reduced-motion`. Código: `heroMotion`, `--hp` en `scrub()` y la sección 5 de `js/main.js`; bloque "Movimiento de la portada" en `css/style.css` (el zoom va en el `<picture>` y el asentado y la respiración en la `<img>`, para no pisarse).
 
-Verificado con mediciones (el panel de pruebas estaba oculto y pausa los cuadros de animación, así que se simuló el ciclo de dibujo): `--hp` va de 0 a 1 y es reversible, zoom 1,02 a 1,08, texto -64 px y opacidad 1 a 0, parallax del mouse en las dos direcciones y regreso a cero, funciona en Dolce Shop y junto al círculo del cambio de web, consola sin errores. **No se vio en movimiento real ni en un celular**, y la pausa fuera de pantalla (IntersectionObserver) no se pudo probar con el panel oculto. Si se aprueba: sacar el parámetro y dejar el movimiento como único comportamiento (o ajustar intensidades); si no, borrar el bloque.
+Verificado con mediciones (el panel de pruebas estaba oculto y pausa los cuadros de animación, así que se simuló el ciclo de dibujo): `--hp` de 0 a 1 y reversible, zoom 1,02 a 1,08, texto -64 px con opacidad siempre 1, parallax del mouse en las dos direcciones y regreso a cero, funciona en Dolce Shop y junto al círculo del cambio de web, consola sin errores. **No se vio en movimiento real ni en un celular**, y la pausa fuera de pantalla (IntersectionObserver) no se pudo probar con el panel oculto.
 
 ## Fuente de diseño
 

@@ -14,11 +14,8 @@
     ? window.CuadraMotion.reduceMotion()
     : window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* Prueba de movimiento "vivo" en la portada: solo con ?m=vivo en la URL. Sin parámetro no cambia nada. */
-  var VIVO = false;
-  try { VIVO = new URLSearchParams(window.location.search).get("m") === "vivo"; } catch (e) { /* sin soporte */ }
-  VIVO = VIVO && !reduce;
-  if (VIVO) root.setAttribute("data-m", "vivo");
+  /* Movimiento de la portada (zoom con el scroll, mouse, respiración): se apaga con "reducir movimiento". */
+  var heroMotion = !reduce;
   var heroEls = [].slice.call(document.querySelectorAll(".hero--cover"));
 
   /* ---------- 1. Motor de Cuadra: reveals + parallax declarativo ---------- */
@@ -43,7 +40,7 @@
     }
     var max = root.scrollHeight - vh;
     root.style.setProperty("--page", max > 0 ? clamp01(window.scrollY / max).toFixed(4) : "0");
-    if (VIVO) {
+    if (heroMotion) {
       // avance del scroll sobre la portada visible: 0 arriba de todo, 1 cuando ya salió
       var hero = heroEls.filter(function (h) { return h.offsetParent !== null; })[0];
       if (hero) root.style.setProperty("--hp", clamp01(window.scrollY / (hero.offsetHeight || 1)).toFixed(3));
@@ -265,8 +262,8 @@
     if (btn) switchTo(btn.getAttribute("data-set-mode"), btn);
   });
 
-  /* ---------- 5. Movimiento "vivo" de la portada (solo con ?m=vivo) ---------- */
-  if (VIVO) {
+  /* ---------- 5. Movimiento de la portada: pausa fuera de pantalla y parallax con el mouse ---------- */
+  if (heroMotion) {
     // la respiración de la foto se pausa cuando la portada no se ve (o está en la otra web)
     if ("IntersectionObserver" in window) {
       var io = new IntersectionObserver(function (entries) {
