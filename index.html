@@ -62,7 +62,11 @@
   <section class="hero hero--cover" id="inicio" aria-labelledby="h1-aroma">
     <div class="hero__field on-field">
       <div class="hero__media">
-        <img class="hero__bg settle" src="img/portada_aroma.webp" srcset="img/portada_aroma_960.webp 960w, img/portada_aroma.webp 1860w" sizes="100vw" alt="Mesa de madera clara vista desde arriba con un café con latte art en taza rosa, un croissant de jamón y queso, un rol con arándanos y un panqueque con frutas" width="1860" height="846" fetchpriority="high">
+        <picture>
+          <source media="(min-width: 900px)" srcset="img/portada_aroma_960.webp 960w, img/portada_aroma.webp 1860w" sizes="100vw">
+          <source media="(min-width: 640px)" srcset="img/portada_aroma_tablet.webp">
+          <img class="hero__bg settle" src="img/portada_aroma_movil.webp" srcset="img/portada_aroma_movil_750.webp 750w, img/portada_aroma_movil.webp 1125w" sizes="100vw" alt="Mesa de madera clara vista desde arriba con un café con latte art en taza rosa, un croissant de jamón y queso, un rol con arándanos y un panqueque con frutas" width="1125" height="1900" fetchpriority="high">
+        </picture>
       </div>
       <div class="wrap hero__grid">
         <div class="hero__text">

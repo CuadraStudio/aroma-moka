@@ -187,25 +187,27 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 .ring--static::before { display: none; }
 
 /* ---------- Portada de Aroma Moka: foto de fondo, texto al centro ----------
-   Solo aplica a .hero--cover (la portada de Dolce Shop no cambia). En celular la foto va arriba con
-   su proporción y el texto debajo, sobre el tono de la madera; desde 1000 px la foto es el fondo. */
+   Solo aplica a .hero--cover (la portada de Dolce Shop no cambia). La foto es el fondo en todos los
+   tamaños, pero cada rango usa su propia composición (<picture>) con la comida en las cuatro esquinas
+   y la madera libre al centro, y la altura sigue la proporción de esa imagen: celular 1125x1900,
+   tablet 1536x1600 y desde 900 px la foto horizontal 1860x846. */
 .hero--cover { --field: #f4d6bb; --field-ink: var(--moka); --field-sub: var(--moka); }
-.hero--cover .hero__field { background: var(--field); }
-.hero__media { overflow: hidden; }
-.hero__bg { display: block; width: 100%; height: auto; aspect-ratio: 1860 / 846; object-fit: cover; }
-.hero--cover .hero__grid { align-items: center; text-align: center; padding-top: 36px; padding-bottom: 92px; }
+.hero--cover .hero__field { display: grid; place-items: center; aspect-ratio: 1125 / 1900; background: var(--field); }
+.hero__media { position: absolute; inset: 0; overflow: hidden; }
+.hero__bg { display: block; width: 100%; height: 100%; object-fit: cover; }
+.hero--cover .hero__grid { position: relative; width: 100%; align-items: center; text-align: center; padding-top: 0; padding-bottom: 0; }
 .hero--cover .hero__text { align-items: center; gap: 20px; }
 .hero--cover .hero__cta { justify-content: center; }
 .hero--cover .ring { left: 50%; right: auto; transform: translateX(-50%); }
 .hero--cover .ring::before { background: var(--hueso); }
+.hero--cover .hero__title { font-size: clamp(36px, 11vw, 44px); }
 @media (min-width: 640px) {
-  .hero--cover .hero__grid { padding-top: 48px; padding-bottom: 104px; }
+  .hero--cover .hero__field { aspect-ratio: 1536 / 1600; }
+  .hero--cover .hero__title { font-size: clamp(44px, 7vw, 88px); }
 }
-@media (min-width: 1000px) {
-  .hero--cover .hero__field { display: grid; place-items: center; aspect-ratio: 1860 / 846; }
-  .hero--cover .hero__media { position: absolute; inset: 0; }
-  .hero--cover .hero__bg { height: 100%; }
-  .hero--cover .hero__grid { position: relative; width: 100%; padding-top: 48px; padding-bottom: 48px; }
+@media (min-width: 900px) {
+  .hero--cover .hero__field { aspect-ratio: 1860 / 846; }
+  .hero--cover .hero__grid { padding-top: 48px; padding-bottom: 48px; }
   .hero--cover .hero__title { font-size: clamp(40px, 4.5vw, 70px); }
 }
 
