@@ -125,26 +125,18 @@ html[data-mode="dolce"] [data-only="aroma"] { display: none !important; }
 .curtain.is-in { clip-path: inset(0 0 0 0); transition: clip-path 0.45s var(--ease); }
 .curtain.is-out { clip-path: inset(0 0 100% 0); transition: clip-path 0.45s var(--ease); }
 
-/* Variantes de transición (solo con ?t=circulo o ?t=mitades; sin parámetro no aplican) */
-html[data-t] .switch__thumb { transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.45s var(--ease); }
+/* Cambio de web: círculo que se abre desde el botón (transiciones de vista). El círculo lo anima
+   main.js; acá solo se apagan las animaciones por defecto y se parte con el círculo cerrado.
+   Con "reducir movimiento" queda el fundido por defecto, acortado. */
 @media (prefers-reduced-motion: no-preference) {
-  html[data-t="circulo"]::view-transition-old(root),
-  html[data-t="circulo"]::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
-  html[data-t="circulo"]::view-transition-old(root) { z-index: 1; }
-  html[data-t="circulo"]::view-transition-new(root) { z-index: 2; clip-path: circle(0px at var(--vt-x, 50%) var(--vt-y, 50%)); }
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+  ::view-transition-old(root) { z-index: 1; }
+  ::view-transition-new(root) { z-index: 2; clip-path: circle(0px at var(--vt-x, 50%) var(--vt-y, 50%)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  html[data-t]::view-transition-old(root),
-  html[data-t]::view-transition-new(root) { animation-duration: 0.15s; }
-}
-.halves { position: fixed; inset: 0; z-index: 110; pointer-events: none; overflow: hidden; }
-.halves__l, .halves__r { position: absolute; top: 0; bottom: 0; width: 50.3%; }
-.halves__l { left: 0; background: var(--madera); }
-.halves__r { right: 0; background: var(--chicle); }
-.halves__amp {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: 0;
-  display: grid; place-items: center; width: clamp(96px, 22vmin, 190px); aspect-ratio: 1; border-radius: 50%;
-  background: var(--hueso); color: var(--moka); font: 400 clamp(54px, 13vmin, 112px)/1 var(--serif);
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation-duration: 0.15s; }
 }
 
 /* ---------- Encabezado e interruptor ---------- */
@@ -172,7 +164,7 @@ html[data-t] .switch__thumb { transition: transform 0.55s cubic-bezier(0.34, 1.5
 .switch__btn[aria-pressed="true"] { color: var(--field-ink); }
 .switch__thumb {
   position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 999px;
-  background: var(--field); transition: transform 0.45s var(--ease), background-color 0.45s var(--ease);
+  background: var(--field); transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.45s var(--ease);
 }
 html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 

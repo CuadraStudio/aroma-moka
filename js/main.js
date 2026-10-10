@@ -137,34 +137,9 @@
     scrub();
   }
 
-  /* Cortina de siempre (es la que se usa sin parámetro). */
-  function switchCurtain(next) {
-    if (reduce || !curtain) {
-      apply(next);
-      window.scrollTo({ top: 0, behavior: "instant" });
-      return;
-    }
-    curtain.style.background = FIELD[next];
-    curtain.className = "curtain";
-    void curtain.offsetWidth; // reinicia la transición
-    curtain.classList.add("is-in");
-    window.setTimeout(function () {
-      apply(next);
-      window.scrollTo({ top: 0, behavior: "instant" });
-      curtain.classList.remove("is-in");
-      curtain.classList.add("is-out");
-      window.setTimeout(function () { curtain.className = "curtain"; }, 480);
-    }, 470);
-  }
-
-  /* ---------- Variantes de transición para comparar ----------
-     Solo se activan con ?t=circulo o ?t=mitades en la URL. Sin parámetro no cambia nada.
-     Las dos dejan a la persona en el mismo lugar de la otra web (en vez de volver al tope),
-     son más cortas (~0,7 s) y con "reducir movimiento" hacen un fundido de 150 ms. */
-  var T = null;
-  try { T = new URLSearchParams(window.location.search).get("t"); } catch (e) { /* sin soporte */ }
-  if (T !== "circulo" && T !== "mitades") T = null;
-  if (T) root.setAttribute("data-t", T);
+  /* Cambio de web: la nueva se abre como un círculo desde donde se tocó (API de transiciones
+     de vista, ~0,65 s) y deja a la persona en el mismo lugar de la otra web. En un navegador
+     sin esa API queda una cortina de color. Con "reducir movimiento", un fundido de 150 ms. */
   var busy = false;
 
   // secciones equivalentes entre las dos webs, en el mismo orden (el cierre es compartido)
@@ -215,6 +190,23 @@
     return typeof document.startViewTransition === "function";
   }
 
+  // respaldo para navegadores sin transiciones de vista: cortina de color (el tono de la portada de destino)
+  var CURTAIN = { aroma: "#F4D6BB", dolce: "#F3CCCB" };
+  function switchCurtain(next, pos) {
+    if (reduce || !curtain) { swapKeepingPlace(next, pos); return; }
+    curtain.style.background = CURTAIN[next];
+    curtain.className = "curtain";
+    void curtain.offsetWidth; // reinicia la transición
+    busy = true;
+    curtain.classList.add("is-in");
+    window.setTimeout(function () {
+      swapKeepingPlace(next, pos);
+      curtain.classList.remove("is-in");
+      curtain.classList.add("is-out");
+      window.setTimeout(function () { curtain.className = "curtain"; busy = false; }, 480);
+    }, 470);
+  }
+
   // con "reducir movimiento": fundido corto si el navegador lo permite, si no cambio directo
   function fadeSwap(next, pos) {
     if (!hasViewTransitions()) { swapKeepingPlace(next, pos); return; }
@@ -226,10 +218,10 @@
     vt.finished.catch(function () {}).then(function () { busy = false; });
   }
 
-  // A · la web nueva se abre como un círculo desde donde se tocó (API de transiciones de vista)
+  // la web nueva se abre como un círculo desde donde se tocó
   function switchCircle(next, trigger) {
-    if (!hasViewTransitions()) { switchCurtain(next); return; } // sin soporte: cortina de siempre
     var pos = capturePos();
+    if (!hasViewTransitions()) { switchCurtain(next, pos); return; }
     if (reduce) { fadeSwap(next, pos); return; }
     var rect = (trigger || switchBtns[0]).getBoundingClientRect();
     var x = Math.round(rect.left + rect.width / 2), y = Math.round(rect.top + rect.height / 2);
@@ -250,39 +242,9 @@
     vt.finished.catch(function () {}).then(function () { busy = false; });
   }
 
-  // B · dos mitades (marrón y rosa) se juntan en un "&" y se abren sobre la web nueva
-  function switchHalves(next) {
-    var pos = capturePos();
-    if (reduce) { fadeSwap(next, pos); return; }
-    var wrap = document.createElement("div");
-    wrap.className = "halves";
-    wrap.setAttribute("aria-hidden", "true");
-    wrap.innerHTML = '<span class="halves__l"></span><span class="halves__r"></span><span class="halves__amp">&amp;</span>';
-    document.body.appendChild(wrap);
-    var L = wrap.querySelector(".halves__l"), R = wrap.querySelector(".halves__r"), A = wrap.querySelector(".halves__amp");
-    var inEase = "cubic-bezier(0.7, 0, 0.3, 1)", outEase = "cubic-bezier(0.6, 0, 0.2, 1)";
-    var C = "translate(-50%, -50%)";
-    busy = true;
-    L.animate([{ transform: "translateX(-101%)" }, { transform: "translateX(0)" }], { duration: 280, easing: inEase, fill: "forwards" });
-    R.animate([{ transform: "translateX(101%)" }, { transform: "translateX(0)" }], { duration: 280, easing: inEase, fill: "forwards" });
-    A.animate([{ opacity: 0, transform: C + " scale(0.5)" }, { opacity: 1, transform: C + " scale(1)" }],
-      { duration: 240, delay: 130, easing: "cubic-bezier(0.34, 1.56, 0.64, 1)", fill: "forwards" });
-    window.setTimeout(function () {
-      swapKeepingPlace(next, pos);
-      L.animate([{ transform: "translateX(0)" }, { transform: "translateX(-101%)" }], { duration: 340, delay: 30, easing: outEase, fill: "forwards" });
-      R.animate([{ transform: "translateX(0)" }, { transform: "translateX(101%)" }], { duration: 340, delay: 30, easing: outEase, fill: "forwards" });
-      A.animate([{ opacity: 1, transform: C + " scale(1)" }, { opacity: 0, transform: C + " scale(1.3)" }],
-        { duration: 220, easing: "ease-out", fill: "forwards" });
-      window.setTimeout(function () { wrap.remove(); busy = false; }, 420);
-    }, 330);
-  }
-
   function switchTo(next, trigger) {
-    if (next === mode) return;
-    if (T && busy) return;
-    if (T === "circulo") switchCircle(next, trigger);
-    else if (T === "mitades") switchHalves(next);
-    else switchCurtain(next);
+    if (next === mode || busy) return;
+    switchCircle(next, trigger);
   }
 
   document.addEventListener("click", function (e) {
