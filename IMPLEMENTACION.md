@@ -27,7 +27,8 @@ Enlace directo a cada web: `?v=aroma` y `?v=dolce`.
 ## Ajustes después de la entrega
 
 - **Portada de Aroma Moka con foto de fondo (2026-10-09, pedido de Luciano):** se quitaron las dos fotos que crecían con el scroll (taza rosa y pavlovas), sus epígrafes y el párrafo de la derecha; la portada usa una foto cenital de mesa de madera (`img/portada_aroma.webp` de 1860 px e `img/portada_aroma_960.webp`) con el título y los dos botones centrados ("Ver qué hay", "Cómo llegar"). El párrafo "Dos pasiones, una sola mesa…" se sacó porque "Juntos", justo abajo, dice lo mismo; los botones se conservaron. El sello giratorio pasó al centro del borde inferior, porque a la derecha tapaba el plato. La foto es el fondo en todos los tamaños, pero una foto horizontal recortada en vertical pierde toda la comida, así que hay **tres composiciones** elegidas con `<picture>`: desde 900 px la foto horizontal (`portada_aroma.webp` y `_960`), de 640 a 899 px una vertical casi cuadrada (`portada_aroma_tablet.webp`, 1536×1600) y por debajo de 640 px una vertical alta (`portada_aroma_movil.webp` 1125×1900 y `_movil_750`). Las dos verticales se armaron a partir de la misma foto: se recortaron las cuatro comidas (taza, rol, croissant, panqueque), se pusieron en las esquinas con fundidos y la madera del centro se extendió por espejo, para dejar el centro libre al texto. La altura de la portada sigue la proporción de cada imagen para que el texto no tape la comida (se midió en 320, 375, 430, 640, 768, 900, 1024 y 1440 px). En celular el título baja un poco de tamaño (36 a 44 px) para entrar en el centro libre a 320 px. El texto pasa a moka sobre la madera clara. Solo afecta a `.hero--cover`; la portada de Dolce Shop no cambió. La foto no lleva `decoding="async"` a propósito: es la imagen principal y así pinta de inmediato. Las fotos `03_cafe_taza_rosa.webp` y `16_pavlovas.webp` quedan sin uso.
-- **La imagen de portada es generada con IA (ChatGPT), aportada por Luciano:** no es una foto del local y los platos pueden no coincidir con la carta real. El PNG original (2,3 MB) no está en el repo; sigue en `Descargas/Img Chat GPT/`.
+- **Portada de Dolce Shop con foto de fondo (2026-10-09, pedido de Luciano: "lo mismo"):** mismo tratamiento que la de Aroma Moka. Se quitaron las dos fotos que crecían (torta Oli y surtido de pastelería), sus epígrafes y el párrafo de la derecha ("Pastelería artesanal para cada ocasión…", que ya está en "A medida"); quedan el título y los botones "Pedir presupuesto" y "Ver trabajos" centrados, y el sello giratorio con el corazón al centro del borde inferior. Imágenes: `portada_dolce.webp` (1859 px) y `_960` para escritorio, `portada_dolce_tablet.webp` (1536×1600) y `portada_dolce_movil.webp` (1125×1900) con `_movil_750`, las dos verticales armadas con el mismo método. Fondo rosa `#F3CCCB` tomado de la foto (`.hero--dolce`). Se retiró el CSS que quedó sin uso (`.band`, `.grow`, `.captions`, `.cap`, `.hero__aside` y el diseño en dos columnas de la portada). Las fotos `dolce_torta_oli.webp` y `08_surtido_pasteleria.webp` siguen en uso en las pilas.
+- **Las dos imágenes de portada son generadas con IA (ChatGPT), aportadas por Luciano:** no son fotos del local ni de los productos reales, y los platos pueden no coincidir con lo que hacen (en Dolce Shop, las tortas y macarons de la portada no son necesariamente los suyos). Los PNG originales (2 a 2,3 MB) no están en el repo; siguen en `Descargas/Img Chat GPT/`. El de Dolce Shop también está copiado en `img/` pero excluido de git en `.git/info/exclude` (solo local).
 
 - **Un solo marrón para el texto (2026-10-09, pedido de Luciano):** la etiqueta de la portada ("Aroma Moka & Dolce Shop") y las etiquetas chicas `label--accent` (Juntos, barras de carril, números de promesas) usaban madera (`#7E411A`); ahora usan moka (`#4F2C14`), el mismo del título y del resto del texto. Los logos ya usan un marrón casi igual (`#563117` medido), no se tocaron. **Madera queda solo como color de superficie:** fondo del cierre, botón activo del interruptor, cortina de cambio de modo y `theme-color` del navegador móvil. Pasarlo también a moka dejaría el cierre casi negro y quitaría un color de la paleta; si se quiere, es cambiar `--madera` en `css/style.css`.
 
@@ -43,7 +44,7 @@ Todo en una sola página, con dos modos. El modo vive en `html[data-mode]` (`aro
 
 | Escena | Aroma Moka | Dolce Shop |
 |---|---|---|
-| Apertura | `#inicio` (foto de portada de fondo) | `#d-inicio` (foto que crece) |
+| Apertura | `#inicio` (foto de portada de fondo) | `#d-inicio` (foto de portada de fondo) |
 | Manifiesto | `#juntos` ("Juntos") | `#d-medida` ("A medida") |
 | Dos carriles + pilas de fotos | `#cafe` / `#comer` | `#d-tortas` / `#d-galletas` |
 | Cierre con datos y botones | `#visitanos` (compartido; solo cambian título y etiqueta) | igual |
@@ -51,14 +52,14 @@ Todo en una sola página, con dos modos. El modo vive en `html[data-mode]` (`aro
 
 - `index.html`: estructura y contenido de las dos webs.
 - `css/style.css`: tokens, componentes y escalado (mobile-first: base móvil, `min-width` 640 / 1000 / 1280). El modo cambia solo las variables `--field`, `--field-ink`, `--field-sub` y `--u`: madera con texto hueso en Aroma Moka, rosa chicle con texto moka en Dolce Shop.
-- `js/main.js`: interruptor de modo, "foto que crece", cierre que se junta, línea central, barra de progreso y pilas de fotos.
+- `js/main.js`: interruptor de modo, cierre que se junta, línea central, barra de progreso y pilas de fotos.
 - `engine/cuadra-motion.css|js`: reveals (`data-reveal`) y deriva de los carriles (`data-parallax`). Es una **copia sin cambios** del motor de Cuadra (`engine/` en la raíz de `Webs/`, copiada el 2026-10-07), puesta acá para que el repo de este sitio se publique solo. Si el motor cambia en `Webs/`, hay que volver a copiarlo.
 
 ## Movimiento más allá del reveal básico, y por qué
 
 El concepto pide un recorrido con un solo gesto fuerte por pantalla, así que hay más que el reveal:
 
-- **Foto que crece (momento de firma; desde 2026-10-09 solo en la web de Dolce Shop):** la pareja de fotos del inicio sube y se abre del 64% al 100% del ancho con esquinas redondeadas, mientras el fondo pasa de campo de color a hueso. Es `clip-path` con la variable `--p`, que `main.js` calcula con el scroll (en los dos sentidos). Se eligió JS y no `animation-timeline` para que funcione en todos los navegadores.
+- **Foto que crece (retirada el 2026-10-09):** el momento de firma original (la pareja de fotos del inicio que se abría del 64% al 100% con `clip-path` y `--p`) se quitó de las dos webs cuando las portadas pasaron a foto de fondo. Hoy el gesto de entrada es el asentado de la foto (`settle`, escala 1.15 a 1 en 1,8 s). `main.js` conserva el cálculo de `--p` porque lo usan los carriles y el cierre.
 - **Dos carriles a contramarcha:** las pilas de fotos derivan en sentidos opuestos con `data-parallax` del motor (velocidad ±0.07, solo ≥ 1000 px). Una línea central se dibuja con el scroll y un "&" marca la unión.
 - **Cierre que se junta:** los datos de las dos casas se acercan desde ±10 vw.
 - **Anillo de texto:** SVG con `textPath` que gira una vuelta cada 24 s.

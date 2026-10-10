@@ -161,8 +161,6 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 .hero__grid { display: flex; flex-direction: column; gap: 24px; padding-top: 32px; padding-bottom: 88px; }
 .hero__text { display: flex; flex-direction: column; gap: 18px; }
 .hero__title { font: 400 clamp(44px, 7vw, 88px)/1 var(--serif); letter-spacing: -0.02em; }
-.hero__aside { display: flex; flex-direction: column; gap: 18px; }
-.hero__aside .lead { max-width: 340px; }
 .hero__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
 
 .line { display: block; overflow: hidden; padding-bottom: 0.2em; margin-bottom: -0.2em; }
@@ -192,6 +190,7 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
    y la madera libre al centro, y la altura sigue la proporción de esa imagen: celular 1125x1900,
    tablet 1536x1600 y desde 900 px la foto horizontal 1860x846. */
 .hero--cover { --field: #f4d6bb; --field-ink: var(--moka); --field-sub: var(--moka); }
+.hero--dolce { --field: #f3cccb; }
 .hero--cover .hero__field { display: grid; place-items: center; aspect-ratio: 1125 / 1900; background: var(--field); }
 .hero__media { position: absolute; inset: 0; overflow: hidden; }
 .hero__bg { display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -210,25 +209,6 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
   .hero--cover .hero__grid { padding-top: 48px; padding-bottom: 48px; }
   .hero--cover .hero__title { font-size: clamp(40px, 4.5vw, 70px); }
 }
-
-.band { background: linear-gradient(var(--field) 0 50%, var(--hueso) 50% 100%); }
-.band .wrap { padding-bottom: 40px; }
-
-.grow {
-  --r: 24px;
-  display: flex; gap: 3px; aspect-ratio: 3 / 2; overflow: hidden; background: var(--hueso);
-  border-radius: var(--r);
-  clip-path: inset(
-    calc((1 - var(--p, 1)) * 14%) calc((1 - var(--p, 1)) * 18%) 0 calc((1 - var(--p, 1)) * 18%)
-    round calc(var(--r) + (1 - var(--p, 1)) * 12px)
-  );
-}
-.grow__half { flex: 1 1 0; min-width: 0; overflow: hidden; }
-.grow__half img { width: 100%; height: 100%; object-fit: cover; }
-
-.captions { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 10px; }
-.cap { display: flex; flex-direction: column; gap: 2px; border-top: 1px solid var(--moka); padding-top: 8px; }
-.cap__name { font: 400 19px/1.2 var(--serif); }
 
 /* ---------- Juntos / A medida ---------- */
 .juntos { border-top: 1px solid var(--moka); }
@@ -350,11 +330,6 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 
   .hero__grid { padding-top: 56px; padding-bottom: 112px; }
   .ring { width: 150px; bottom: -68px; }
-  .band .wrap { padding-bottom: 56px; }
-  .grow { --r: 28px; aspect-ratio: 2 / 1; }
-
-  .cap { flex-direction: row; justify-content: space-between; align-items: baseline; }
-  .cap__name { font-size: 22px; }
 
   .promises { flex-direction: row; gap: 32px; }
   .promises li { flex: 1 1 0; flex-direction: column; gap: 6px; border-bottom: 0; }
@@ -369,10 +344,6 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 }
 
 @media (min-width: 1000px) {
-  .hero__grid { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 28px 48px; padding-top: 72px; }
-  .hero__text { flex: 3 1 480px; }
-  .hero__aside { flex: 1 1 300px; max-width: 380px; }
-
   .nav { display: flex; align-items: center; gap: 4px; }
   .nav__set { display: flex; gap: 4px; }
   .nav a:not(.btn) {

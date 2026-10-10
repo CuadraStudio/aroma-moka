@@ -1,8 +1,8 @@
 /* ==========================================================================
    Aroma Moka & Dolce Shop · v7.0
    - El motor de Cuadra pone los reveals y la deriva de los carriles.
-   - Todo lo de acá es del sitio: interruptor de modo, "foto que crece",
-     cierre que se junta, línea central, barra de progreso y pilas de fotos.
+   - Todo lo de acá es del sitio: interruptor de modo, cierre que se junta,
+     línea central, barra de progreso y pilas de fotos.
    Sin librerías. prefers-reduced-motion: nada se anima y todo queda en su
    estado final.
    ========================================================================== */

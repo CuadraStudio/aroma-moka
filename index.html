@@ -159,8 +159,15 @@
 <!-- ============================ DOLCE SHOP ============================ -->
 <main data-only="dolce">
 
-  <section class="hero" id="d-inicio" aria-labelledby="h1-dolce">
+  <section class="hero hero--cover hero--dolce" id="d-inicio" aria-labelledby="h1-dolce">
     <div class="hero__field on-field">
+      <div class="hero__media">
+        <picture>
+          <source media="(min-width: 900px)" srcset="img/portada_dolce_960.webp 960w, img/portada_dolce.webp 1859w" sizes="100vw">
+          <source media="(min-width: 640px)" srcset="img/portada_dolce_tablet.webp">
+          <img class="hero__bg settle" src="img/portada_dolce_movil.webp" srcset="img/portada_dolce_movil_750.webp 750w, img/portada_dolce_movil.webp 1125w" sizes="100vw" alt="Superficie rosa vista desde arriba con una torta de dos pisos decorada con rosas, mini tortas en una bandeja, galletas y brownies con frutilla en un plato y macarons de colores" width="1125" height="1900" fetchpriority="high">
+        </picture>
+      </div>
       <div class="wrap hero__grid">
         <div class="hero__text">
           <p class="label label--field">Dolce Shop · Pastelería artesanal</p>
@@ -168,9 +175,6 @@
             <span class="line"><span class="rise">Tortas y <span class="u">galletas</span></span></span>
             <span class="line"><span class="rise d1">hechas <span class="u">a tu medida</span>.</span></span>
           </h1>
-        </div>
-        <div class="hero__aside">
-          <p class="lead">Pastelería artesanal para cada ocasión. Cada pedido se arma con presupuesto, siempre por WhatsApp.</p>
           <div class="hero__cta">
             <a class="btn btn--field" href="https://wa.me/59893329614?text=Hola%20Dolce%20Shop%2C%20quisiera%20pedir%20un%20presupuesto" target="_blank" rel="noopener">Pedir presupuesto</a>
             <a class="link link--field" href="#d-tortas">Ver trabajos →</a>
@@ -180,18 +184,6 @@
       <div class="ring">
         <svg class="ring__text spin" viewBox="0 0 200 200" aria-hidden="true"><defs><path id="ringC" d="M100,20 a80,80 0 1,1 0,160 a80,80 0 1,1 0,-160"/></defs><text textLength="496" lengthAdjust="spacing"><textPath href="#ringC">PASTELERÍA ARTESANAL · A TU MEDIDA · </textPath></text></svg>
         <svg class="ring__heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-      </div>
-    </div>
-    <div class="band">
-      <div class="wrap">
-        <div class="grow" data-scrub>
-          <div class="grow__half"><img class="settle" src="img/dolce_torta_oli.webp" alt="Torta personalizada de buttercream pastel con toppers de fondant: patín, cámara, anteojos de corazón y macarons" width="640" height="640" fetchpriority="high"></div>
-          <div class="grow__half"><img class="settle" src="img/08_surtido_pasteleria.webp" alt="Tabla de pastelería sobre papel de Dolce Shop: croissant, cookie, scones, budín y una galletita con foto" width="1440" height="1439"></div>
-        </div>
-        <div class="captions">
-          <p class="cap"><span class="label">01 — Tortas ↑</span><span class="cap__name">Dolce Shop</span></p>
-          <p class="cap"><span class="label">02 — Galletas y cajas ↓</span><span class="cap__name">Dolce Shop</span></p>
-        </div>
       </div>
     </div>
   </section>
