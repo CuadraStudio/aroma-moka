@@ -18,10 +18,11 @@
   var heroMotion = !reduce;
   var heroEls = [].slice.call(document.querySelectorAll(".hero--cover"));
 
-  /* Prueba de carruseles: ?c=carta o ?c=tira en la URL. Sin parámetro quedan las tarjetas apiladas de siempre. */
+  /* Prueba de carruseles: ?c=tira, ?c=scroll o ?c=historias en la URL. Sin parámetro quedan las tarjetas apiladas de siempre. */
+  var strips = []; // franjas que se actualizan con el scroll de la página (variantes scroll e historias)
   var CAROUSEL = null;
   try { CAROUSEL = new URLSearchParams(window.location.search).get("c"); } catch (e) { /* sin soporte */ }
-  if (CAROUSEL !== "carta" && CAROUSEL !== "tira") CAROUSEL = null;
+  if (["tira", "scroll", "historias"].indexOf(CAROUSEL) < 0) CAROUSEL = null;
   if (CAROUSEL) root.setAttribute("data-c", CAROUSEL);
 
   /* ---------- 1. Motor de Cuadra: reveals + parallax declarativo ---------- */
@@ -46,6 +47,7 @@
     }
     var max = root.scrollHeight - vh;
     root.style.setProperty("--page", max > 0 ? clamp01(window.scrollY / max).toFixed(4) : "0");
+    for (var k = 0; k < strips.length; k++) strips[k].update();
     if (heroMotion) {
       // avance del scroll sobre la portada visible: 0 arriba de todo, 1 cuando ya salió
       var hero = heroEls.filter(function (h) { return h.offsetParent !== null; })[0];
@@ -66,92 +68,8 @@
   window.addEventListener("resize", onScroll);
   scrub();
 
-  /* ---------- 3a. Variantes de carrusel para comparar (solo con ?c=carta o ?c=tira) ---------- */
+  /* ---------- 3a. Variantes de carrusel para comparar (solo con ?c=tira, ?c=scroll o ?c=historias) ---------- */
   function pad2(n) { return (n < 10 ? "0" : "") + n; }
-
-  // A · selector tipográfico: los nombres van en grande, como una carta; la foto nueva se abre en círculo
-  function initCarta(stack, wrap, cards) {
-    var n = cards.length, idx = 0, finishNow = null;
-    var list = document.createElement("ol");
-    list.className = "carta__list";
-    cards.forEach(function (card, i) {
-      card.removeAttribute("data-pos");
-      var li = document.createElement("li");
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className = "carta__item";
-      b.innerHTML = '<span class="carta__n"></span><span class="carta__name"></span>';
-      b.firstChild.textContent = pad2(i + 1);
-      b.lastChild.textContent = card.getAttribute("data-caption");
-      b.addEventListener("click", function (e) { show(i, e.clientX); });
-      li.appendChild(b);
-      list.appendChild(li);
-    });
-    stack.parentNode.insertBefore(list, stack.nextSibling);
-    var items = [].slice.call(list.querySelectorAll(".carta__item"));
-
-    function mark() {
-      cards.forEach(function (c, i) {
-        c.classList.toggle("is-active", i === idx);
-        c.setAttribute("aria-hidden", i === idx ? "false" : "true");
-      });
-      items.forEach(function (b, i) { b.setAttribute("aria-current", i === idx ? "true" : "false"); });
-    }
-
-    function show(next, clientX) {
-      if (next === idx) return;
-      if (finishNow) finishNow(); // un clic nuevo termina en el acto la animación anterior
-      var cur = cards[next];
-      idx = next;
-      items.forEach(function (b, i) { b.setAttribute("aria-current", i === idx ? "true" : "false"); });
-      if (reduce || !cur.animate) { mark(); return; }
-      var box = stack.getBoundingClientRect();
-      // el círculo se abre desde el borde de la foto más cercano a la lista, a la altura de donde se tocó
-      var x = typeof clientX === "number" ? Math.max(0, Math.min(box.width, clientX - box.left)) : box.width / 2;
-      var y = box.height;
-      var radius = Math.ceil(Math.hypot(Math.max(x, box.width - x), y));
-      cur.classList.add("is-entering");
-      cur.setAttribute("aria-hidden", "false");
-      var anim = cur.animate(
-        { clipPath: ["circle(0px at " + x + "px " + y + "px)", "circle(" + radius + "px at " + x + "px " + y + "px)"] },
-        { duration: 700, easing: "cubic-bezier(0.65, 0, 0.35, 1)", fill: "forwards" }
-      );
-      var img = cur.querySelector("img");
-      if (img && img.animate) img.animate({ transform: ["scale(1.14)", "scale(1)"] }, { duration: 1000, easing: "cubic-bezier(0.2, 0.7, 0.1, 1)" });
-      var done = false, timer = 0;
-      finishNow = function () {
-        if (done) return;
-        done = true;
-        window.clearTimeout(timer);
-        anim.cancel();
-        cur.classList.remove("is-entering");
-        finishNow = null;
-        mark();
-      };
-      anim.onfinish = finishNow;
-      timer = window.setTimeout(finishNow, 780); // por si la pestaña estaba oculta y no se dispara "onfinish"
-    }
-
-    // deslizar sobre la foto y flechas del teclado
-    var x0 = null;
-    stack.addEventListener("pointerdown", function (e) { x0 = e.clientX; });
-    stack.addEventListener("pointerup", function (e) {
-      if (x0 === null) return;
-      var dx = e.clientX - x0;
-      x0 = null;
-      if (Math.abs(dx) > 40) show((idx + (dx < 0 ? 1 : -1) + n) % n, e.clientX);
-    });
-    stack.addEventListener("pointercancel", function () { x0 = null; });
-    stack.setAttribute("tabindex", "0");
-    stack.setAttribute("role", "group");
-    stack.setAttribute("aria-label", "Fotos, usá las flechas o elegí un nombre de la lista");
-    stack.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowRight") { e.preventDefault(); show((idx + 1) % n); }
-      if (e.key === "ArrowLeft") { e.preventDefault(); show((idx - 1 + n) % n); }
-    });
-
-    mark();
-  }
 
   // B · tira con scroll nativo: se desliza con el dedo, el trackpad o arrastrando con el mouse
   function initTira(stack, wrap, cards) {
@@ -253,6 +171,263 @@
     update();
   }
 
+  // A · las fotos avanzan con el scroll de la página, a contramarcha entre un carril y el otro
+  function initScrollLinked(stack, wrap, cards) {
+    if (reduce) { initTira(stack, wrap, cards); return; } // sin movimiento: tira de scroll nativo
+    var n = cards.length, isRight = stack.classList.contains("stack--r");
+    var caption = wrap.querySelector(".stack__caption"), count = wrap.querySelector(".stack__count");
+    if (caption) caption.setAttribute("aria-live", "off"); // cambia mientras se scrollea: que no lo lea cada vez
+    var track = document.createElement("div");
+    track.className = "scroll__track";
+    (isRight ? cards.slice().reverse() : cards).forEach(function (c) {
+      c.removeAttribute("data-pos");
+      c.setAttribute("aria-hidden", "false");
+      track.appendChild(c);
+    });
+    stack.appendChild(track);
+    var max = 0, linked = 0, manualTarget = 0, manualShown = 0, last = -1, raf = 0;
+
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+    function step() { return n > 1 ? Math.abs(cards[1].offsetLeft - cards[0].offsetLeft) : stack.clientWidth; }
+    function render() {
+      var pos = clamp(linked + manualShown, 0, max), x = isRight ? pos - max : -pos;
+      track.style.transform = "translate3d(" + x.toFixed(1) + "px, 0, 0)";
+      // la foto más cercana al centro de la franja manda en el pie y el contador
+      var mid = stack.clientWidth / 2, best = 0, bd = Infinity;
+      cards.forEach(function (c, i) {
+        var d = Math.abs(c.offsetLeft + c.offsetWidth / 2 + x - mid);
+        if (d < bd) { bd = d; best = i; }
+      });
+      if (best !== last) {
+        last = best;
+        if (caption) caption.textContent = cards[best].getAttribute("data-caption");
+        if (count) count.textContent = pad2(best + 1) + " / " + pad2(n);
+      }
+    }
+    function update() {
+      var r = stack.getBoundingClientRect();
+      if (!r.height) return; // está en la otra web (oculta)
+      max = Math.max(0, track.scrollWidth - stack.clientWidth);
+      // 0 cuando la franja entra por abajo y 1 cuando sale por arriba; las fotos avanzan en el tramo central
+      var t = (window.innerHeight - r.top) / (window.innerHeight + r.height);
+      linked = clamp((t - 0.22) / 0.56, 0, 1) * max;
+      manualTarget = clamp(manualTarget, -linked, max - linked);
+      manualShown = clamp(manualShown, -linked, max - linked);
+      render();
+    }
+    function ease() {
+      raf = 0;
+      manualShown += (manualTarget - manualShown) * 0.2;
+      if (Math.abs(manualTarget - manualShown) < 0.4) manualShown = manualTarget;
+      render();
+      if (manualShown !== manualTarget) raf = window.requestAnimationFrame(ease);
+    }
+    // lo que se mueve a mano (arrastre, dedo o teclado) se suma a lo que mueve el scroll
+    function setManual(v, now) {
+      manualTarget = clamp(v, -linked, max - linked);
+      if (now) { manualShown = manualTarget; render(); }
+      else if (!raf) raf = window.requestAnimationFrame(ease);
+    }
+
+    var dragging = false, decided = false, horiz = false, sx = 0, sy = 0, sm = 0;
+    stack.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      dragging = true; decided = false; horiz = false; sx = e.clientX; sy = e.clientY; sm = manualTarget;
+    });
+    stack.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      var dx = e.clientX - sx, dy = e.clientY - sy;
+      if (!decided && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+        decided = true;
+        horiz = Math.abs(dx) > Math.abs(dy);
+        if (horiz) {
+          stack.classList.add("is-drag");
+          try { stack.setPointerCapture(e.pointerId); } catch (err) { /* sin captura */ }
+        }
+      }
+      if (horiz) setManual(sm + (isRight ? 1 : -1) * dx, true);
+    });
+    function end() { dragging = false; stack.classList.remove("is-drag"); }
+    stack.addEventListener("pointerup", end);
+    stack.addEventListener("pointercancel", end);
+
+    stack.setAttribute("tabindex", "0");
+    stack.setAttribute("role", "group");
+    stack.setAttribute("aria-label", "Fotos que avanzan al scrollear; deslizá o usá las flechas del teclado");
+    stack.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") { e.preventDefault(); setManual(manualTarget + step(), false); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); setManual(manualTarget - step(), false); }
+    });
+
+    strips.push({ update: update });
+    update();
+  }
+
+  // B · las fotos avanzan solas, estilo historias: barra de segmentos, toque en los lados y pausa
+  function initHistorias(stack, wrap, cards) {
+    var n = cards.length, idx = 0, DURATION = 4500;
+    var isRight = stack.classList.contains("stack--r");
+    var elapsed = reduce ? DURATION : (isRight ? DURATION * 0.45 : 0); // los dos carriles no cambian a la vez
+    var paused = false, held = false, hovering = false, finishNow = null;
+    var heldFor = 0, downAt = 0, swiped = false, sx = 0, sy = 0, raf = 0, last = 0;
+    var caption = wrap.querySelector(".stack__caption"), count = wrap.querySelector(".stack__count");
+    var ctrl = wrap.querySelector(".stack__ctrl");
+    if (caption) caption.setAttribute("aria-live", "off"); // cambia solo: que no lo lea cada vez
+    cards.forEach(function (c) { c.removeAttribute("data-pos"); });
+
+    var segs = document.createElement("div");
+    segs.className = "hist__segs";
+    segs.setAttribute("aria-hidden", "true");
+    var fills = cards.map(function () {
+      var s = document.createElement("span"), f = document.createElement("i");
+      s.className = "hist__seg";
+      s.appendChild(f);
+      segs.appendChild(s);
+      return f;
+    });
+    stack.appendChild(segs);
+
+    function zone(cls, label) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "hist__zone " + cls;
+      b.setAttribute("aria-label", label);
+      stack.appendChild(b);
+      return b;
+    }
+    var prevB = zone("hist__zone--l", "Foto anterior");
+    var nextB = zone("hist__zone--r", "Foto siguiente");
+    var pauseB = null;
+    if (!reduce && ctrl) {
+      pauseB = document.createElement("button");
+      pauseB.type = "button";
+      pauseB.className = "round hist__pause";
+      pauseB.setAttribute("aria-label", "Pausar el cambio automático");
+      pauseB.textContent = "II";
+      ctrl.appendChild(pauseB);
+      pauseB.addEventListener("click", function () {
+        paused = !paused;
+        pauseB.textContent = paused ? "▶" : "II";
+        pauseB.setAttribute("aria-label", paused ? "Reanudar el cambio automático" : "Pausar el cambio automático");
+      });
+    }
+
+    function ui() {
+      if (caption) caption.textContent = cards[idx].getAttribute("data-caption");
+      if (count) count.textContent = pad2(idx + 1) + " / " + pad2(n);
+      fills.forEach(function (f, i) {
+        f.style.transform = "scaleX(" + (i < idx ? 1 : i === idx ? Math.min(1, elapsed / DURATION).toFixed(3) : 0) + ")";
+      });
+    }
+    function mark() {
+      cards.forEach(function (c, i) {
+        c.classList.toggle("is-active", i === idx);
+        c.setAttribute("aria-hidden", i === idx ? "false" : "true");
+      });
+    }
+
+    // la foto nueva se abre como un círculo desde (x, y), medidos sobre la foto
+    function go(next, x, y) {
+      if (next === idx) return;
+      if (finishNow) finishNow();
+      var cur = cards[next];
+      idx = next;
+      elapsed = reduce ? DURATION : 0;
+      ui();
+      if (reduce || !cur.animate) { mark(); return; }
+      var box = stack.getBoundingClientRect();
+      x = typeof x === "number" ? Math.max(0, Math.min(box.width, x)) : box.width / 2;
+      y = typeof y === "number" ? Math.max(0, Math.min(box.height, y)) : 0;
+      var radius = Math.ceil(Math.hypot(Math.max(x, box.width - x), Math.max(y, box.height - y)));
+      cur.classList.add("is-entering");
+      cur.setAttribute("aria-hidden", "false");
+      var anim = cur.animate(
+        { clipPath: ["circle(0px at " + x + "px " + y + "px)", "circle(" + radius + "px at " + x + "px " + y + "px)"] },
+        { duration: 650, easing: "cubic-bezier(0.65, 0, 0.35, 1)", fill: "forwards" }
+      );
+      var img = cur.querySelector("img");
+      if (img && img.animate) img.animate({ transform: ["scale(1.12)", "scale(1)"] }, { duration: 900, easing: "cubic-bezier(0.2, 0.7, 0.1, 1)" });
+      var done = false, timer = 0;
+      finishNow = function () {
+        if (done) return;
+        done = true;
+        window.clearTimeout(timer);
+        anim.cancel();
+        cur.classList.remove("is-entering");
+        finishNow = null;
+        mark();
+      };
+      anim.onfinish = finishNow;
+      timer = window.setTimeout(finishNow, 720); // por si la pestaña estaba oculta y no se dispara "onfinish"
+    }
+    function navTo(next, e) {
+      var box = stack.getBoundingClientRect();
+      go(next, e ? e.clientX - box.left : undefined, e ? e.clientY - box.top : undefined);
+    }
+
+    // avance automático: solo mientras la franja se ve, sin pausa, sin mouse encima ni dedo apoyado
+    function tick(ts) {
+      raf = window.requestAnimationFrame(tick);
+      var dt = Math.max(0, Math.min(100, ts - last)); // tope de 100 ms: al volver a la pestaña no salta de golpe
+      last = ts;
+      if (paused || held || hovering || document.hidden) return;
+      elapsed += dt;
+      if (elapsed >= DURATION) {
+        var nx = (idx + 1) % n, sb = fills[nx].parentNode.getBoundingClientRect(), box = stack.getBoundingClientRect();
+        go(nx, sb.left + sb.width / 2 - box.left, 0); // se abre desde donde terminó la barra
+      } else {
+        fills[idx].style.transform = "scaleX(" + (elapsed / DURATION).toFixed(3) + ")";
+      }
+    }
+    function update() {
+      var r = stack.getBoundingClientRect(), vh = window.innerHeight;
+      var shown = r.height ? Math.min(r.bottom, vh) - Math.max(r.top, 0) : 0;
+      var visible = !reduce && r.height > 0 && shown >= r.height * 0.4;
+      if (visible && !raf) { last = performance.now(); raf = window.requestAnimationFrame(tick); }
+      if (!visible && raf) { window.cancelAnimationFrame(raf); raf = 0; }
+    }
+
+    // toque en los lados (izquierdo = anterior, derecho = siguiente); apoyado más de 250 ms = pausa sin cambiar
+    prevB.addEventListener("click", function (e) {
+      if (heldFor >= 250 || swiped) { heldFor = 0; swiped = false; return; }
+      navTo((idx - 1 + n) % n, e.detail ? e : null);
+    });
+    nextB.addEventListener("click", function (e) {
+      if (heldFor >= 250 || swiped) { heldFor = 0; swiped = false; return; }
+      navTo((idx + 1) % n, e.detail ? e : null);
+    });
+    stack.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      held = true; downAt = performance.now(); sx = e.clientX; sy = e.clientY; swiped = false; heldFor = 0;
+    });
+    function release(e) {
+      if (!held) return;
+      held = false;
+      heldFor = performance.now() - downAt;
+      if (e.type === "pointerup") {
+        var dx = e.clientX - sx, dy = e.clientY - sy;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { swiped = true; navTo((idx + (dx < 0 ? 1 : -1) + n) % n, e); }
+      }
+    }
+    stack.addEventListener("pointerup", release);
+    stack.addEventListener("pointercancel", release);
+    stack.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") hovering = true; });
+    stack.addEventListener("pointerleave", function () { hovering = false; held = false; });
+
+    stack.setAttribute("tabindex", "0");
+    stack.setAttribute("role", "group");
+    stack.setAttribute("aria-label", "Fotos que cambian solas; tocá los lados o usá las flechas del teclado");
+    stack.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") { e.preventDefault(); go((idx + 1) % n); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); go((idx - 1 + n) % n); }
+    });
+
+    strips.push({ update: update });
+    mark();
+    ui();
+    update();
+  }
+
   /* ---------- 3. Pilas de fotos (tarjetas apiladas) ---------- */
   [].forEach.call(document.querySelectorAll("[data-stack]"), function (stack) {
     var wrap = stack.closest(".stack-wrap");
@@ -262,8 +437,9 @@
     var n = cards.length;
     var idx = 0;
 
-    if (CAROUSEL === "carta") { initCarta(stack, wrap, cards); return; }
     if (CAROUSEL === "tira") { initTira(stack, wrap, cards); return; }
+    if (CAROUSEL === "scroll") { initScrollLinked(stack, wrap, cards); return; }
+    if (CAROUSEL === "historias") { initHistorias(stack, wrap, cards); return; }
 
     function render() {
       cards.forEach(function (card, i) {
