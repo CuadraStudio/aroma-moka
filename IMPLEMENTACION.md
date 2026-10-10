@@ -24,6 +24,11 @@ Enlace directo a cada web: `?v=aroma` y `?v=dolce`.
 - Mantiene `<meta name="robots" content="noindex">`: es una demo para el prospecto, no producción.
 - Los nombres de Render son únicos: `aroma-moka` ya estaba tomado, por eso termina en `-web`.
 
+## Ajustes después de la entrega
+
+- **Portada de Aroma Moka con foto de fondo (2026-10-09, pedido de Luciano):** se quitaron las dos fotos que crecían con el scroll (taza rosa y pavlovas), sus epígrafes y el párrafo de la derecha; la portada usa una foto cenital de mesa de madera (`img/portada_aroma.webp` de 1860 px e `img/portada_aroma_960.webp`) con el título y los dos botones centrados ("Ver qué hay", "Cómo llegar"). El párrafo "Dos pasiones, una sola mesa…" se sacó porque "Juntos", justo abajo, dice lo mismo; los botones se conservaron. El sello giratorio pasó al centro del borde inferior, porque a la derecha tapaba el plato. Desde 1000 px la foto es el fondo y la altura sigue su proporción, para que el texto quede en el centro libre sin tapar la comida; por debajo, la foto va arriba con su proporción y el texto debajo, sobre el tono de la madera (`#F4D6BB`), porque en vertical un fondo recortaría la comida. El texto pasa a moka sobre la madera clara. Solo afecta a `.hero--cover`; la portada de Dolce Shop no cambió. La foto no lleva `decoding="async"` a propósito: es la imagen principal y así pinta de inmediato. Las fotos `03_cafe_taza_rosa.webp` y `16_pavlovas.webp` quedan sin uso.
+- **La imagen de portada es generada con IA (ChatGPT), aportada por Luciano:** no es una foto del local y los platos pueden no coincidir con la carta real. El PNG original (2,3 MB) no está en el repo; sigue en `Descargas/Img Chat GPT/`.
+
 ## Fuente de diseño
 
 No hay `DESIGN.md` (se eliminó el 2026-09-30 a pedido de Luciano). El contrato de esta pasada es el **Artifact Design "Aroma Moka — Design Concept"** (https://claude.ai/artifact/MYgK5VvxpF7Qomp2fo2ex8) y las decisiones tomadas en la conversación del 2026-10-07. Nada de esto está marcado APROBADO. **No se usó el `DESIGN.md` anterior** (`sites/aroma-moka/DESIGN.md`) como referencia, por pedido explícito.
@@ -36,7 +41,7 @@ Todo en una sola página, con dos modos. El modo vive en `html[data-mode]` (`aro
 
 | Escena | Aroma Moka | Dolce Shop |
 |---|---|---|
-| Apertura + foto que crece | `#inicio` | `#d-inicio` |
+| Apertura | `#inicio` (foto de portada de fondo) | `#d-inicio` (foto que crece) |
 | Manifiesto | `#juntos` ("Juntos") | `#d-medida` ("A medida") |
 | Dos carriles + pilas de fotos | `#cafe` / `#comer` | `#d-tortas` / `#d-galletas` |
 | Cierre con datos y botones | `#visitanos` (compartido; solo cambian título y etiqueta) | igual |
@@ -51,7 +56,7 @@ Todo en una sola página, con dos modos. El modo vive en `html[data-mode]` (`aro
 
 El concepto pide un recorrido con un solo gesto fuerte por pantalla, así que hay más que el reveal:
 
-- **Foto que crece (momento de firma):** la pareja de fotos del inicio sube y se abre del 64% al 100% del ancho con esquinas redondeadas, mientras el fondo pasa de campo de color a hueso. Es `clip-path` con la variable `--p`, que `main.js` calcula con el scroll (en los dos sentidos). Se eligió JS y no `animation-timeline` para que funcione en todos los navegadores.
+- **Foto que crece (momento de firma; desde 2026-10-09 solo en la web de Dolce Shop):** la pareja de fotos del inicio sube y se abre del 64% al 100% del ancho con esquinas redondeadas, mientras el fondo pasa de campo de color a hueso. Es `clip-path` con la variable `--p`, que `main.js` calcula con el scroll (en los dos sentidos). Se eligió JS y no `animation-timeline` para que funcione en todos los navegadores.
 - **Dos carriles a contramarcha:** las pilas de fotos derivan en sentidos opuestos con `data-parallax` del motor (velocidad ±0.07, solo ≥ 1000 px). Una línea central se dibuja con el scroll y un "&" marca la unión.
 - **Cierre que se junta:** los datos de las dos casas se acercan desde ±10 vw.
 - **Anillo de texto:** SVG con `textPath` que gira una vuelta cada 24 s.

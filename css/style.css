@@ -186,6 +186,29 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 .ring--static { position: relative; right: auto; bottom: auto; flex: 0 0 auto; width: 140px; }
 .ring--static::before { display: none; }
 
+/* ---------- Portada de Aroma Moka: foto de fondo, texto al centro ----------
+   Solo aplica a .hero--cover (la portada de Dolce Shop no cambia). En celular la foto va arriba con
+   su proporción y el texto debajo, sobre el tono de la madera; desde 1000 px la foto es el fondo. */
+.hero--cover { --field: #f4d6bb; --field-ink: var(--moka); --field-sub: var(--madera); }
+.hero--cover .hero__field { background: var(--field); }
+.hero__media { overflow: hidden; }
+.hero__bg { display: block; width: 100%; height: auto; aspect-ratio: 1860 / 846; object-fit: cover; }
+.hero--cover .hero__grid { align-items: center; text-align: center; padding-top: 36px; padding-bottom: 92px; }
+.hero--cover .hero__text { align-items: center; gap: 20px; }
+.hero--cover .hero__cta { justify-content: center; }
+.hero--cover .ring { left: 50%; right: auto; transform: translateX(-50%); }
+.hero--cover .ring::before { background: var(--hueso); }
+@media (min-width: 640px) {
+  .hero--cover .hero__grid { padding-top: 48px; padding-bottom: 104px; }
+}
+@media (min-width: 1000px) {
+  .hero--cover .hero__field { display: grid; place-items: center; aspect-ratio: 1860 / 846; }
+  .hero--cover .hero__media { position: absolute; inset: 0; }
+  .hero--cover .hero__bg { height: 100%; }
+  .hero--cover .hero__grid { position: relative; width: 100%; padding-top: 48px; padding-bottom: 48px; }
+  .hero--cover .hero__title { font-size: clamp(40px, 4.5vw, 70px); }
+}
+
 .band { background: linear-gradient(var(--field) 0 50%, var(--hueso) 50% 100%); }
 .band .wrap { padding-bottom: 40px; }
 
