@@ -38,7 +38,7 @@ Enlace directo a cada web: `?v=aroma` y `?v=dolce`.
 
 Al tocar el interruptor (o un enlace "Mirá lo que prepara…"), la web nueva se abre como un círculo desde el punto tocado, usando la API de transiciones de vista (`document.startViewTransition`; el círculo es un `clip-path` animado desde JS sobre `::view-transition-new(root)`). Se ve el contenido real de la otra web y dura ~0,65 s. Se compararon dos variantes por URL (`?t=circulo` y `?t=mitades`, esta última con dos mitades que se juntaban en un "&") y Luciano eligió el círculo; la otra y el parámetro se borraron.
 
-- **Mismo lugar en la otra web:** en vez de volver al tope, la persona queda en la sección equivalente y a la misma altura relativa (Inicio ↔ Inicio, Juntos ↔ A medida, carriles ↔ carriles, cierre ↔ cierre); si estaba al final de la página, queda al final.
+- **Mismo lugar en la otra web:** en vez de volver al tope, la persona queda en la sección equivalente y a la misma altura relativa (Inicio ↔ Inicio, Juntos ↔ A medida, carriles (Aroma Moka) ↔ productos (Dolce Shop), cierre ↔ cierre); si estaba al final de la página, queda al final.
 - **Otros detalles:** se ignora un segundo clic mientras corre la transición; el botón del interruptor se desliza con un pequeño rebote.
 - **Respaldo:** en un navegador sin transiciones de vista queda una cortina de color (el tono de la portada de destino: `#F4D6BB` para Aroma Moka, `#F3CCCB` para Dolce Shop), que también conserva el lugar.
 - **`prefers-reduced-motion`:** fundido de 150 ms si el navegador tiene la API; si no, cambio directo.
@@ -70,7 +70,7 @@ Los carruseles de las dos webs (dos por web, uno en cada carril) cambian de foto
 
 - **Barra de segmentos** arriba de la foto (uno por foto) que se llena como temporizador, 4,5 s por foto, con un leve degradé oscuro arriba para que se lea sobre fotos claras.
 - **Toque en los lados:** el izquierdo (35 %) va a la foto anterior y el derecho (65 %) a la siguiente; apoyar más de 250 ms, o pasar el mouse por encima, pausa; también se desliza con el dedo o el mouse y se usan las flechas del teclado con el carrusel enfocado. En escritorio aparecen flechas circulares al pasar el mouse por cada lado. Botón de pausa visible (accesibilidad).
-- **Cuándo corre:** solo mientras al menos el 40 % de la franja se ve y la pestaña está activa; los dos carriles no cambian a la vez (el derecho arranca al 45 %). Al volver a la pestaña no salta de golpe (tope de 100 ms por cuadro).
+- **Cuándo corre:** solo mientras al menos el 40 % de la franja se ve y la pestaña está activa; los dos carruseles de una misma web no cambian a la vez (el segundo arranca al 45 %). Al volver a la pestaña no salta de golpe (tope de 100 ms por cuadro).
 - **Cambio de foto:** la nueva se abre como un círculo desde donde terminó la barra (o desde donde se tocó), con un leve zoom de entrada. Un temporizador de respaldo cierra la animación aunque la pestaña estuviera oculta, y un toque nuevo termina en el acto la anterior.
 - **Pie:** el nombre de la foto en serif grande y el contador "01 / 03" al lado. Sin `aria-live` (cambia solo, no se anuncia cada vez).
 - **`prefers-reduced-motion`:** no avanza sola; se cambia con los toques y el teclado, sin animación.
@@ -82,7 +82,7 @@ Verificado con mediciones: avance automático con relojes acelerados, no avanza 
 
 ## Barras de los carriles: nombres juntos en el centro (2026-10-10, pedido de Luciano)
 
-Cada carril tiene una barra fija arriba con un rótulo y un nombre. Antes, en el carril derecho el rótulo estaba pegado al centro y el nombre al borde; ahora el orden de ese carril está invertido para que los dos nombres queden juntos junto al "&": el rótulo de la izquierda ("01 — Café") pegado al borde izquierdo, "Aroma Moka" junto al centro, "Dolce Shop" del otro lado del "&" y el rótulo de la derecha ("Comida — 02") pegado al borde derecho. Se lee de punta a punta como **"01 — Café … Aroma Moka & Dolce Shop … Comida — 02"**. En el carril derecho el orden del HTML es nombre y después rótulo, y el número va al final. Los nombres quedan a 48 px de la línea central (el "&" mide 46 px). En celular, con los carriles apilados, cada barra reparte sus dos textos entre los extremos. En la web de Dolce Shop el patrón es el mismo ("01 — Tortas … Dolce Shop & Dolce Shop … Galletas y cajas — 02"), por lo que el nombre queda repetido junto al "&". A 320 px la barra más larga baja a dos líneas.
+Cada carril tiene una barra fija arriba con un rótulo y un nombre. Antes, en el carril derecho el rótulo estaba pegado al centro y el nombre al borde; ahora el orden de ese carril está invertido para que los dos nombres queden juntos junto al "&": el rótulo de la izquierda ("01 — Café") pegado al borde izquierdo, "Aroma Moka" junto al centro, "Dolce Shop" del otro lado del "&" y el rótulo de la derecha ("Comida — 02") pegado al borde derecho. Se lee de punta a punta como **"01 — Café … Aroma Moka & Dolce Shop … Comida — 02"**. En el carril derecho el orden del HTML es nombre y después rótulo, y el número va al final. Los nombres quedan a 48 px de la línea central (el "&" mide 46 px). En celular, con los carriles apilados, cada barra reparte sus dos textos entre los extremos. Esto vale solo para la web de Aroma Moka: en Dolce Shop ya no hay carriles ni barras (ver "Dolce Shop: productos sin la división").
 
 ## Cierre más completo, vista previa al compartir y datos para Google (2026-10-10, pedido de Luciano)
 
@@ -102,6 +102,22 @@ Luciano pidió ideas de secciones que faltaban y eligió armar las cuatro que no
 
 Verificado: las diez combinaciones de hora y día simuladas del cartel dan el texto esperado (incluidos los casos donde la fecha en UTC ya es otro día), el mapa carga y marca el local con 4,6 (63), no se ve en Dolce Shop y vuelve a mostrarse al cambiar a Aroma Moka (la aparición suave del reveal no se pudo ver con el panel oculto, que pausa el observador), el JSON-LD es JSON válido, y no hay desborde horizontal a 320, 375, 768 y 1440 px. **No se verificó** la vista previa en WhatsApp ni en otras redes (hace falta publicar), ni la aparición real en Google. El cartel se animó con el panel oculto, así que el pulso del punto no se vio con relojes reales.
 
+## Dolce Shop: productos sin la división (2026-10-10, pedido de Luciano)
+
+Luciano pidió sacar "la división" de la web de Dolce Shop y enfocarla solo en sus productos. Lo interpreté así: en Dolce Shop desaparecen los dos carriles, la línea central, el "&" y las barras que repetían el nombre ("01 — Tortas … Dolce Shop & Dolce Shop … Galletas y cajas — 02"). En su lugar hay **dos bloques de producto a ancho completo, uno debajo del otro**: "01 — Tortas" (fondo hueso) y "02 — Galletas y cajas" (fondo rosa claro).
+
+- **Escritorio (1000 px o más):** cada bloque va en dos columnas, texto y carrusel de fotos (480 px), y los lados se alternan: texto a la izquierda y fotos a la derecha en Tortas, al revés en Galletas y cajas.
+- **Tablet y celular:** el texto va arriba y el carrusel debajo, a todo el ancho (hasta 520 px).
+- **Sin cambios:** los textos, las fotos y los carruseles estilo historias son los mismos. Los accesos "Tortas" y "Galletas" del menú y "Ver trabajos" siguen llegando a `#d-tortas` y `#d-galletas`, y el cambio entre webs conserva el lugar (de los productos de Dolce Shop a los carriles de Aroma Moka y de vuelta).
+- **Ya no hay en esta web:** la deriva de las fotos con el scroll (`data-parallax`), la línea central, el "&" y las barras fijas. La etiqueta de cada bloque ("01 — Tortas", "02 — Galletas y cajas") quedó sobre el título.
+- **La web de Aroma Moka no cambió.**
+
+Código: sección `.products` con dos `.product` dentro de `main[data-only="dolce"]` en `index.html`; bloque "Productos de Dolce Shop" de `css/style.css`. Las reglas de `.lane*`, `.seam` y `.amp` siguen en uso solo para Aroma Moka.
+
+**No se tocó:** el cierre ("Visitanos") es compartido, así que en la web de Dolce Shop sigue mostrando también la tarjeta de contacto de Aroma Moka, y la sección "A medida" tampoco cambió. Queda consultado con Luciano.
+
+Verificado con mediciones: dos bloques con los lados alternados a 1440 px, una columna a 768, 375 y 320 px sin desborde horizontal, sin restos de carriles, línea central ni deriva en la web de Dolce Shop, los dos carruseles con su barra de segmentos y respondiendo al toque, el cambio de web conserva el lugar (0,54 de la sección en los dos sentidos), consola sin errores. Una captura en escritorio y una en celular; con el panel oculto el texto quedó a medio aparecer en la captura (el reveal del motor).
+
 ## Fuente de diseño
 
 No hay `DESIGN.md` (se eliminó el 2026-09-30 a pedido de Luciano). El contrato de esta pasada es el **Artifact Design "Aroma Moka — Design Concept"** (https://claude.ai/artifact/MYgK5VvxpF7Qomp2fo2ex8) y las decisiones tomadas en la conversación del 2026-10-07. Nada de esto está marcado APROBADO. **No se usó el `DESIGN.md` anterior** (`sites/aroma-moka/DESIGN.md`) como referencia, por pedido explícito.
@@ -116,7 +132,7 @@ Todo en una sola página, con dos modos. El modo vive en `html[data-mode]` (`aro
 |---|---|---|
 | Apertura | `#inicio` (foto de portada de fondo) | `#d-inicio` (foto de portada de fondo) |
 | Manifiesto | `#juntos` ("Juntos") | `#d-medida` ("A medida") |
-| Dos carriles + carruseles de fotos | `#cafe` / `#comer` | `#d-tortas` / `#d-galletas` |
+| Dos carriles + carruseles de fotos (Aroma Moka) / dos bloques de producto con carrusel (Dolce Shop) | `#cafe` / `#comer` | `#d-tortas` / `#d-galletas` |
 | Cierre con datos y botones | `#visitanos` (compartido; solo cambian título y etiqueta) | igual |
 | Pie | `.foot` (compartido) | igual |
 
@@ -130,7 +146,7 @@ Todo en una sola página, con dos modos. El modo vive en `html[data-mode]` (`aro
 El concepto pide un recorrido con un solo gesto fuerte por pantalla, así que hay más que el reveal:
 
 - **Foto que crece (retirada el 2026-10-09):** el momento de firma original (la pareja de fotos del inicio que se abría del 64% al 100% con `clip-path` y `--p`) se quitó de las dos webs cuando las portadas pasaron a foto de fondo. Hoy el gesto de entrada es el asentado de la foto (`settle`, escala 1.15 a 1 en 1,8 s). `main.js` conserva el cálculo de `--p` porque lo usan los carriles y el cierre.
-- **Dos carriles a contramarcha:** los carruseles de fotos derivan en sentidos opuestos con `data-parallax` del motor (velocidad ±0.07, solo ≥ 1000 px). Una línea central se dibuja con el scroll y un "&" marca la unión.
+- **Dos carriles a contramarcha (solo en la web de Aroma Moka):** los carruseles de fotos derivan en sentidos opuestos con `data-parallax` del motor (velocidad ±0.07, solo ≥ 1000 px). Una línea central se dibuja con el scroll y un "&" marca la unión.
 - **Cierre que se junta:** los datos de las dos casas se acercan desde ±10 vw.
 - **Anillo de texto:** SVG con `textPath` que gira una vuelta cada 24 s.
 - **Carruseles de fotos:** estilo historias, con barra de segmentos, toque en los lados, pausa y círculo de apertura (ver "Carruseles de fotos").
@@ -150,7 +166,7 @@ Registrado en `docs/operacion/MOTION-LOG.md`. No repite el momento de firma de l
 
 ## Decisiones [IA] donde no había contrato
 
-- La web de Dolce Shop (titular "Tortas y galletas hechas a tu medida", sección "A medida", carriles "Tortas" y "Galletas y cajas") es una **propuesta mía** a partir de las fotos de sus tortas y galletas, el texto "Pastelería artesanal" de sus tarjetas y los destacados de su Instagram (Mamá, San Valentín, Pascuas, Fiestas, Tortas, Cookies).
+- La web de Dolce Shop (titular "Tortas y galletas hechas a tu medida", sección "A medida", bloques "Tortas" y "Galletas y cajas") es una **propuesta mía** a partir de las fotos de sus tortas y galletas, el texto "Pastelería artesanal" de sus tarjetas y los destacados de su Instagram (Mamá, San Valentín, Pascuas, Fiestas, Tortas, Cookies).
 - Campo de Dolce Shop en rosa chicle (el rosa de su papel de empaque) y el de Aroma Moka en madera.
 - Corazón de línea genérico como centro del anillo de Dolce Shop.
 - Orden de las fotos de los carruseles y repetición de algunas fotos entre secciones, porque Dolce Shop tiene solo 4 fotos reales.
