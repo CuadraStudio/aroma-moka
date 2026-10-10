@@ -1,1 +1,0 @@
-three.js r160 (MIT), copiado de npm sin cambios: build/three.module.min.js y examples/jsm/{loaders/GLTFLoader,utils/BufferGeometryUtils,environments/RoomEnvironment}.js

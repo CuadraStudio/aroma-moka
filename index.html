@@ -18,8 +18,6 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#7E411A">
 <script>try{var m=new URLSearchParams(location.search).get("v")||localStorage.getItem("am-mode");if(m==="dolce"||m==="aroma")document.documentElement.setAttribute("data-mode",m)}catch(e){}</script>
-<script>try{if(new URLSearchParams(location.search).get("torta")==="3d")document.documentElement.classList.add("has-torta3d")}catch(e){}</script>
-<script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js","three/addons/":"./vendor/three/addons/"}}</script>
 <link rel="icon" type="image/webp" href="img/isotipo.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -272,37 +270,10 @@
   </section>
 
   <section class="products" id="d-tortas" aria-label="Tortas y galletas">
-    <!-- Prueba: torta en 3D. Solo se ve con ?torta=3d (clase has-torta3d en <html>). -->
-    <div class="torta3d" data-torta3d>
-      <div class="torta3d__in">
-        <div class="torta3d__head" data-reveal>
-          <p class="label label--accent">01 — Tortas a tu medida</p>
-          <h2 class="torta3d__title">Hechas para celebrar.</h2>
-          <p class="lead">Diseños únicos, detalles artesanales y mucho amor en cada torta.</p>
-        </div>
-
-        <div class="torta3d__stage" data-stage>
-          <span class="torta3d__disc" aria-hidden="true"></span>
-          <div class="torta3d__layer">
-            <span class="torta3d__shadow" aria-hidden="true"></span>
-            <img class="torta3d__poster" src="img/torta3d_poster.webp" alt="Torta de dos pisos con cobertura color marfil, rosas rosas y blancas que caen por los laterales, perlas y un detalle de encaje, sobre una base circular blanca" width="900" height="945" loading="lazy" decoding="async">
-            <canvas class="torta3d__canvas" data-canvas tabindex="0" role="button" aria-pressed="false" aria-label="Torta de dos pisos en 3D. Se mueve suavemente: tocá o presioná Enter para pausar o reanudar el movimiento. Arrastrá para girarla."></canvas>
-          </div>
-        </div>
-
-        <div class="torta3d__actions" data-reveal>
-          <div class="torta3d__cta">
-            <a class="btn btn--rose" href="https://wa.me/59893329614?text=Hola%20Dolce%20Shop%2C%20quisiera%20consultar%20por%20una%20torta%20como%20la%20de%20las%20rosas" target="_blank" rel="noopener">Consultar por esta torta →</a>
-            <a class="link" href="#d-mas">Ver más diseños →</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <article class="product product--a" id="d-mas">
+    <article class="product product--a">
       <div class="product__in">
         <div class="product__text" data-reveal>
-          <p class="label label--accent"><span class="torta3d-off">01 — Tortas</span><span class="torta3d-only">Más diseños</span></p>
+          <p class="label label--accent">01 — Tortas</p>
           <h2 class="product__title">Tortas para cada ocasión</h2>
           <p class="lead">Con buttercream pastel, toppers de fondant y moños de cinta: cada torta se arma a tu medida.</p>
         </div>

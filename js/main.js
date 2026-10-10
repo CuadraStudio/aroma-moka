@@ -460,18 +460,5 @@
     document.addEventListener("visibilitychange", function () { if (!document.hidden) paintOpen(); });
   }
 
-  /* ---------- 7. Torta en 3D (prueba, solo con ?torta=3d): se carga cuando la sección se acerca ---------- */
-  var tortaHost = document.querySelector("[data-torta3d]");
-  if (root.classList.contains("has-torta3d") && tortaHost && "IntersectionObserver" in window) {
-    var tortaIo = new IntersectionObserver(function (entries) {
-      if (!entries[0].isIntersecting) return;
-      tortaIo.disconnect();
-      import("./torta3d.js")
-        .then(function (m) { tortaHost.__ctl = m.init(tortaHost, { reduce: reduce }); })
-        .catch(function () { /* sin módulo o sin red: queda el póster */ });
-    }, { rootMargin: "700px 0px" });
-    tortaIo.observe(tortaHost); // en la web de Aroma Moka está oculto, así que solo dispara en la de Dolce Shop
-  }
-
   apply(mode, true);
 })();
