@@ -311,6 +311,55 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 .stack__ctrl { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
 .stack__count { font: 700 12.5px/1 var(--sans); letter-spacing: 0.12em; }
 
+/* ---------- Carruseles: variantes para comparar (solo con ?c=carta o ?c=tira; sin parámetro no aplican) ---------- */
+/* comunes: sin marco ni inclinación; el borde redondeado más suave que en las tarjetas */
+html[data-c] .stack__card { border: 0; border-radius: 18px; transform: none !important; }
+
+/* A · selector tipográfico */
+html[data-c="carta"] .stack__bar { display: none; }
+html[data-c="carta"] .stack__card { opacity: 0; visibility: hidden; z-index: 0; transition: none; }
+html[data-c="carta"] .stack__card.is-active { opacity: 1; visibility: visible; z-index: 1; }
+html[data-c="carta"] .stack__card.is-entering { opacity: 1; visibility: visible; z-index: 2; }
+.carta__list { list-style: none; margin: 22px 0 0; padding: 0; border-bottom: 1px solid var(--moka); }
+.carta__item {
+  display: flex; align-items: baseline; gap: 16px; width: 100%; padding: 12px 0;
+  border: 0; border-top: 1px solid var(--moka); background: none; color: var(--moka);
+  text-align: left; cursor: pointer; opacity: 0.4; transition: opacity 0.3s var(--ease);
+}
+.carta__item:hover { opacity: 0.75; }
+.carta__item[aria-current="true"] { opacity: 1; }
+.carta__n { flex: 0 0 auto; width: 2.4em; font: 700 12.5px/1 var(--sans); letter-spacing: 0.16em; }
+.carta__name { flex: 1 1 auto; font: 400 clamp(24px, 2.4vw, 32px)/1.15 var(--serif); letter-spacing: -0.01em; }
+.carta__item::after {
+  content: "→"; flex: 0 0 auto; font: 400 22px/1 var(--sans);
+  opacity: 0; transform: translateX(-10px); transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.carta__item[aria-current="true"]::after { opacity: 1; transform: none; }
+
+/* B · tira con scroll nativo */
+html[data-c="tira"] .stack-wrap { position: relative; }
+html[data-c="tira"] .stack {
+  aspect-ratio: auto; display: flex; gap: 14px; overflow-x: auto; overflow-y: hidden;
+  scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; cursor: grab;
+}
+html[data-c="tira"] .stack::-webkit-scrollbar { display: none; }
+html[data-c="tira"] .stack.is-drag { scroll-snap-type: none; cursor: grabbing; }
+html[data-c="tira"] .stack.has-cursor { cursor: none; }
+html[data-c="tira"] .stack__card { position: relative; inset: auto; flex: 0 0 80%; aspect-ratio: 4 / 5; scroll-snap-align: start; touch-action: auto; }
+html[data-c="tira"] .stack__card img { -webkit-user-drag: none; user-select: none; pointer-events: none; }
+html[data-c="tira"] .stack__bar { margin-top: 14px; padding-top: 0; border-top: 0; }
+html[data-c="tira"] .stack__ctrl [data-dir] { display: none; }
+html[data-c="tira"] .stack__caption { font: 400 clamp(22px, 2.2vw, 30px)/1.15 var(--serif); letter-spacing: -0.01em; }
+.tira__bar { height: 2px; margin-top: 18px; overflow: hidden; border-radius: 2px; background: rgba(79, 44, 20, 0.18); }
+.tira__bar span { display: block; height: 100%; background: var(--moka); will-change: transform; }
+.tira__cursor {
+  position: absolute; left: 0; top: 0; z-index: 6; display: grid; place-items: center; width: 92px; height: 92px;
+  border-radius: 50%; background: var(--moka); color: var(--hueso); pointer-events: none;
+  font: 700 11px/1 var(--sans); letter-spacing: 0.14em; text-transform: uppercase;
+  opacity: 0; scale: 0.6; transition: opacity 0.2s var(--ease), scale 0.25s var(--ease);
+}
+.tira__cursor.is-on { opacity: 1; scale: 1; }
+
 /* ---------- Cierre ---------- */
 .closing { background: var(--field); color: var(--field-ink); overflow: hidden; }
 .closing__in {

@@ -64,6 +64,20 @@ Todo es `transform` y desaparece con `prefers-reduced-motion`. Código: `heroMot
 
 Verificado con mediciones (el panel de pruebas estaba oculto y pausa los cuadros de animación, así que se simuló el ciclo de dibujo): `--hp` de 0 a 1 y reversible, zoom 1,02 a 1,08, texto -64 px con opacidad siempre 1, parallax del mouse en las dos direcciones y regreso a cero, funciona en Dolce Shop y junto al círculo del cambio de web, consola sin errores. **No se vio en movimiento real ni en un celular**, y la pausa fuera de pantalla (IntersectionObserver) no se pudo probar con el panel oculto.
 
+## Carruseles: variantes para comparar (2026-10-10, [IA], a decidir)
+
+Los carruseles actuales (tres tarjetas apiladas con borde, inclinadas, con flechas de 44 px) no siguen la estética de las portadas. Se armaron dos alternativas que se activan **solo** con un parámetro; sin parámetro quedan las tarjetas apiladas de siempre (se verificó: mismas posiciones, inclinación, borde y flechas). Las dos se construyen en la carga de la página a partir de las mismas fotos y sus `data-caption`, sin duplicar contenido.
+
+| URL | Variante |
+|---|---|
+| `/` (sin parámetro) | Tarjetas apiladas, como estaban |
+| `/?c=carta` | **A. Selector tipográfico.** Foto grande sin marco y debajo los nombres numerados en serif grande, como una carta (el activo en marrón pleno con una flecha, los demás al 40 %). Al elegir un nombre, la foto nueva se abre como un círculo desde el borde inferior de la foto, a la altura de donde se tocó (el mismo recurso del cambio de web). También se cambia deslizando la foto o con las flechas del teclado |
+| `/?c=tira` | **B. Tira con scroll nativo.** Fotos sin marco en fila (cada una al 80 % del ancho, para que se vea un pedazo de la siguiente) con ajuste a cada foto. Se desliza con el dedo o el trackpad, o arrastrando con el mouse (cursor circular "Arrastrar"; con arrastrar más del 18 % de una foto pasa a la siguiente). Barra fina de progreso, nombre grande y contador "01 / 03" en lugar de las flechas. Flechas del teclado con la tira enfocada |
+
+El parámetro `c` se conserva al cambiar de web. Código: `CAROUSEL`, `initCarta` e `initTira` en `js/main.js` (antes de la sección 3) y el bloque "Carruseles: variantes" en `css/style.css`.
+
+Verificado con mediciones: estructura y estados de A (clic, doble clic rápido, teclado, el recorte circular queda limpio al terminar) y de B (scroll con ajuste, barra, nombre y contador, arrastre con mouse y cursor, teclado), en el carril de café de Aroma Moka y en los de Dolce Shop (con 2 y 3 fotos), sin desborde horizontal a 375 px, consola sin errores; se vieron capturas de las dos variantes en escritorio. **No se vio la animación del círculo ni el arrastre en movimiento real, ni nada en un celular de verdad** (el panel de pruebas oculto pausa las animaciones; el cierre de la animación de A tiene un temporizador de respaldo por eso). Cuando se elija una, hay que dejarla como única, borrar la otra y las tarjetas apiladas (CSS, JS y los `data-pos` y flechas del HTML).
+
 ## Fuente de diseño
 
 No hay `DESIGN.md` (se eliminó el 2026-09-30 a pedido de Luciano). El contrato de esta pasada es el **Artifact Design "Aroma Moka — Design Concept"** (https://claude.ai/artifact/MYgK5VvxpF7Qomp2fo2ex8) y las decisiones tomadas en la conversación del 2026-10-07. Nada de esto está marcado APROBADO. **No se usó el `DESIGN.md` anterior** (`sites/aroma-moka/DESIGN.md`) como referencia, por pedido explícito.

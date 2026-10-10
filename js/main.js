@@ -18,6 +18,12 @@
   var heroMotion = !reduce;
   var heroEls = [].slice.call(document.querySelectorAll(".hero--cover"));
 
+  /* Prueba de carruseles: ?c=carta o ?c=tira en la URL. Sin parámetro quedan las tarjetas apiladas de siempre. */
+  var CAROUSEL = null;
+  try { CAROUSEL = new URLSearchParams(window.location.search).get("c"); } catch (e) { /* sin soporte */ }
+  if (CAROUSEL !== "carta" && CAROUSEL !== "tira") CAROUSEL = null;
+  if (CAROUSEL) root.setAttribute("data-c", CAROUSEL);
+
   /* ---------- 1. Motor de Cuadra: reveals + parallax declarativo ---------- */
   if (window.CuadraMotion) window.CuadraMotion.init();
 
@@ -60,6 +66,193 @@
   window.addEventListener("resize", onScroll);
   scrub();
 
+  /* ---------- 3a. Variantes de carrusel para comparar (solo con ?c=carta o ?c=tira) ---------- */
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+
+  // A · selector tipográfico: los nombres van en grande, como una carta; la foto nueva se abre en círculo
+  function initCarta(stack, wrap, cards) {
+    var n = cards.length, idx = 0, finishNow = null;
+    var list = document.createElement("ol");
+    list.className = "carta__list";
+    cards.forEach(function (card, i) {
+      card.removeAttribute("data-pos");
+      var li = document.createElement("li");
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "carta__item";
+      b.innerHTML = '<span class="carta__n"></span><span class="carta__name"></span>';
+      b.firstChild.textContent = pad2(i + 1);
+      b.lastChild.textContent = card.getAttribute("data-caption");
+      b.addEventListener("click", function (e) { show(i, e.clientX); });
+      li.appendChild(b);
+      list.appendChild(li);
+    });
+    stack.parentNode.insertBefore(list, stack.nextSibling);
+    var items = [].slice.call(list.querySelectorAll(".carta__item"));
+
+    function mark() {
+      cards.forEach(function (c, i) {
+        c.classList.toggle("is-active", i === idx);
+        c.setAttribute("aria-hidden", i === idx ? "false" : "true");
+      });
+      items.forEach(function (b, i) { b.setAttribute("aria-current", i === idx ? "true" : "false"); });
+    }
+
+    function show(next, clientX) {
+      if (next === idx) return;
+      if (finishNow) finishNow(); // un clic nuevo termina en el acto la animación anterior
+      var cur = cards[next];
+      idx = next;
+      items.forEach(function (b, i) { b.setAttribute("aria-current", i === idx ? "true" : "false"); });
+      if (reduce || !cur.animate) { mark(); return; }
+      var box = stack.getBoundingClientRect();
+      // el círculo se abre desde el borde de la foto más cercano a la lista, a la altura de donde se tocó
+      var x = typeof clientX === "number" ? Math.max(0, Math.min(box.width, clientX - box.left)) : box.width / 2;
+      var y = box.height;
+      var radius = Math.ceil(Math.hypot(Math.max(x, box.width - x), y));
+      cur.classList.add("is-entering");
+      cur.setAttribute("aria-hidden", "false");
+      var anim = cur.animate(
+        { clipPath: ["circle(0px at " + x + "px " + y + "px)", "circle(" + radius + "px at " + x + "px " + y + "px)"] },
+        { duration: 700, easing: "cubic-bezier(0.65, 0, 0.35, 1)", fill: "forwards" }
+      );
+      var img = cur.querySelector("img");
+      if (img && img.animate) img.animate({ transform: ["scale(1.14)", "scale(1)"] }, { duration: 1000, easing: "cubic-bezier(0.2, 0.7, 0.1, 1)" });
+      var done = false, timer = 0;
+      finishNow = function () {
+        if (done) return;
+        done = true;
+        window.clearTimeout(timer);
+        anim.cancel();
+        cur.classList.remove("is-entering");
+        finishNow = null;
+        mark();
+      };
+      anim.onfinish = finishNow;
+      timer = window.setTimeout(finishNow, 780); // por si la pestaña estaba oculta y no se dispara "onfinish"
+    }
+
+    // deslizar sobre la foto y flechas del teclado
+    var x0 = null;
+    stack.addEventListener("pointerdown", function (e) { x0 = e.clientX; });
+    stack.addEventListener("pointerup", function (e) {
+      if (x0 === null) return;
+      var dx = e.clientX - x0;
+      x0 = null;
+      if (Math.abs(dx) > 40) show((idx + (dx < 0 ? 1 : -1) + n) % n, e.clientX);
+    });
+    stack.addEventListener("pointercancel", function () { x0 = null; });
+    stack.setAttribute("tabindex", "0");
+    stack.setAttribute("role", "group");
+    stack.setAttribute("aria-label", "Fotos, usá las flechas o elegí un nombre de la lista");
+    stack.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") { e.preventDefault(); show((idx + 1) % n); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); show((idx - 1 + n) % n); }
+    });
+
+    mark();
+  }
+
+  // B · tira con scroll nativo: se desliza con el dedo, el trackpad o arrastrando con el mouse
+  function initTira(stack, wrap, cards) {
+    var n = cards.length, last = -1;
+    var caption = wrap.querySelector(".stack__caption");
+    var count = wrap.querySelector(".stack__count");
+    cards.forEach(function (c) {
+      c.removeAttribute("data-pos");
+      c.setAttribute("aria-hidden", "false");
+    });
+    var bar = document.createElement("div");
+    bar.className = "tira__bar";
+    bar.setAttribute("aria-hidden", "true");
+    bar.innerHTML = "<span></span>";
+    var fill = bar.firstChild;
+    fill.style.width = (100 / n) + "%";
+    stack.parentNode.insertBefore(bar, stack.nextSibling);
+
+    var cursor = null;
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      cursor = document.createElement("span");
+      cursor.className = "tira__cursor";
+      cursor.setAttribute("aria-hidden", "true");
+      cursor.textContent = "Arrastrar";
+      wrap.appendChild(cursor);
+      stack.classList.add("has-cursor");
+    }
+
+    function maxScroll() { return Math.max(0, stack.scrollWidth - stack.clientWidth); }
+    function step() { return n > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : stack.clientWidth; }
+    function update() {
+      var max = maxScroll(), t = max > 0 ? Math.max(0, Math.min(1, stack.scrollLeft / max)) : 0;
+      fill.style.transform = "translateX(" + (t * (n - 1) * 100) + "%)";
+      var i = Math.round(t * (n - 1));
+      if (i !== last) {
+        last = i;
+        if (caption) caption.textContent = cards[i].getAttribute("data-caption");
+        if (count) count.textContent = pad2(i + 1) + " / " + pad2(n);
+      }
+    }
+    var raf = 0;
+    stack.addEventListener("scroll", function () {
+      if (!raf) raf = window.requestAnimationFrame(function () { raf = 0; update(); });
+    }, { passive: true });
+    window.addEventListener("resize", update);
+
+    // arrastrar con el mouse (con el dedo ya desliza el navegador)
+    var down = false, sx = 0, sl = 0, dragDx = 0;
+    function targets() {
+      var max = maxScroll();
+      return cards.map(function (c) { return Math.min(max, c.offsetLeft - cards[0].offsetLeft); });
+    }
+    function nearest(pos) {
+      var t = targets(), best = 0, bd = Infinity;
+      t.forEach(function (v, i) { var d = Math.abs(v - pos); if (d < bd) { bd = d; best = i; } });
+      return best;
+    }
+    // al soltar: si se arrastró más del 18 % de una foto, pasa a la siguiente (o anterior); si no, vuelve a la de partida
+    function snapAfterDrag() {
+      var from = nearest(sl), to = from, s = step();
+      if (dragDx < -s * 0.18) to = Math.min(n - 1, from + 1);
+      else if (dragDx > s * 0.18) to = Math.max(0, from - 1);
+      stack.scrollTo({ left: targets()[to], behavior: reduce ? "auto" : "smooth" });
+    }
+    stack.addEventListener("pointerdown", function (e) {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      down = true; sx = e.clientX; sl = stack.scrollLeft; dragDx = 0;
+      stack.classList.add("is-drag");
+      try { stack.setPointerCapture(e.pointerId); } catch (err) { /* sin captura */ }
+    });
+    stack.addEventListener("pointermove", function (e) {
+      if (cursor && e.pointerType === "mouse") {
+        var r = wrap.getBoundingClientRect();
+        cursor.style.transform = "translate(" + (e.clientX - r.left) + "px, " + (e.clientY - r.top) + "px) translate(-50%, -50%)";
+      }
+      if (down) { dragDx = e.clientX - sx; stack.scrollLeft = sl - dragDx; }
+    });
+    function end() {
+      if (!down) return;
+      down = false;
+      stack.classList.remove("is-drag");
+      snapAfterDrag();
+    }
+    stack.addEventListener("pointerup", end);
+    stack.addEventListener("pointercancel", end);
+    if (cursor) {
+      stack.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") cursor.classList.add("is-on"); });
+      stack.addEventListener("pointerleave", function () { cursor.classList.remove("is-on"); });
+    }
+
+    stack.setAttribute("tabindex", "0");
+    stack.setAttribute("role", "group");
+    stack.setAttribute("aria-label", "Fotos, deslizá o usá las flechas del teclado");
+    stack.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") { e.preventDefault(); stack.scrollBy({ left: step(), behavior: reduce ? "auto" : "smooth" }); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); stack.scrollBy({ left: -step(), behavior: reduce ? "auto" : "smooth" }); }
+    });
+
+    update();
+  }
+
   /* ---------- 3. Pilas de fotos (tarjetas apiladas) ---------- */
   [].forEach.call(document.querySelectorAll("[data-stack]"), function (stack) {
     var wrap = stack.closest(".stack-wrap");
@@ -68,6 +261,9 @@
     var count = wrap.querySelector(".stack__count");
     var n = cards.length;
     var idx = 0;
+
+    if (CAROUSEL === "carta") { initCarta(stack, wrap, cards); return; }
+    if (CAROUSEL === "tira") { initTira(stack, wrap, cards); return; }
 
     function render() {
       cards.forEach(function (card, i) {
