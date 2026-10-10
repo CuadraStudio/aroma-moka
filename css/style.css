@@ -282,7 +282,6 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
   align-items: baseline; gap: 14px; padding: 14px 0 12px; background: var(--lane-bg);
   border-bottom: 1px solid var(--moka);
 }
-.lane__bar--end { justify-content: flex-end; }
 .lane__name { font: 400 20px/1.2 var(--serif); }
 .lane__text { display: flex; flex-direction: column; gap: 16px; max-width: 440px; margin-top: clamp(28px, 4vw, 56px); }
 .lane__title { font: 400 clamp(34px, 5vw, 64px)/1 var(--serif); letter-spacing: -0.01em; }
@@ -323,6 +322,20 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 .stack__ctrl { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
 .stack__count { font: 700 14px/1 var(--sans); letter-spacing: 0.12em; }
 .hist__pause { width: 36px; height: 36px; font: 700 11px/1 var(--sans); letter-spacing: 0.08em; }
+
+/* ---------- Productos de Dolce Shop: dos bloques, sin carriles ni línea central ---------- */
+.products { border-top: 1px solid var(--moka); }
+.product { padding: clamp(48px, 7vw, 96px) var(--pad); background: var(--hueso); }
+.product + .product { border-top: 1px solid var(--moka); }
+.product__in { display: flex; flex-direction: column; gap: clamp(28px, 4vw, 48px); max-width: 1180px; margin: 0 auto; }
+.product__text { display: flex; flex-direction: column; gap: 16px; max-width: 440px; }
+.product__title { font: 400 clamp(34px, 5vw, 64px)/1 var(--serif); letter-spacing: -0.01em; }
+.product .stack-wrap { width: 100%; max-width: 520px; margin: 0; }
+@media (min-width: 1000px) {
+  .product__in { flex-direction: row; align-items: center; justify-content: space-between; gap: 64px; }
+  .product--b .product__in { flex-direction: row-reverse; }
+  .product .stack-wrap { flex: 0 0 480px; }
+}
 
 /* ---------- Cierre ---------- */
 .closing { background: var(--field); color: var(--field-ink); overflow: hidden; }
