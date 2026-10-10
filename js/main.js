@@ -18,12 +18,7 @@
   var heroMotion = !reduce;
   var heroEls = [].slice.call(document.querySelectorAll(".hero--cover"));
 
-  /* Prueba de carruseles: ?c=tira, ?c=scroll o ?c=historias en la URL. Sin parámetro quedan las tarjetas apiladas de siempre. */
-  var strips = []; // franjas que se actualizan con el scroll de la página (variantes scroll e historias)
-  var CAROUSEL = null;
-  try { CAROUSEL = new URLSearchParams(window.location.search).get("c"); } catch (e) { /* sin soporte */ }
-  if (["tira", "scroll", "historias"].indexOf(CAROUSEL) < 0) CAROUSEL = null;
-  if (CAROUSEL) root.setAttribute("data-c", CAROUSEL);
+  var strips = []; // franjas que se actualizan con el scroll de la página (carruseles de fotos)
 
   /* ---------- 1. Motor de Cuadra: reveals + parallax declarativo ---------- */
   if (window.CuadraMotion) window.CuadraMotion.init();
@@ -68,202 +63,10 @@
   window.addEventListener("resize", onScroll);
   scrub();
 
-  /* ---------- 3a. Variantes de carrusel para comparar (solo con ?c=tira, ?c=scroll o ?c=historias) ---------- */
+  /* ---------- 3. Carruseles de fotos: cambian solas, estilo historias ---------- */
   function pad2(n) { return (n < 10 ? "0" : "") + n; }
 
-  // B · tira con scroll nativo: se desliza con el dedo, el trackpad o arrastrando con el mouse
-  function initTira(stack, wrap, cards) {
-    var n = cards.length, last = -1;
-    var caption = wrap.querySelector(".stack__caption");
-    var count = wrap.querySelector(".stack__count");
-    cards.forEach(function (c) {
-      c.removeAttribute("data-pos");
-      c.setAttribute("aria-hidden", "false");
-    });
-    var bar = document.createElement("div");
-    bar.className = "tira__bar";
-    bar.setAttribute("aria-hidden", "true");
-    bar.innerHTML = "<span></span>";
-    var fill = bar.firstChild;
-    fill.style.width = (100 / n) + "%";
-    stack.parentNode.insertBefore(bar, stack.nextSibling);
-
-    var cursor = null;
-    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-      cursor = document.createElement("span");
-      cursor.className = "tira__cursor";
-      cursor.setAttribute("aria-hidden", "true");
-      cursor.textContent = "Arrastrar";
-      wrap.appendChild(cursor);
-      stack.classList.add("has-cursor");
-    }
-
-    function maxScroll() { return Math.max(0, stack.scrollWidth - stack.clientWidth); }
-    function step() { return n > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : stack.clientWidth; }
-    function update() {
-      var max = maxScroll(), t = max > 0 ? Math.max(0, Math.min(1, stack.scrollLeft / max)) : 0;
-      fill.style.transform = "translateX(" + (t * (n - 1) * 100) + "%)";
-      var i = Math.round(t * (n - 1));
-      if (i !== last) {
-        last = i;
-        if (caption) caption.textContent = cards[i].getAttribute("data-caption");
-        if (count) count.textContent = pad2(i + 1) + " / " + pad2(n);
-      }
-    }
-    var raf = 0;
-    stack.addEventListener("scroll", function () {
-      if (!raf) raf = window.requestAnimationFrame(function () { raf = 0; update(); });
-    }, { passive: true });
-    window.addEventListener("resize", update);
-
-    // arrastrar con el mouse (con el dedo ya desliza el navegador)
-    var down = false, sx = 0, sl = 0, dragDx = 0;
-    function targets() {
-      var max = maxScroll();
-      return cards.map(function (c) { return Math.min(max, c.offsetLeft - cards[0].offsetLeft); });
-    }
-    function nearest(pos) {
-      var t = targets(), best = 0, bd = Infinity;
-      t.forEach(function (v, i) { var d = Math.abs(v - pos); if (d < bd) { bd = d; best = i; } });
-      return best;
-    }
-    // al soltar: si se arrastró más del 18 % de una foto, pasa a la siguiente (o anterior); si no, vuelve a la de partida
-    function snapAfterDrag() {
-      var from = nearest(sl), to = from, s = step();
-      if (dragDx < -s * 0.18) to = Math.min(n - 1, from + 1);
-      else if (dragDx > s * 0.18) to = Math.max(0, from - 1);
-      stack.scrollTo({ left: targets()[to], behavior: reduce ? "auto" : "smooth" });
-    }
-    stack.addEventListener("pointerdown", function (e) {
-      if (e.pointerType !== "mouse" || e.button !== 0) return;
-      down = true; sx = e.clientX; sl = stack.scrollLeft; dragDx = 0;
-      stack.classList.add("is-drag");
-      try { stack.setPointerCapture(e.pointerId); } catch (err) { /* sin captura */ }
-    });
-    stack.addEventListener("pointermove", function (e) {
-      if (cursor && e.pointerType === "mouse") {
-        var r = wrap.getBoundingClientRect();
-        cursor.style.transform = "translate(" + (e.clientX - r.left) + "px, " + (e.clientY - r.top) + "px) translate(-50%, -50%)";
-      }
-      if (down) { dragDx = e.clientX - sx; stack.scrollLeft = sl - dragDx; }
-    });
-    function end() {
-      if (!down) return;
-      down = false;
-      stack.classList.remove("is-drag");
-      snapAfterDrag();
-    }
-    stack.addEventListener("pointerup", end);
-    stack.addEventListener("pointercancel", end);
-    if (cursor) {
-      stack.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") cursor.classList.add("is-on"); });
-      stack.addEventListener("pointerleave", function () { cursor.classList.remove("is-on"); });
-    }
-
-    stack.setAttribute("tabindex", "0");
-    stack.setAttribute("role", "group");
-    stack.setAttribute("aria-label", "Fotos, deslizá o usá las flechas del teclado");
-    stack.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowRight") { e.preventDefault(); stack.scrollBy({ left: step(), behavior: reduce ? "auto" : "smooth" }); }
-      if (e.key === "ArrowLeft") { e.preventDefault(); stack.scrollBy({ left: -step(), behavior: reduce ? "auto" : "smooth" }); }
-    });
-
-    update();
-  }
-
-  // A · las fotos avanzan con el scroll de la página, a contramarcha entre un carril y el otro
-  function initScrollLinked(stack, wrap, cards) {
-    if (reduce) { initTira(stack, wrap, cards); return; } // sin movimiento: tira de scroll nativo
-    var n = cards.length, isRight = stack.classList.contains("stack--r");
-    var caption = wrap.querySelector(".stack__caption"), count = wrap.querySelector(".stack__count");
-    if (caption) caption.setAttribute("aria-live", "off"); // cambia mientras se scrollea: que no lo lea cada vez
-    var track = document.createElement("div");
-    track.className = "scroll__track";
-    (isRight ? cards.slice().reverse() : cards).forEach(function (c) {
-      c.removeAttribute("data-pos");
-      c.setAttribute("aria-hidden", "false");
-      track.appendChild(c);
-    });
-    stack.appendChild(track);
-    var max = 0, linked = 0, manualTarget = 0, manualShown = 0, last = -1, raf = 0;
-
-    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
-    function step() { return n > 1 ? Math.abs(cards[1].offsetLeft - cards[0].offsetLeft) : stack.clientWidth; }
-    function render() {
-      var pos = clamp(linked + manualShown, 0, max), x = isRight ? pos - max : -pos;
-      track.style.transform = "translate3d(" + x.toFixed(1) + "px, 0, 0)";
-      // la foto más cercana al centro de la franja manda en el pie y el contador
-      var mid = stack.clientWidth / 2, best = 0, bd = Infinity;
-      cards.forEach(function (c, i) {
-        var d = Math.abs(c.offsetLeft + c.offsetWidth / 2 + x - mid);
-        if (d < bd) { bd = d; best = i; }
-      });
-      if (best !== last) {
-        last = best;
-        if (caption) caption.textContent = cards[best].getAttribute("data-caption");
-        if (count) count.textContent = pad2(best + 1) + " / " + pad2(n);
-      }
-    }
-    function update() {
-      var r = stack.getBoundingClientRect();
-      if (!r.height) return; // está en la otra web (oculta)
-      max = Math.max(0, track.scrollWidth - stack.clientWidth);
-      // 0 cuando la franja entra por abajo y 1 cuando sale por arriba; las fotos avanzan en el tramo central
-      var t = (window.innerHeight - r.top) / (window.innerHeight + r.height);
-      linked = clamp((t - 0.22) / 0.56, 0, 1) * max;
-      manualTarget = clamp(manualTarget, -linked, max - linked);
-      manualShown = clamp(manualShown, -linked, max - linked);
-      render();
-    }
-    function ease() {
-      raf = 0;
-      manualShown += (manualTarget - manualShown) * 0.2;
-      if (Math.abs(manualTarget - manualShown) < 0.4) manualShown = manualTarget;
-      render();
-      if (manualShown !== manualTarget) raf = window.requestAnimationFrame(ease);
-    }
-    // lo que se mueve a mano (arrastre, dedo o teclado) se suma a lo que mueve el scroll
-    function setManual(v, now) {
-      manualTarget = clamp(v, -linked, max - linked);
-      if (now) { manualShown = manualTarget; render(); }
-      else if (!raf) raf = window.requestAnimationFrame(ease);
-    }
-
-    var dragging = false, decided = false, horiz = false, sx = 0, sy = 0, sm = 0;
-    stack.addEventListener("pointerdown", function (e) {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
-      dragging = true; decided = false; horiz = false; sx = e.clientX; sy = e.clientY; sm = manualTarget;
-    });
-    stack.addEventListener("pointermove", function (e) {
-      if (!dragging) return;
-      var dx = e.clientX - sx, dy = e.clientY - sy;
-      if (!decided && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
-        decided = true;
-        horiz = Math.abs(dx) > Math.abs(dy);
-        if (horiz) {
-          stack.classList.add("is-drag");
-          try { stack.setPointerCapture(e.pointerId); } catch (err) { /* sin captura */ }
-        }
-      }
-      if (horiz) setManual(sm + (isRight ? 1 : -1) * dx, true);
-    });
-    function end() { dragging = false; stack.classList.remove("is-drag"); }
-    stack.addEventListener("pointerup", end);
-    stack.addEventListener("pointercancel", end);
-
-    stack.setAttribute("tabindex", "0");
-    stack.setAttribute("role", "group");
-    stack.setAttribute("aria-label", "Fotos que avanzan al scrollear; deslizá o usá las flechas del teclado");
-    stack.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowRight") { e.preventDefault(); setManual(manualTarget + step(), false); }
-      if (e.key === "ArrowLeft") { e.preventDefault(); setManual(manualTarget - step(), false); }
-    });
-
-    strips.push({ update: update });
-    update();
-  }
-
-  // B · las fotos avanzan solas, estilo historias: barra de segmentos, toque en los lados y pausa
+  // las fotos avanzan solas, estilo historias: barra de segmentos, toque en los lados y pausa
   function initHistorias(stack, wrap, cards) {
     var n = cards.length, idx = 0, DURATION = 4500;
     var isRight = stack.classList.contains("stack--r");
@@ -273,7 +76,6 @@
     var caption = wrap.querySelector(".stack__caption"), count = wrap.querySelector(".stack__count");
     var ctrl = wrap.querySelector(".stack__ctrl");
     if (caption) caption.setAttribute("aria-live", "off"); // cambia solo: que no lo lea cada vez
-    cards.forEach(function (c) { c.removeAttribute("data-pos"); });
 
     var segs = document.createElement("div");
     segs.className = "hist__segs";
@@ -428,61 +230,8 @@
     update();
   }
 
-  /* ---------- 3. Pilas de fotos (tarjetas apiladas) ---------- */
   [].forEach.call(document.querySelectorAll("[data-stack]"), function (stack) {
-    var wrap = stack.closest(".stack-wrap");
-    var cards = [].slice.call(stack.querySelectorAll(".stack__card"));
-    var caption = wrap.querySelector(".stack__caption");
-    var count = wrap.querySelector(".stack__count");
-    var n = cards.length;
-    var idx = 0;
-
-    if (CAROUSEL === "tira") { initTira(stack, wrap, cards); return; }
-    if (CAROUSEL === "scroll") { initScrollLinked(stack, wrap, cards); return; }
-    if (CAROUSEL === "historias") { initHistorias(stack, wrap, cards); return; }
-
-    function render() {
-      cards.forEach(function (card, i) {
-        var pos = (i - idx + n) % n;
-        card.setAttribute("data-pos", String(pos));
-        card.setAttribute("aria-hidden", pos === 0 ? "false" : "true");
-      });
-      caption.textContent = cards[idx].getAttribute("data-caption");
-      count.textContent = idx + 1 + " / " + n;
-    }
-
-    function go(dir) {
-      idx = (idx + dir + n) % n;
-      render();
-    }
-
-    [].forEach.call(wrap.querySelectorAll("[data-dir]"), function (btn) {
-      btn.addEventListener("click", function () {
-        go(parseInt(btn.getAttribute("data-dir"), 10));
-      });
-    });
-
-    // deslizar con el dedo o el mouse
-    var x0 = null;
-    stack.addEventListener("pointerdown", function (e) { x0 = e.clientX; });
-    stack.addEventListener("pointerup", function (e) {
-      if (x0 === null) return;
-      var dx = e.clientX - x0;
-      x0 = null;
-      if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
-    });
-    stack.addEventListener("pointercancel", function () { x0 = null; });
-
-    // teclado: flechas con la pila enfocada
-    stack.setAttribute("tabindex", "0");
-    stack.setAttribute("role", "group");
-    stack.setAttribute("aria-label", "Fotos, usá las flechas para cambiar");
-    stack.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
-      if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
-    });
-
-    render();
+    initHistorias(stack, stack.closest(".stack-wrap"), [].slice.call(stack.querySelectorAll(".stack__card")));
   });
 
   /* ---------- 4. Interruptor Aroma Moka / Dolce Shop ---------- */

@@ -64,22 +64,25 @@ Todo es `transform` y desaparece con `prefers-reduced-motion`. Código: `heroMot
 
 Verificado con mediciones (el panel de pruebas estaba oculto y pausa los cuadros de animación, así que se simuló el ciclo de dibujo): `--hp` de 0 a 1 y reversible, zoom 1,02 a 1,08, texto -64 px con opacidad siempre 1, parallax del mouse en las dos direcciones y regreso a cero, funciona en Dolce Shop y junto al círculo del cambio de web, consola sin errores. **No se vio en movimiento real ni en un celular**, y la pausa fuera de pantalla (IntersectionObserver) no se pudo probar con el panel oculto.
 
-## Carruseles: variantes para comparar (2026-10-10, [IA], a decidir)
+## Carruseles de fotos: estilo historias (2026-10-10, elegido por Luciano)
 
-Los carruseles actuales (tres tarjetas apiladas con borde, inclinadas, con flechas de 44 px) no siguen la estética de las portadas. Se probaron alternativas que se activan **solo** con un parámetro; sin parámetro quedan las tarjetas apiladas de siempre (se verificó: mismas posiciones, inclinación, borde y flechas). Todas se construyen en la carga de la página a partir de las mismas fotos y sus `data-caption`, sin duplicar contenido. Quitan el borde y la inclinación de las tarjetas (esquinas de 18 px) y las flechas.
+Los carruseles de las dos webs (dos por web, uno en cada carril) cambian de foto solos, estilo historias de Instagram. Reemplazan a las tarjetas apiladas con borde, inclinadas y con flechas de 44 px, que no seguían la estética de las portadas. Se compararon por URL cuatro alternativas (selector tipográfico "carta", tira con scroll nativo, fotos que avanzan con el scroll de la página y estilo historias); Luciano descartó la carta (lista larga: al elegir otro nombre había que volver a subir para ver el cambio), encontró la tira poco intuitiva y que "detiene un poco la experiencia", y eligió **historias**. Las otras y las tarjetas apiladas se borraron (CSS, JS, `data-pos`, flechas y el parámetro `?c`).
 
-Primera ronda: Luciano descartó **carta** (selector tipográfico: la lista era larga y al elegir otro nombre había que volver a subir para ver el cambio; se borró) y encontró más acertada la **tira**, pero "poco intuitiva" (con la rueda del mouse no se mueve, solo arrastrando, y en celular no hay pista) y que "detiene un poco la experiencia" (hay que operarla para ver las otras fotos). De ahí las dos nuevas.
+- **Barra de segmentos** arriba de la foto (uno por foto) que se llena como temporizador, 4,5 s por foto, con un leve degradé oscuro arriba para que se lea sobre fotos claras.
+- **Toque en los lados:** el izquierdo (35 %) va a la foto anterior y el derecho (65 %) a la siguiente; apoyar más de 250 ms, o pasar el mouse por encima, pausa; también se desliza con el dedo o el mouse y se usan las flechas del teclado con el carrusel enfocado. En escritorio aparecen flechas circulares al pasar el mouse por cada lado. Botón de pausa visible (accesibilidad).
+- **Cuándo corre:** solo mientras al menos el 40 % de la franja se ve y la pestaña está activa; los dos carriles no cambian a la vez (el derecho arranca al 45 %). Al volver a la pestaña no salta de golpe (tope de 100 ms por cuadro).
+- **Cambio de foto:** la nueva se abre como un círculo desde donde terminó la barra (o desde donde se tocó), con un leve zoom de entrada. Un temporizador de respaldo cierra la animación aunque la pestaña estuviera oculta, y un toque nuevo termina en el acto la anterior.
+- **Pie:** el nombre de la foto en serif grande y el contador "01 / 03" al lado. Sin `aria-live` (cambia solo, no se anuncia cada vez).
+- **`prefers-reduced-motion`:** no avanza sola; se cambia con los toques y el teclado, sin animación.
+- **Sin JavaScript** se ve la primera foto de cada carrusel (`is-active` en el HTML).
 
-| URL | Variante |
-|---|---|
-| `/` (sin parámetro) | Tarjetas apiladas, como estaban |
-| `/?c=tira` | Tira con scroll nativo (se deja para comparar): fotos al 80 % del ancho con ajuste, arrastre con mouse (cursor "Arrastrar"), barra de progreso, nombre grande y contador |
-| `/?c=scroll` | **A. Las fotos avanzan con el scroll de la página, a contramarcha.** Mientras se baja, las fotos de cada franja se deslizan de costado: las del carril izquierdo hacia un lado y las del derecho (en orden visual invertido) hacia el otro. Avanzan en el tramo central del paso de la franja por la pantalla (22 % a 78 %), con reposo al entrar y al salir, así cada foto queda un rato quieta. No hay que operar nada; además se puede arrastrar con el dedo o el mouse (el movimiento a mano se suma al del scroll) y con las flechas del teclado. Un arrastre vertical no la mueve (sigue scrolleando la página) |
-| `/?c=historias` | **B. Las fotos avanzan solas, estilo historias de Instagram.** Barra de tres segmentos arriba de la foto que se llena como temporizador (4,5 s por foto), con un leve degradé para que se lea sobre fotos claras. Tocar el lado izquierdo (35 %) va a la anterior y el derecho (65 %) a la siguiente; apoyar más de 250 ms o pasar el mouse por encima pausa; también se desliza o se usa el teclado. Botón de pausa visible (accesibilidad). Solo corre mientras la franja se ve (al menos el 40 %) y la pestaña está activa; los dos carriles no cambian a la vez. La foto nueva se abre como un círculo desde donde terminó la barra (o desde donde se tocó) |
+Código: `initHistorias` y la sección 3 de `js/main.js` (`scrub()` actualiza las franjas al hacer scroll); bloque de `.stack`, `.hist__*` y `.stack__bar` en `css/style.css`.
 
-Con `prefers-reduced-motion`: A cae a la tira nativa y B no avanza sola. El parámetro `c` se conserva al cambiar de web. Código: `CAROUSEL`, `strips`, `initTira`, `initScrollLinked` e `initHistorias` en `js/main.js` (antes de la sección 3; `scrub()` actualiza las franjas) y el bloque "Carruseles: variantes" en `css/style.css`.
+Verificado con mediciones: avance automático con relojes acelerados, no avanza fuera de vista ni al cargar, pausa con el botón y con el mouse, toque en los lados, apoyar y soltar no cambia, deslizar, teclado, carriles de 2 y 3 fotos de Dolce Shop, sin desborde horizontal a 375 y 320 px, consola sin errores, y una captura en escritorio. **No se vio el avance con relojes reales ni nada en un celular de verdad** (el panel de pruebas oculto pausa las animaciones).
 
-Verificado con mediciones: A (las dos franjas en sentido contrario según el scroll, orden y contador correctos, arrastre horizontal, no se mueve con arrastre vertical, teclado, el arrastre se suma al scroll) y B (avance automático con relojes acelerados, no avanza fuera de vista ni al cargar, pausa con botón y con el mouse, toque en los lados, apoyar y soltar no cambia, deslizar, teclado), en el carril de café y en los de Dolce Shop (con 2 y 3 fotos), sin desborde horizontal a 375 px, consola sin errores; se vio una captura de B en escritorio. **No se vio A moviéndose con el scroll real, ni nada en un celular de verdad**; el panel de pruebas oculto pausa las animaciones y los cuadros, así que se simularon. Cuando se elija una, hay que dejarla como única, borrar las otras y las tarjetas apiladas (CSS, JS, `data-pos` y flechas del HTML).
+## Barras de los carriles: unidas en el centro (2026-10-10, pedido de Luciano)
+
+Cada carril tiene una barra fija arriba con un rótulo y un nombre. Antes quedaban en los extremos ("01 — Café" a la izquierda y "Aroma Moka" pegado al centro; "02 — Comida" pegado al centro y "Dolce Shop" a la derecha). Ahora los dos textos de cada carril van juntos y pegados al "&" del centro, para leerse como una sola línea: **"01 — Café  Aroma Moka & Dolce Shop  Comida — 02"**. En el carril derecho el orden es nombre y después rótulo ("Comida — 02"). En escritorio, el grupo izquierdo se alinea al final y el derecho al principio, a 48 px de la línea central (el "&" mide 46 px); en celular, con los carriles apilados, los dos grupos se alinean a la izquierda. En la web de Dolce Shop el patrón es el mismo ("01 — Tortas  Dolce Shop" y "Dolce Shop  Galletas y cajas — 02"), por lo que el nombre queda repetido junto al "&". A 320 px la barra más larga baja a dos líneas.
 
 ## Fuente de diseño
 
@@ -95,13 +98,13 @@ Todo en una sola página, con dos modos. El modo vive en `html[data-mode]` (`aro
 |---|---|---|
 | Apertura | `#inicio` (foto de portada de fondo) | `#d-inicio` (foto de portada de fondo) |
 | Manifiesto | `#juntos` ("Juntos") | `#d-medida` ("A medida") |
-| Dos carriles + pilas de fotos | `#cafe` / `#comer` | `#d-tortas` / `#d-galletas` |
+| Dos carriles + carruseles de fotos | `#cafe` / `#comer` | `#d-tortas` / `#d-galletas` |
 | Cierre con datos y botones | `#visitanos` (compartido; solo cambian título y etiqueta) | igual |
 | Pie | `.foot` (compartido) | igual |
 
 - `index.html`: estructura y contenido de las dos webs.
 - `css/style.css`: tokens, componentes y escalado (mobile-first: base móvil, `min-width` 640 / 1000 / 1280). El modo cambia solo las variables `--field`, `--field-ink`, `--field-sub` y `--u`: madera con texto hueso en Aroma Moka, rosa chicle con texto moka en Dolce Shop.
-- `js/main.js`: interruptor de modo, cierre que se junta, línea central, barra de progreso y pilas de fotos.
+- `js/main.js`: interruptor de modo, cierre que se junta, línea central, barra de progreso y carruseles de fotos.
 - `engine/cuadra-motion.css|js`: reveals (`data-reveal`) y deriva de los carriles (`data-parallax`). Es una **copia sin cambios** del motor de Cuadra (`engine/` en la raíz de `Webs/`, copiada el 2026-10-07), puesta acá para que el repo de este sitio se publique solo. Si el motor cambia en `Webs/`, hay que volver a copiarlo.
 
 ## Movimiento más allá del reveal básico, y por qué
@@ -109,10 +112,10 @@ Todo en una sola página, con dos modos. El modo vive en `html[data-mode]` (`aro
 El concepto pide un recorrido con un solo gesto fuerte por pantalla, así que hay más que el reveal:
 
 - **Foto que crece (retirada el 2026-10-09):** el momento de firma original (la pareja de fotos del inicio que se abría del 64% al 100% con `clip-path` y `--p`) se quitó de las dos webs cuando las portadas pasaron a foto de fondo. Hoy el gesto de entrada es el asentado de la foto (`settle`, escala 1.15 a 1 en 1,8 s). `main.js` conserva el cálculo de `--p` porque lo usan los carriles y el cierre.
-- **Dos carriles a contramarcha:** las pilas de fotos derivan en sentidos opuestos con `data-parallax` del motor (velocidad ±0.07, solo ≥ 1000 px). Una línea central se dibuja con el scroll y un "&" marca la unión.
+- **Dos carriles a contramarcha:** los carruseles de fotos derivan en sentidos opuestos con `data-parallax` del motor (velocidad ±0.07, solo ≥ 1000 px). Una línea central se dibuja con el scroll y un "&" marca la unión.
 - **Cierre que se junta:** los datos de las dos casas se acercan desde ±10 vw.
 - **Anillo de texto:** SVG con `textPath` que gira una vuelta cada 24 s.
-- **Pilas de fotos:** tres tarjetas apiladas con flechas, teclado (flechas con la pila enfocada) y swipe.
+- **Carruseles de fotos:** estilo historias, con barra de segmentos, toque en los lados, pausa y círculo de apertura (ver "Carruseles de fotos").
 - **Interruptor:** un círculo con la web nueva se abre desde el botón tocado (0,65 s) y deja a la persona en el mismo lugar de la página (ver "Transición al cambiar de web").
 - **Barra de progreso** rosa de 3 px arriba.
 
@@ -132,7 +135,7 @@ Registrado en `docs/operacion/MOTION-LOG.md`. No repite el momento de firma de l
 - La web de Dolce Shop (titular "Tortas y galletas hechas a tu medida", sección "A medida", carriles "Tortas" y "Galletas y cajas") es una **propuesta mía** a partir de las fotos de sus tortas y galletas, el texto "Pastelería artesanal" de sus tarjetas y los destacados de su Instagram (Mamá, San Valentín, Pascuas, Fiestas, Tortas, Cookies).
 - Campo de Dolce Shop en rosa chicle (el rosa de su papel de empaque) y el de Aroma Moka en madera.
 - Corazón de línea genérico como centro del anillo de Dolce Shop.
-- Orden de las pilas de fotos y repetición de algunas fotos entre secciones, porque Dolce Shop tiene solo 4 fotos reales.
+- Orden de las fotos de los carruseles y repetición de algunas fotos entre secciones, porque Dolce Shop tiene solo 4 fotos reales.
 
 ## Copy escrito por IA, para revisar
 
@@ -148,7 +151,7 @@ Registrado en `docs/operacion/MOTION-LOG.md`. No repite el momento de firma de l
 - **Logo de Dolce Shop en vectorial (SVG):** hoy se usa el PNG recortado; en tamaño chico alcanza, pero un vectorial queda más nítido y permitiría una versión de un solo color para fondos rosas.
 - **Mascota** (taza con gorro tejido y cara sonriente) en vectorial y sin QR. La imagen recibida mide 140×162 px.
 - **Isotipo** en alta: el actual mide 150 px y solo se usa en tamaño chico.
-- **Fotos de Dolce Shop:** solo 4, de 480 a 640 px de ancho, bajadas de Instagram. Se ven bien en las tarjetas, pero no aguantan una foto grande. Hacen falta más y en mejor calidad.
+- **Fotos de Dolce Shop:** solo 4, de 480 a 640 px de ancho, bajadas de Instagram. Se ven bien en los carruseles, pero no aguantan una foto grande. Hacen falta más y en mejor calidad.
 - Carta y precios: no encontrados, no hay ninguno en el sitio.
 
 ## Funcionalidades simuladas (etapa 15)

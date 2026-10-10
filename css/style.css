@@ -278,8 +278,8 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 .lane--r { --lane-bg: var(--porcelana); background: var(--porcelana); border-top: 1px solid var(--moka); }
 
 .lane__bar {
-  position: sticky; top: var(--header-h); z-index: 5; display: flex; justify-content: space-between;
-  align-items: baseline; gap: 12px; padding: 14px 0 12px; background: var(--lane-bg);
+  position: sticky; top: var(--header-h); z-index: 5; display: flex; justify-content: flex-start;
+  align-items: baseline; gap: 14px; padding: 14px 0 12px; background: var(--lane-bg);
   border-bottom: 1px solid var(--moka);
 }
 .lane__name { font: 400 20px/1.2 var(--serif); }
@@ -290,75 +290,16 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 .lane--l .stack-wrap { margin-left: 30px; }
 .lane--r .stack-wrap { margin-right: 30px; }
 
-.stack { --d: -1; position: relative; aspect-ratio: 4 / 5; }
-.stack--r { --d: 1; }
-.stack__card {
-  position: absolute; inset: 0; overflow: hidden; border-radius: 22px; border: 1.5px solid var(--lane-bg);
-  background: var(--hueso); touch-action: pan-y; transition: transform 0.6s var(--ease);
-}
+.stack { position: relative; aspect-ratio: 4 / 5; touch-action: pan-y; }
+.stack__card { position: absolute; inset: 0; overflow: hidden; border-radius: 18px; background: var(--hueso); opacity: 0; visibility: hidden; z-index: 0; }
+.stack__card.is-active { opacity: 1; visibility: visible; z-index: 1; }
+.stack__card.is-entering { opacity: 1; visibility: visible; z-index: 2; }
 .stack__card img { width: 100%; height: 100%; object-fit: cover; }
-.stack__card[data-pos="0"] { z-index: 3; transform: none; }
-.stack__card[data-pos="1"] { z-index: 2; transform: translate(calc(var(--d) * 14px), -12px) scale(0.96) rotate(calc(var(--d) * 2deg)); }
-.stack__card[data-pos="2"] { z-index: 1; transform: translate(calc(var(--d) * 26px), -22px) scale(0.92) rotate(calc(var(--d) * 4deg)); }
 /* recorte vertical del papel de Dolce Shop (de la foto cuadrada de 1440 px) */
 .stack__card--paper img { position: absolute; max-width: none; width: 327.27%; height: auto; left: -200%; top: -167%; }
 
-.stack__bar {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  margin-top: 20px; padding-top: 10px; border-top: 1px solid var(--moka);
-}
-.stack__caption { font: 400 18px/1.2 var(--serif); }
-.stack__ctrl { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
-.stack__count { font: 700 12.5px/1 var(--sans); letter-spacing: 0.12em; }
-
-/* ---------- Carruseles: variantes para comparar (solo con ?c=tira, ?c=scroll o ?c=historias; sin parámetro no aplican) ---------- */
-/* comunes: sin marco ni inclinación; el borde redondeado más suave que en las tarjetas */
-html[data-c] .stack__card { border: 0; border-radius: 18px; transform: none !important; }
-
-/* Tira con scroll nativo (?c=tira) */
-html[data-c="tira"] .stack-wrap { position: relative; }
-html[data-c="tira"] .stack {
-  aspect-ratio: auto; display: flex; gap: 14px; overflow-x: auto; overflow-y: hidden;
-  scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; cursor: grab;
-}
-html[data-c="tira"] .stack::-webkit-scrollbar { display: none; }
-html[data-c="tira"] .stack.is-drag { scroll-snap-type: none; cursor: grabbing; }
-html[data-c="tira"] .stack.has-cursor { cursor: none; }
-html[data-c="tira"] .stack__card { position: relative; inset: auto; flex: 0 0 80%; aspect-ratio: 4 / 5; scroll-snap-align: start; touch-action: auto; }
-html[data-c="tira"] .stack__card img { -webkit-user-drag: none; user-select: none; pointer-events: none; }
-html[data-c="tira"] .stack__bar { margin-top: 14px; padding-top: 0; border-top: 0; }
-html[data-c="tira"] .stack__ctrl [data-dir] { display: none; }
-html[data-c="tira"] .stack__caption { font: 400 clamp(22px, 2.2vw, 30px)/1.15 var(--serif); letter-spacing: -0.01em; }
-.tira__bar { height: 2px; margin-top: 18px; overflow: hidden; border-radius: 2px; background: rgba(79, 44, 20, 0.18); }
-.tira__bar span { display: block; height: 100%; background: var(--moka); will-change: transform; }
-.tira__cursor {
-  position: absolute; left: 0; top: 0; z-index: 6; display: grid; place-items: center; width: 92px; height: 92px;
-  border-radius: 50%; background: var(--moka); color: var(--hueso); pointer-events: none;
-  font: 700 11px/1 var(--sans); letter-spacing: 0.14em; text-transform: uppercase;
-  opacity: 0; scale: 0.6; transition: opacity 0.2s var(--ease), scale 0.25s var(--ease);
-}
-.tira__cursor.is-on { opacity: 1; scale: 1; }
-
-/* A y B · fotos que avanzan con el scroll (scroll) o solas (historias) */
-html[data-c="scroll"] .stack__bar, html[data-c="historias"] .stack__bar { margin-top: 14px; padding-top: 0; border-top: 0; }
-html[data-c="scroll"] .stack__ctrl [data-dir], html[data-c="historias"] .stack__ctrl [data-dir] { display: none; }
-html[data-c="scroll"] .stack__caption, html[data-c="historias"] .stack__caption {
-  font: 400 clamp(22px, 2.2vw, 30px)/1.15 var(--serif); letter-spacing: -0.01em;
-}
-html[data-c="scroll"] .stack__count, html[data-c="historias"] .stack__count { font: 700 14px/1 var(--sans); letter-spacing: 0.12em; }
-
-/* A · las fotos se deslizan con el scroll de la página */
-html[data-c="scroll"] .stack { aspect-ratio: auto; overflow: hidden; touch-action: pan-y; cursor: grab; }
-html[data-c="scroll"] .stack.is-drag { cursor: grabbing; }
-.scroll__track { position: relative; display: flex; gap: 14px; will-change: transform; }
-html[data-c="scroll"] .stack__card { position: relative; inset: auto; flex: 0 0 80%; aspect-ratio: 4 / 5; touch-action: pan-y; }
-html[data-c="scroll"] .stack__card img { -webkit-user-drag: none; user-select: none; pointer-events: none; }
-
-/* B · las fotos cambian solas, estilo historias */
-html[data-c="historias"] .stack__card { opacity: 0; visibility: hidden; z-index: 0; transition: none; }
-html[data-c="historias"] .stack__card.is-active { opacity: 1; visibility: visible; z-index: 1; }
-html[data-c="historias"] .stack__card.is-entering { opacity: 1; visibility: visible; z-index: 2; }
-html[data-c="historias"] .stack::after {
+/* fotos que cambian solas, estilo historias: barra de segmentos arriba y toque en los lados */
+.stack::after {
   content: ""; position: absolute; inset: 0 0 auto 0; height: 76px; z-index: 3; pointer-events: none;
   border-radius: 18px 18px 0 0; background: linear-gradient(rgba(35, 20, 8, 0.34), transparent);
 }
@@ -375,6 +316,11 @@ html[data-c="historias"] .stack::after {
 }
 .hist__zone--r::after { content: "›"; left: auto; right: 14px; }
 @media (hover: hover) { .hist__zone:hover::after, .hist__zone:focus-visible::after { opacity: 1; } }
+
+.stack__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
+.stack__caption { font: 400 clamp(22px, 2.2vw, 30px)/1.15 var(--serif); letter-spacing: -0.01em; }
+.stack__ctrl { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+.stack__count { font: 700 14px/1 var(--sans); letter-spacing: 0.12em; }
 .hist__pause { width: 36px; height: 36px; font: 700 11px/1 var(--sans); letter-spacing: 0.08em; }
 
 /* ---------- Cierre ---------- */
@@ -469,6 +415,7 @@ html[data-c="historias"] .stack::after {
   .lanes { flex-direction: row; }
   .lane { flex: 1 1 50%; }
   .lane--l { padding-right: clamp(16px, 3.5vw, 48px); }
+  .lane--l .lane__bar { justify-content: flex-end; } /* '01 — Café  Aroma Moka' y 'Dolce Shop  Comida — 02' quedan unidos junto al & */
   .lane--r { padding-left: clamp(16px, 3.5vw, 48px); border-top: 0; }
   .lane--l .lane__text { margin-left: auto; }
   .lane--r .lane__text { margin-right: auto; }
