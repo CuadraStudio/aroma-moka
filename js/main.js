@@ -14,6 +14,13 @@
     ? window.CuadraMotion.reduceMotion()
     : window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* Prueba de movimiento "vivo" en la portada: solo con ?m=vivo en la URL. Sin parámetro no cambia nada. */
+  var VIVO = false;
+  try { VIVO = new URLSearchParams(window.location.search).get("m") === "vivo"; } catch (e) { /* sin soporte */ }
+  VIVO = VIVO && !reduce;
+  if (VIVO) root.setAttribute("data-m", "vivo");
+  var heroEls = [].slice.call(document.querySelectorAll(".hero--cover"));
+
   /* ---------- 1. Motor de Cuadra: reveals + parallax declarativo ---------- */
   if (window.CuadraMotion) window.CuadraMotion.init();
 
@@ -36,6 +43,11 @@
     }
     var max = root.scrollHeight - vh;
     root.style.setProperty("--page", max > 0 ? clamp01(window.scrollY / max).toFixed(4) : "0");
+    if (VIVO) {
+      // avance del scroll sobre la portada visible: 0 arriba de todo, 1 cuando ya salió
+      var hero = heroEls.filter(function (h) { return h.offsetParent !== null; })[0];
+      if (hero) root.style.setProperty("--hp", clamp01(window.scrollY / (hero.offsetHeight || 1)).toFixed(3));
+    }
   }
 
   var ticking = false;
@@ -184,6 +196,7 @@
   function swapKeepingPlace(next, pos) {
     apply(next);
     restorePos(pos, next);
+    scrub(); // que las variables de scroll ya correspondan a la nueva posición en el primer cuadro
   }
 
   function hasViewTransitions() {
@@ -251,6 +264,39 @@
     var btn = e.target.closest("[data-set-mode]");
     if (btn) switchTo(btn.getAttribute("data-set-mode"), btn);
   });
+
+  /* ---------- 5. Movimiento "vivo" de la portada (solo con ?m=vivo) ---------- */
+  if (VIVO) {
+    // la respiración de la foto se pausa cuando la portada no se ve (o está en la otra web)
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { en.target.classList.toggle("is-paused", !en.isIntersecting); });
+      });
+      heroEls.forEach(function (h) { io.observe(h); });
+    }
+
+    // parallax con el mouse: solo con puntero fino y pantalla de 900 px o más
+    if (window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 900px)").matches) {
+      var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+      var follow = function () {
+        cx += (tx - cx) * 0.08;
+        cy += (ty - cy) * 0.08;
+        root.style.setProperty("--mx", cx.toFixed(3));
+        root.style.setProperty("--my", cy.toFixed(3));
+        raf = (Math.abs(tx - cx) > 0.002 || Math.abs(ty - cy) > 0.002) ? window.requestAnimationFrame(follow) : 0;
+      };
+      var kick = function () { if (!raf) raf = window.requestAnimationFrame(follow); };
+      heroEls.forEach(function (h) {
+        h.addEventListener("pointermove", function (e) {
+          var r = h.getBoundingClientRect();
+          tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+          ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
+          kick();
+        });
+        h.addEventListener("pointerleave", function () { tx = 0; ty = 0; kick(); });
+      });
+    }
+  }
 
   apply(mode, true);
 })();
