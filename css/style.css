@@ -337,6 +337,51 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
   .product .stack-wrap { flex: 0 0 480px; }
 }
 
+/* ---------- Torta en 3D (prueba: solo con ?torta=3d) ---------- */
+.torta3d, .torta3d-only { display: none; }
+.has-torta3d .torta3d { display: block; }
+.has-torta3d .torta3d-only { display: inline; }
+.has-torta3d .torta3d-off { display: none; }
+
+.torta3d { background: var(--hueso); padding: clamp(32px, 5vw, 72px) var(--pad) clamp(16px, 3vw, 40px); overflow: hidden; }
+.torta3d__in { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 3vw, 36px); max-width: 1280px; margin: 0 auto; }
+.torta3d__head { display: flex; flex-direction: column; gap: 14px; }
+.torta3d__title { font: 400 clamp(48px, 9.5vw, 108px)/0.94 var(--serif); letter-spacing: -0.025em; }
+
+/* el cuadro es de 20:21, el mismo del encuadre del modelo: la foto y el 3D coinciden píxel a píxel */
+.torta3d__stage { position: relative; width: 100%; max-width: 640px; aspect-ratio: 20 / 21; justify-self: center; --mx: 0; --my: 0; --sp: 0; }
+.torta3d__disc {
+  position: absolute; left: 6%; top: 3%; width: 88%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, color-mix(in srgb, var(--chicle) 40%, var(--hueso)), color-mix(in srgb, var(--chicle) 56%, var(--hueso)));
+  transform: translate3d(calc(var(--mx) * -16px), calc(var(--my) * -12px + var(--sp) * -38px), 0);
+  will-change: transform;
+}
+.torta3d__layer { position: absolute; inset: 0; transform: translate3d(0, calc(var(--sp) * 14px), 0); will-change: transform; }
+/* sombra de contacto: un halo suave justo fuera del borde de la base (la elipse sale de proyectar la base) */
+.torta3d__shadow {
+  position: absolute; left: 12.95%; top: 44.9%; width: 75.07%; height: 55.2%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(96, 48, 40, 0) 79%, rgba(96, 48, 40, 0.13) 89%, rgba(96, 48, 40, 0) 100%);
+  filter: blur(5px);
+}
+.torta3d__poster, .torta3d__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.torta3d__poster { object-fit: fill; pointer-events: none; transition: opacity 0.7s var(--ease); }
+.torta3d__canvas { display: block; opacity: 0; transition: opacity 0.7s var(--ease); touch-action: pan-y; cursor: grab; border-radius: 28px; }
+.torta3d__canvas:focus-visible { outline: 3px solid var(--moka); outline-offset: -6px; }
+.torta3d__stage.is-live .torta3d__canvas { opacity: 1; }
+.torta3d__stage.is-live .torta3d__poster { opacity: 0; }
+.torta3d__stage.is-drag .torta3d__canvas { cursor: grabbing; }
+
+.torta3d__actions { display: flex; flex-direction: column; gap: 22px; }
+.torta3d__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 28px; }
+.btn--rose { background-color: var(--chicle); border-color: var(--chicle); color: var(--moka); }
+.btn--rose:hover { border-color: var(--moka); }
+@media (min-width: 1000px) {
+  .torta3d__in { grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr); grid-template-areas: "head stage" "actions stage"; align-items: center; column-gap: clamp(32px, 5vw, 80px); }
+  .torta3d__head { grid-area: head; align-self: end; }
+  .torta3d__actions { grid-area: actions; align-self: start; }
+  .torta3d__stage { grid-area: stage; max-width: 700px; }
+}
+
 /* ---------- Cierre ---------- */
 .closing { background: var(--field); color: var(--field-ink); overflow: hidden; }
 .closing__in {
