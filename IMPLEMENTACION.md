@@ -34,6 +34,20 @@ Enlace directo a cada web: `?v=aroma` y `?v=dolce`.
 
 - **Imágenes verticales propias (2026-10-09, aportadas por Luciano):** tablet 1229×1280 y celular 965×1630 para las dos webs, algo menores que las medidas recomendadas (1536×1600 y 1125×1900) pero con la proporción exacta; en pantallas de alta densidad se verán apenas más suaves. No se entregó imagen de escritorio: siguen `portada_aroma.webp` y `portada_dolce.webp` (1860×846 y 1859×846). Se midió con el DOM que el texto cae dentro de la franja libre de cada imagen en 320, 360, 375, 430, 640, 768 y 899 px. En celulares angostos (hasta 399 px) se compactó el espacio entre etiqueta, título y botones, y por debajo de 360 px el título baja a 30 px, porque la franja libre es más baja que el texto. Los PNG originales (2 MB cada uno) quedan solo en local, excluidos de git; las copias idénticas están en `Descargas/Img Chat GPT/`.
 
+## Transiciones del interruptor: variantes para comparar (2026-10-09, [IA], sin decidir)
+
+Se agregaron dos transiciones alternativas que se activan **solo** con un parámetro en la URL. Sin parámetro sigue la cortina de siempre (no cambió).
+
+| URL | Transición |
+|---|---|
+| `/` (sin parámetro) | Cortina de color de siempre, vuelve al tope de la página |
+| `/?t=circulo` | **A.** La web nueva se abre como un círculo desde el botón que se tocó, usando la API de transiciones de vista (`document.startViewTransition` y `clip-path` animado desde JS). Se ve el contenido real, no una cortina. ~0,65 s. En un navegador sin esa API usa la cortina de siempre |
+| `/?t=mitades` | **B.** Dos mitades (madera a la izquierda, rosa chicle a la derecha) entran, se juntan con un "&" dentro de un círculo hueso y se abren sobre la web nueva. ~0,7 s. Funciona en cualquier navegador |
+
+El parámetro `t` se conserva al cambiar de web (`?v=...&t=...`). Lo que comparten las dos variantes: dejan a la persona en el **mismo lugar de la otra web** (Inicio ↔ Inicio, Juntos ↔ A medida, carriles ↔ carriles, cierre ↔ cierre, con la misma altura relativa dentro de la sección; si estaba al final, queda al final); ignoran un segundo clic mientras corre la transición; el botón del interruptor se desliza con un pequeño rebote; y con `prefers-reduced-motion` hacen un fundido de 150 ms (si el navegador tiene la API) o cambian directo. Código en `js/main.js` (`switchCircle`, `switchHalves`, `capturePos`, `restorePos`) y al final del bloque de la cortina en `css/style.css`.
+
+Verificado: cambio de modo, conservación de la posición en ida y vuelta (diferencia de 0,1 % de la altura de la sección), limpieza del overlay, doble clic y consola sin errores; el círculo se midió creciendo (82 px a los 200 ms, 982 px a los 500 ms, 0,69 s en total) y se vio una captura a mitad de camino. **No se vio en movimiento real ni en un celular**, y el fundido de `prefers-reduced-motion` no se probó. Cuando se elija una, hay que dejarla como única, borrar la otra y la cortina si ya no hace falta, y actualizar el `MOTION-LOG`.
+
 ## Fuente de diseño
 
 No hay `DESIGN.md` (se eliminó el 2026-09-30 a pedido de Luciano). El contrato de esta pasada es el **Artifact Design "Aroma Moka — Design Concept"** (https://claude.ai/artifact/MYgK5VvxpF7Qomp2fo2ex8) y las decisiones tomadas en la conversación del 2026-10-07. Nada de esto está marcado APROBADO. **No se usó el `DESIGN.md` anterior** (`sites/aroma-moka/DESIGN.md`) como referencia, por pedido explícito.
