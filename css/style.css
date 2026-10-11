@@ -13,7 +13,8 @@
   --chicle: #efa6bc;
   --madera: #7e411a;
 
-  --serif: "Young Serif", Georgia, serif;
+  --serif: "Playfair Display", Georgia, serif;
+  --script: "Yellowtail", "Segoe Script", cursive;
   --sans: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
 
@@ -198,7 +199,7 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 .hero__field { position: relative; background: var(--field); color: var(--field-ink); }
 .hero__grid { display: flex; flex-direction: column; gap: 24px; padding-top: 32px; padding-bottom: 88px; }
 .hero__text { display: flex; flex-direction: column; gap: 18px; }
-.hero__title { font: 400 clamp(44px, 7vw, 88px)/1 var(--serif); letter-spacing: -0.02em; }
+.hero__title { font: 700 clamp(44px, 7vw, 88px)/1 var(--serif); letter-spacing: -0.02em; }
 .hero__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
 
 .line { display: block; overflow: hidden; padding-bottom: 0.2em; margin-bottom: -0.2em; }
@@ -208,6 +209,8 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
   background-image: linear-gradient(var(--u), var(--u));
   background-repeat: no-repeat; background-position: 0 100%; background-size: 100% 0.07em;
 }
+/* en la portada el acento va en script (más grande, porque el script tiene el ojo chico), sin subrayado */
+.hero__title .u { font: 400 1.22em/1 var(--script); letter-spacing: 0; color: var(--madera); background-image: none; padding-right: 0.05em; }
 
 .ring {
   position: absolute; right: var(--pad); bottom: -56px; z-index: 5;
@@ -263,11 +266,11 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
   max-width: 1100px; margin: 0 auto; padding: clamp(48px, 8vw, 112px) var(--pad); text-align: center;
 }
 .juntos__head { display: flex; flex-direction: column; align-items: center; gap: 18px; }
-.juntos__statement { font: 400 clamp(26px, 3.8vw, 54px)/1.15 var(--serif); letter-spacing: -0.01em; }
+.juntos__statement { font: 600 clamp(26px, 3.8vw, 54px)/1.15 var(--serif); letter-spacing: -0.01em; }
 .promises { display: flex; flex-direction: column; width: 100%; text-align: left; }
 .promises li { display: flex; align-items: baseline; gap: 16px; padding: 12px 0; border-top: 1px solid var(--moka); }
 .promises li:last-child { border-bottom: 1px solid var(--moka); }
-.promises__text { font: 400 20px/1.2 var(--serif); }
+.promises__text { font: 600 20px/1.2 var(--serif); }
 
 /* ---------- Dos carriles ---------- */
 .lanes { position: relative; display: flex; flex-direction: column; border-top: 1px solid var(--moka); }
@@ -282,9 +285,9 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
   align-items: baseline; gap: 14px; padding: 14px 0 12px; background: var(--lane-bg);
   border-bottom: 1px solid var(--moka);
 }
-.lane__name { font: 400 20px/1.2 var(--serif); }
+.lane__name { font: 600 20px/1.2 var(--serif); }
 .lane__text { display: flex; flex-direction: column; gap: 16px; max-width: 440px; margin-top: clamp(28px, 4vw, 56px); }
-.lane__title { font: 400 clamp(34px, 5vw, 64px)/1 var(--serif); letter-spacing: -0.01em; }
+.lane__title { font: 700 clamp(34px, 5vw, 64px)/1 var(--serif); letter-spacing: -0.01em; }
 
 .stack-wrap { width: calc(100% - 44px); margin-top: 48px; }
 .lane--l .stack-wrap { margin-left: 30px; }
@@ -318,7 +321,7 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 @media (hover: hover) { .hist__zone:hover::after, .hist__zone:focus-visible::after { opacity: 1; } }
 
 .stack__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
-.stack__caption { font: 400 clamp(22px, 2.2vw, 30px)/1.15 var(--serif); letter-spacing: -0.01em; }
+.stack__caption { font: 600 clamp(22px, 2.2vw, 30px)/1.15 var(--serif); letter-spacing: -0.01em; }
 .stack__ctrl { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
 .stack__count { font: 700 14px/1 var(--sans); letter-spacing: 0.12em; }
 .hist__pause { width: 36px; height: 36px; font: 700 11px/1 var(--sans); letter-spacing: 0.08em; }
@@ -343,7 +346,7 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
 .slide__count { align-self: flex-end; font: 500 14px/1 var(--sans); letter-spacing: 0.14em; }
 .slide__count b { font-weight: 700; }
 .slide__main { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
-.slide__title { padding-bottom: 0.08em; font: 400 clamp(54px, 13vw, 150px)/0.95 var(--serif); letter-spacing: -0.03em; }
+.slide__title { padding-bottom: 0.08em; font: 700 clamp(54px, 13vw, 150px)/0.95 var(--serif); letter-spacing: -0.03em; }
 .slide__text { max-width: 440px; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.55; }
 .slide__foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
 .slide__facts { display: grid; gap: 14px; }
@@ -371,11 +374,11 @@ html[data-mode="dolce"] .switch__thumb { transform: translateX(100%); }
   padding-top: clamp(48px, 7vw, 88px); padding-bottom: clamp(48px, 7vw, 88px);
 }
 .closing__head { display: flex; flex-direction: column; gap: 16px; }
-.closing__title { font: 400 clamp(34px, 5vw, 64px)/1 var(--serif); letter-spacing: -0.01em; }
+.closing__title { font: 700 clamp(34px, 5vw, 64px)/1 var(--serif); letter-spacing: -0.01em; }
 
 .converge { display: flex; flex-direction: column; gap: 28px; }
 .info { min-width: 0; flex: 1 1 0; }
-.info__title { font: 400 22px/1.1 var(--serif); padding-bottom: 10px; }
+.info__title { font: 600 22px/1.1 var(--serif); padding-bottom: 10px; }
 .info dl > div {
   display: flex; justify-content: space-between; gap: 16px; padding: 10px 0;
   border-top: 1px solid currentColor; font-size: 16px;
@@ -492,7 +495,7 @@ a.pill:hover { background: var(--field-ink); color: var(--field); }
   .amp {
     position: absolute; left: 50%; top: 8px; z-index: 8; transform: translateX(-50%);
     display: flex; align-items: center; justify-content: center; width: 46px; height: 46px;
-    border: 1.5px solid var(--moka); border-radius: 50%; background: var(--hueso); font: 400 24px/1 var(--serif);
+    border: 1.5px solid var(--moka); border-radius: 50%; background: var(--hueso); font: 700 24px/1 var(--serif);
   }
 }
 
