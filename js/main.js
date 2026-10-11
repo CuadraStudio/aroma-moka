@@ -460,10 +460,10 @@
     document.addEventListener("visibilitychange", function () { if (!document.hidden) paintOpen(); });
   }
 
-  /* ---------- 8. Productos de Dolce Shop: láminas que suben una sobre otra con paralaje ----------
-     La pantalla se fija (sticky) y el scroll va pasando las láminas: cada una sube desde abajo (--w), la foto
-     y la foto chica se mueven a otra velocidad y el título entra desde una línea con máscara (--t). El avance
-     se suaviza, con una pausa al principio y al final de cada paso. Sin "reducir movimiento" ni JS: bloques apilados. */
+  /* ---------- 8. Productos de Dolce Shop: láminas que se descubren una sobre otra ----------
+     La pantalla se fija (sticky) y el scroll va pasando las láminas: un borde sube y descubre la siguiente (--w).
+     Fotos y textos no se mueven, solo cambian al pasar el borde. El avance se suaviza, con una pausa al principio
+     y al final de cada paso. Sin "reducir movimiento" ni JS: bloques apilados. */
   var prod = document.querySelector("[data-prod]");
   if (prod && !reduce) {
     var pSlides = [].slice.call(prod.querySelectorAll("[data-slide]"));
@@ -472,7 +472,6 @@
     var pN = pSlides.length, pPinH = 0, pStep = 0, pTop = 0, pCur = 0, pGoal = 0, pRaf = 0, pActive = -1;
     var pClamp = function (v) { return Math.min(1, Math.max(0, v)); };
     var pInOut = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
-    var pOut = function (t) { return 1 - Math.pow(1 - t, 3); };
     var pHeader = function () { var hd = document.querySelector(".site-header"); return hd ? hd.offsetHeight : 0; };
 
     var pMeasure = function () {
@@ -490,9 +489,7 @@
         var w = pInOut(pClamp((pCur - (i - 1) - 0.14) / 0.72)); // pausa del 14% al empezar y al terminar cada paso
         ws.push(w);
         pSlides[i].style.setProperty("--w", w.toFixed(4));
-        pSlides[i].style.setProperty("--t", pOut(pClamp((w - 0.3) / 0.6)).toFixed(4));
       }
-      for (i = 0; i < pN - 1; i++) pSlides[i].style.setProperty("--wn", ws[i + 1].toFixed(4));
       var act = 0;
       for (i = 1; i < pN; i++) if (ws[i] > 0.5) act = i;
       if (act !== pActive) { // las láminas tapadas no se pueden enfocar ni se leen
