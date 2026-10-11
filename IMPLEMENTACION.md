@@ -104,6 +104,8 @@ Verificado: las diez combinaciones de hora y día simuladas del cartel dan el te
 
 ## Dolce Shop: productos sin la división (2026-10-10, pedido de Luciano)
 
+**En la rama `prueba-productos-pila` este bloque está reemplazado por las láminas con paralaje (sección siguiente); en `main` sigue siendo esto.**
+
 Luciano pidió sacar "la división" de la web de Dolce Shop y enfocarla solo en sus productos. Historia, para no repetirla: primero armé dos bloques apilados (commit `c8f073f`); Luciano aclaró que solo quería quitar la línea vertical con el "&" y se volvió a los dos carriles sin esa línea (`444a6e8`); al quedar todavía un corte vertical de color entre los dos fondos, pidió **unificar los dos fondos, eliminar esa división vertical y que siga viéndose con secciones horizontales**. Por eso volvió la disposición en bloques: en la web de Dolce Shop desaparecen los dos carriles, la línea central, el "&" y las barras que repetían el nombre ("01 — Tortas … Dolce Shop & Dolce Shop … Galletas y cajas — 02"). En su lugar hay **dos bloques de producto a ancho completo, uno debajo del otro**: "01 — Tortas" y "02 — Galletas y cajas", con el **mismo fondo hueso de la página** y separados por una línea horizontal. Se eligió el hueso para los dos; el rosa claro del segundo bloque era la otra opción.
 
 - **Escritorio (1000 px o más):** cada bloque va en dos columnas, texto y carrusel de fotos (480 px), y los lados se alternan: texto a la izquierda y fotos a la derecha en Tortas, al revés en Galletas y cajas.
@@ -121,6 +123,26 @@ Verificado con mediciones: dos bloques con los lados alternados a 1440 px, una c
 ## Torta en 3D: prueba retirada del sitio (2026-10-10)
 
 Se probó un modelo 3D de la torta con rosas en la apertura de "Tortas" de Dolce Shop (solo con `?torta=3d`). Se subió al repo y a Render sin que Luciano lo hubiera pedido, y a su pedido se **quitó del sitio**: three.js, el modelo, el póster, el módulo `js/torta3d.js`, el bloque de HTML y de CSS y el cargador de `main.js`. El sitio quedó igual que en el commit `c366a5c`. El código sigue en la historia de git (commit `979d8b1`, `git show 979d8b1:js/torta3d.js`); el modelo, la foto de origen y las herramientas de ajuste están en `research/3d/` del repo de `Webs`, fuera del sitio.
+
+## Productos de Dolce Shop: láminas con paralaje (prueba en la rama `prueba-productos-pila`, 2026-10-10)
+
+Luciano pasó una grabación de pantalla de otro sitio y pidió "este tipo de parallax" para el sector donde se muestran los productos (tortas, alfajores, galletitas, etc.). Del video se tomó **el mecanismo**, no el arte ni los textos: una pantalla que se **fija** mientras se hace scroll y tres "ofertas" que se suceden. Cada una es una lámina dividida en foto grande a la izquierda y panel de color a la derecha, con número (01/03), título enorme, texto corto, un enlace, datos y una foto chica abajo. La lámina siguiente **sube desde abajo** tapando a la anterior, con el panel de color distinto, la foto grande moviéndose a otra velocidad y el título entrando desde una línea con máscara.
+
+**Está en una rama local del repo del sitio y no se subió.** En `main` y en Render, la web de Dolce Shop sigue con los dos bloques de productos.
+
+- **Láminas (4):** Tortas, Alfajores, Galletas y Cajas, con panel porcelana, durazno, chicle y un rosa intermedio. Cada una tiene su foto grande, un enlace "Pedir presupuesto →" a WhatsApp con mensaje propio, los datos que el sitio ya decía ("Pedidos: con presupuesto" y "Presupuestos: únicamente por WhatsApp") y, si hay, una foto chica. Reemplaza en la web de Dolce Shop a los dos bloques con carrusel (en Aroma Moka siguen los carruseles de siempre).
+- **Textos:** Tortas y los datos son los de siempre. Galletas ("Galletas decoradas a mano, para cada fecha.") y Cajas ("Cajas de meriendas con letras de chocolate, para cada fecha.") salen de partir el texto de "Galletas y cajas con tu mensaje". **Alfajores ("Alfajores artesanales, rellenos y decorados a mano.") es [IA]: para revisar.**
+- **Fotos:** solo hay cinco reales, chicas y sin una de alfajores. Tortas: lambeth y Oli. Galletas: las navideñas y, chica, la galleta con foto impresa. Cajas: la caja con letras de chocolate y, chica, un recorte de la tabla con croissant, scones y red velvet. **Alfajores usa un recorte de la foto del surtido (`dolce_surtido_alfajor.webp`, 740×740) donde se ve una galleta con forma de flor, rellena y glaseada, con mermelada en el centro: se asumió que es un alfajor y falta que el cliente lo confirme.** Los recortes se hicieron de `08_surtido_pasteleria.webp` (1440 px) y quedan a su tamaño o un poco ampliados.
+- **Movimiento:** pantalla fija (`position: sticky`) en una pista de 1 + 0,85 × 3 pantallas; el avance se suaviza y cada paso tiene una pausa del 14% al empezar y al terminar. Solo se animan `clip-path`, `transform` y `opacity`, y el cuadro solo se dibuja mientras hay movimiento y la sección está cerca de la pantalla.
+- **Accesibilidad:** sin JavaScript o con `prefers-reduced-motion`, las cuatro láminas quedan **apiladas, una debajo de otra y sin fijar la pantalla**. Con la pila activa, las láminas tapadas son `inert` y `aria-hidden`, así que no se enfocan ni se leen. El acceso "Galletas" del menú (`#d-galletas`) lleva a la tercera lámina; "Ver trabajos" y "Tortas" llevan al principio.
+- **Celular:** foto arriba (44%) y panel abajo; en la pila se esconden los datos y la foto chica para que entre el título, el texto y el enlace. A 375 px no desborda y el título más largo ("Alfajores", 54 px) entra.
+- **Código:** sección `.prod` con cuatro `.slide` en `index.html`, bloque "Productos de Dolce Shop" de `css/style.css` (se quitó el de los bloques apilados) y sección 8 de `js/main.js`. Hay tres recortes nuevos en `img/`.
+
+**Verificado:** los pasos de scroll dan el avance esperado (0, 0,5, 1…) con la pantalla fija; capturas de las láminas 1, 2 y 4 y de la transición de 1 a 2; que las láminas tapadas queden inertes; que al cambiar de Aroma Moka a Dolce Shop se mida la pila; que el acceso "Galletas" vaya a la tercera lámina; el modo apilado, sin desborde a 375 px; consola sin errores. Con el panel de pruebas oculto se probó con un reloj de cuadros simulado. **No se vio:** el movimiento fluido con scroll real de rueda o dedo, el rendimiento en un celular de verdad, ni las transiciones de 2 a 3 y de 3 a 4 en captura.
+
+**Límites:** las fotos son pocas y de baja resolución para una columna de este tamaño (el recorte de alfajores es el más nítido); no hay fotos ni datos de otros productos (cupcakes, macarons…). La lista de productos y una foto buena de cada uno se pide en `../PREGUNTAS-CLIENTE.md` (pregunta 23).
+
+**Decisión pendiente:** si esto reemplaza a los bloques de productos en `main` (hay que pedir el push) o se descarta.
 
 ## Fuente de diseño
 
@@ -191,7 +213,7 @@ Registrado en `docs/operacion/MOTION-LOG.md`. No repite el momento de firma de l
 - **Isotipo** en alta: el actual mide 150 px y solo se usa en tamaño chico.
 - **Fotos de Dolce Shop:** solo 4, de 480 a 640 px de ancho, bajadas de Instagram. Se ven bien en los carruseles, pero no aguantan una foto grande. Hacen falta más y en mejor calidad.
 - Carta y precios: no encontrados, no hay ninguno en el sitio.
-- **Para armar las secciones que faltan** (cómo pedir una torta, ocasiones, qué hay en la mesa, meriendas, preguntas frecuentes, quiénes están detrás) y los datos que siguen sin encontrarse (feriados, horario y lugar de retiro de Dolce Shop, link de PedidosYa, delivery propio): `../PREGUNTAS-CLIENTE.md`, lista de 22 preguntas en dos tandas, sin enviar.
+- **Para armar las secciones que faltan** (cómo pedir una torta, ocasiones, qué hay en la mesa, meriendas, preguntas frecuentes, quiénes están detrás) y los datos que siguen sin encontrarse (feriados, horario y lugar de retiro de Dolce Shop, link de PedidosYa, delivery propio): `../PREGUNTAS-CLIENTE.md`, lista de 23 preguntas en dos tandas, sin enviar. Para las láminas de productos de Dolce Shop hace falta la lista completa de productos y una foto buena de cada uno (pregunta 23).
 
 ## Funcionalidades simuladas (etapa 15)
 

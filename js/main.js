@@ -460,5 +460,87 @@
     document.addEventListener("visibilitychange", function () { if (!document.hidden) paintOpen(); });
   }
 
+  /* ---------- 8. Productos de Dolce Shop: láminas que suben una sobre otra con paralaje ----------
+     La pantalla se fija (sticky) y el scroll va pasando las láminas: cada una sube desde abajo (--w), la foto
+     y la foto chica se mueven a otra velocidad y el título entra desde una línea con máscara (--t). El avance
+     se suaviza, con una pausa al principio y al final de cada paso. Sin "reducir movimiento" ni JS: bloques apilados. */
+  var prod = document.querySelector("[data-prod]");
+  if (prod && !reduce) {
+    var pSlides = [].slice.call(prod.querySelectorAll("[data-slide]"));
+    var pTrack = prod.querySelector(".prod__track");
+    var pPin = prod.querySelector(".prod__pin");
+    var pN = pSlides.length, pPinH = 0, pStep = 0, pTop = 0, pCur = 0, pGoal = 0, pRaf = 0, pActive = -1;
+    var pClamp = function (v) { return Math.min(1, Math.max(0, v)); };
+    var pInOut = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+    var pOut = function (t) { return 1 - Math.pow(1 - t, 3); };
+    var pHeader = function () { var hd = document.querySelector(".site-header"); return hd ? hd.offsetHeight : 0; };
+
+    var pMeasure = function () {
+      if (prod.offsetParent === null) return false; // está activa la web de Aroma Moka: no hay nada que medir
+      pPinH = Math.max(560, window.innerHeight - pHeader());
+      pStep = pPinH * 0.85;
+      pTrack.style.height = pPinH + pStep * (pN - 1) + "px";
+      pPin.style.height = pPinH + "px";
+      pTop = pTrack.getBoundingClientRect().top + window.scrollY;
+      return true;
+    };
+    var pPaint = function () {
+      var ws = [1], i;
+      for (i = 1; i < pN; i++) {
+        var w = pInOut(pClamp((pCur - (i - 1) - 0.14) / 0.72)); // pausa del 14% al empezar y al terminar cada paso
+        ws.push(w);
+        pSlides[i].style.setProperty("--w", w.toFixed(4));
+        pSlides[i].style.setProperty("--t", pOut(pClamp((w - 0.3) / 0.6)).toFixed(4));
+      }
+      for (i = 0; i < pN - 1; i++) pSlides[i].style.setProperty("--wn", ws[i + 1].toFixed(4));
+      var act = 0;
+      for (i = 1; i < pN; i++) if (ws[i] > 0.5) act = i;
+      if (act !== pActive) { // las láminas tapadas no se pueden enfocar ni se leen
+        pActive = act;
+        pSlides.forEach(function (s, idx) {
+          s.inert = idx !== act;
+          if (idx !== act) s.setAttribute("aria-hidden", "true"); else s.removeAttribute("aria-hidden");
+        });
+      }
+    };
+    var pGoalFromScroll = function () {
+      pGoal = pClamp((window.scrollY + pHeader() - pTop) / (pStep * (pN - 1))) * (pN - 1);
+    };
+    var pLoop = function () {
+      pRaf = 0;
+      pCur += (pGoal - pCur) * 0.16;
+      if (Math.abs(pGoal - pCur) < 0.0008) pCur = pGoal;
+      pPaint();
+      if (pCur !== pGoal) pRaf = window.requestAnimationFrame(pLoop);
+    };
+    var pKick = function () {
+      if (prod.offsetParent === null) return;
+      pGoalFromScroll();
+      var r = prod.getBoundingClientRect();
+      if (r.bottom < -300 || r.top > window.innerHeight + 300) { pCur = pGoal; pPaint(); return; } // lejos: salta al estado final
+      if (!pRaf) pRaf = window.requestAnimationFrame(pLoop);
+    };
+    var pRefresh = function () {
+      if (!pMeasure()) return;
+      pGoalFromScroll(); pCur = pGoal; pPaint();
+    };
+    var pGoTo = function (idx) { // ir a una lámina: Galletas es la tercera (índice 2)
+      window.scrollTo({ top: pTop - pHeader() + pStep * idx + (idx ? 2 : 0), behavior: "smooth" });
+    };
+
+    prod.classList.add("is-pinned");
+    pRefresh();
+    window.addEventListener("scroll", pKick, { passive: true });
+    window.addEventListener("resize", pRefresh);
+    window.addEventListener("load", function () { pRefresh(); if (window.location.hash === "#d-galletas" && prod.offsetParent !== null) pGoTo(2); });
+    new MutationObserver(function () { window.requestAnimationFrame(pRefresh); }).observe(root, { attributes: true, attributeFilter: ["data-mode"] });
+    document.addEventListener("click", function (e) {
+      var l = e.target.closest && e.target.closest('a[href="#d-galletas"]');
+      if (!l || prod.offsetParent === null) return;
+      e.preventDefault();
+      pGoTo(2);
+    });
+  }
+
   apply(mode, true);
 })();
