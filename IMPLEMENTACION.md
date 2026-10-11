@@ -104,7 +104,7 @@ Verificado: las diez combinaciones de hora y día simuladas del cartel dan el te
 
 ## Dolce Shop: productos sin la división (2026-10-10, pedido de Luciano)
 
-**En la rama `prueba-productos-pila` este bloque está reemplazado por las láminas con paralaje (sección siguiente); en `main` sigue siendo esto.**
+**Este bloque (dos bloques horizontales) quedó reemplazado por las láminas (sección siguiente) al subirlas a `main` el 2026-10-10.**
 
 Luciano pidió sacar "la división" de la web de Dolce Shop y enfocarla solo en sus productos. Historia, para no repetirla: primero armé dos bloques apilados (commit `c8f073f`); Luciano aclaró que solo quería quitar la línea vertical con el "&" y se volvió a los dos carriles sin esa línea (`444a6e8`); al quedar todavía un corte vertical de color entre los dos fondos, pidió **unificar los dos fondos, eliminar esa división vertical y que siga viéndose con secciones horizontales**. Por eso volvió la disposición en bloques: en la web de Dolce Shop desaparecen los dos carriles, la línea central, el "&" y las barras que repetían el nombre ("01 — Tortas … Dolce Shop & Dolce Shop … Galletas y cajas — 02"). En su lugar hay **dos bloques de producto a ancho completo, uno debajo del otro**: "01 — Tortas" y "02 — Galletas y cajas", con el **mismo fondo hueso de la página** y separados por una línea horizontal. Se eligió el hueso para los dos; el rosa claro del segundo bloque era la otra opción.
 
@@ -124,11 +124,11 @@ Verificado con mediciones: dos bloques con los lados alternados a 1440 px, una c
 
 Se probó un modelo 3D de la torta con rosas en la apertura de "Tortas" de Dolce Shop (solo con `?torta=3d`). Se subió al repo y a Render sin que Luciano lo hubiera pedido, y a su pedido se **quitó del sitio**: three.js, el modelo, el póster, el módulo `js/torta3d.js`, el bloque de HTML y de CSS y el cargador de `main.js`. El sitio quedó igual que en el commit `c366a5c`. El código sigue en la historia de git (commit `979d8b1`, `git show 979d8b1:js/torta3d.js`); el modelo, la foto de origen y las herramientas de ajuste están en `research/3d/` del repo de `Webs`, fuera del sitio.
 
-## Productos de Dolce Shop: láminas con paralaje (prueba en la rama `prueba-productos-pila`, 2026-10-10)
+## Productos de Dolce Shop: láminas que se descubren (2026-10-10, subidas a `main` a pedido de Luciano)
 
 Luciano pasó una grabación de pantalla de otro sitio y pidió "este tipo de parallax" para el sector donde se muestran los productos (tortas, alfajores, galletitas, etc.). Del video se tomó **el mecanismo**, no el arte ni los textos: una pantalla que se **fija** mientras se hace scroll y tres "ofertas" que se suceden. Cada una es una lámina dividida en foto grande a la izquierda y panel de color a la derecha, con número (01/03), título enorme, texto corto, un enlace, datos y una foto chica abajo. La lámina siguiente **sube desde abajo** tapando a la anterior, con el panel de color distinto. (La primera versión también movía la foto grande a otra velocidad y hacía entrar el título desde una línea con máscara; eso se quitó a pedido de Luciano, ver "Ajuste" más abajo.)
 
-**Está en una rama local del repo del sitio y no se subió.** En `main` y en Render, la web de Dolce Shop sigue con los dos bloques de productos.
+**Se subió a `main` (y con eso a Render, en los dos servicios) el 2026-10-10, cuando Luciano pidió commit y push, junto con la tipografía de la sección siguiente.** Hasta entonces estuvo en la rama local `prueba-productos-pila`. Sigue sin estar APROBADO.
 
 - **Láminas (4):** Tortas, Alfajores, Galletas y Cajas, con panel porcelana, durazno, chicle y un rosa intermedio. Cada una tiene su foto grande, un enlace "Pedir presupuesto →" a WhatsApp con mensaje propio, los datos que el sitio ya decía ("Pedidos: con presupuesto" y "Presupuestos: únicamente por WhatsApp") y, si hay, una foto chica. Reemplaza en la web de Dolce Shop a los dos bloques con carrusel (en Aroma Moka siguen los carruseles de siempre).
 - **Textos:** Tortas y los datos son los de siempre. Galletas ("Galletas decoradas a mano, para cada fecha.") y Cajas ("Cajas de meriendas con letras de chocolate, para cada fecha.") salen de partir el texto de "Galletas y cajas con tu mensaje". **Alfajores ("Alfajores artesanales, rellenos y decorados a mano.") es [IA]: para revisar.**
@@ -144,11 +144,11 @@ Luciano pasó una grabación de pantalla de otro sitio y pidió "este tipo de pa
 
 **Límites:** las fotos son pocas y de baja resolución para una columna de este tamaño (el recorte de alfajores es el más nítido); no hay fotos ni datos de otros productos (cupcakes, macarons…). La lista de productos y una foto buena de cada uno se pide en `../PREGUNTAS-CLIENTE.md` (pregunta 23).
 
-**Decisión pendiente:** si esto reemplaza a los bloques de productos en `main` (hay que pedir el push) o se descarta.
+**Estado:** publicado en la demo a pedido de Luciano; pendiente de su revisión.
 
-## Tipografía: Playfair Display, Yellowtail y Figtree (prueba en la rama `prueba-productos-pila`, 2026-10-10)
+## Tipografía: Playfair Display, Yellowtail y Figtree (2026-10-10, subida a `main` a pedido de Luciano)
 
-Luciano mandó dos historias de Instagram de @aroma.moka ("Postres en vitrina" y "Estamos de corrido") y pidió **considerar** cambiar la fuente de la web, porque Aroma Moka y Dolce Shop "tienen otro estilo". **Está en la misma rama local y no se subió: `main` y Render siguen con Young Serif y Figtree.**
+Luciano mandó dos historias de Instagram de @aroma.moka ("Postres en vitrina" y "Estamos de corrido") y pidió **considerar** cambiar la fuente de la web, porque Aroma Moka y Dolce Shop "tienen otro estilo". **Se subió a `main` junto con las láminas (antes: Young Serif y Figtree).**
 
 - **Observado en las historias (hecho):** el título es un serif de contraste alto y trazo grueso ("Estamos de", "Te esperamos hasta las 20h"); la palabra de acento va en un script manuscrito, en un tono más claro ("corrido", "en vitrina"); las listas y "POSTRES" van en un sans geométrico en negrita, en mayúsculas. Las dos historias usan **dos scripts distintos** (pincel en "en vitrina", trazo fino en "corrido").
 - **Interpretación [IA]:** la web usaba Young Serif, un serif grueso, redondeado y de contraste bajo, que no se parece al serif de las historias, y no tenía script.
@@ -161,7 +161,7 @@ Luciano mandó dos historias de Instagram de @aroma.moka ("Postres en vitrina" y
 
 **Verificado:** las tres familias cargan (ya no se pide Young Serif); portadas de las dos webs en 800 y 1366 px; láminas de Dolce Shop en 1366 px ("Alfajores", el título más largo, entra); sin desborde horizontal en 375 px en las dos webs; los glifos ‹, ›, & y × existen en Playfair Display. **No se vio:** el resto de las secciones de Aroma Moka en 1366 px con la fuente nueva, otros navegadores ni iPhone, ni cómo se ve la web mientras la fuente no cargó (usa Georgia de respaldo). La flecha "→" de los enlaces nunca estuvo en la fuente serif ni en Figtree y la pone el sistema, como antes.
 
-**Decisión pendiente:** si el cambio se queda, se descarta o se prueba con otro serif (Noto Serif Display) o sin script.
+**Pendiente de su revisión:** si el cambio se queda, se descarta o se prueba con otro serif (Noto Serif Display) o sin script.
 
 ## Fuente de diseño
 
@@ -242,5 +242,5 @@ Ninguna: no hay formularios. Los dos botones abren WhatsApp con un mensaje de sa
 
 - **Verificación visual incompleta:** al verificar, el panel del navegador estuvo oculto y no repintaba al hacer scroll. Se verificó por DOM (no hay scroll horizontal en 375, 768, 1280 y 1920 px; sin errores de consola; recursos y fuentes cargan; interruptor, pilas de fotos y variables de scroll responden) y visualmente solo el inicio en 375 y 1100 px. **No se vieron las secciones de abajo ni el modo Dolce Shop en pantalla.** Pendiente de revisión visual en la etapa 7.
 - **Imágenes sin uso en `img/`:** quedan los WebP/JPG de versiones anteriores que esta versión ya no usa. No se borraron.
-- **Fuentes:** vienen de Google Fonts (necesita conexión). En `main`: Young Serif y Figtree; en la rama de prueba `prueba-productos-pila`: Playfair Display, Yellowtail y Figtree.
+- **Fuentes:** vienen de Google Fonts (necesita conexión): Playfair Display, Yellowtail y Figtree (hasta el 2026-10-10 eran Young Serif y Figtree).
 - La deriva de carriles depende de `requestAnimationFrame`: si la pestaña está oculta, se pausa (es normal).
