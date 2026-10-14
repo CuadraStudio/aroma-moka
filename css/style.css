@@ -612,3 +612,20 @@ a.pill:hover { background: var(--field-ink); color: var(--field); }
     display: flex; left: auto; right: 0; top: 8px; transform: translateX(50%);
   }
 }
+/* Alineación original hacia la unión; & visible también entre bloques en móvil. */
+.lanes .lane__text { max-width: 440px; }
+.lanes .lane__bar { position: sticky; top: var(--header-h); }
+.lanes .lanes__amp {
+  position: absolute; display: flex; align-items: center; justify-content: center;
+  width: 46px; height: 46px; left: 50%; right: auto; top: -23px;
+  transform: translateX(-50%); z-index: 8; border: 1.5px solid var(--moka);
+  border-radius: 50%; background: var(--hueso); color: var(--moka);
+  font: 700 24px/1 var(--serif); pointer-events: none;
+}
+@media (min-width: 1000px) {
+  .lanes .lane--l { padding-right: clamp(16px, 3.5vw, 48px); }
+  .lanes .lane--r { padding-left: clamp(16px, 3.5vw, 48px); }
+  .lanes .lane--l .lane__text { margin-left: auto; margin-right: 0; }
+  .lanes .lane--r .lane__text { margin-left: 0; margin-right: auto; }
+  .lanes .lanes__amp { left: 0; top: 8px; }
+}
