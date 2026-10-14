@@ -593,3 +593,22 @@ a.pill:hover { background: var(--field-ink); color: var(--field); }
 @media (min-width: 1000px) {
   .lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+/* Recupera la división original sin alterar el encabezado ni las galerías. */
+.lanes { padding-left: 0; padding-right: 0; gap: 0; }
+.lanes__head { padding: 0 var(--pad) 32px; }
+.lanes .lane {
+  position: relative; padding: 0 var(--pad) clamp(32px, 4vw, 56px);
+  background: var(--lane-bg);
+}
+.lanes .lane--r { border-top: 1px solid var(--moka); }
+.lanes .lane__text { position: static; margin-top: 16px; }
+.lanes .lane__bar { position: relative; top: auto; }
+.lanes .lanes__amp { display: none; }
+@media (min-width: 1000px) {
+  .lanes .lane--l { border-right: 1px solid var(--moka); }
+  .lanes .lane--r { border-top: 0; }
+  .lanes .lane__bar { padding-top: 18px; }
+  .lanes .lanes__amp {
+    display: flex; left: auto; right: 0; top: 8px; transform: translateX(50%);
+  }
+}
